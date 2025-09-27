@@ -1,0 +1,24 @@
+{
+  "name": "Nutri Scan",
+  "short_name": "NutriScan",
+  "description": "Instantly track calories and nutrients just by scanning your food with the camera.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "display_override": ["standalone", "fullscreen", "minimal-ui"]
+}

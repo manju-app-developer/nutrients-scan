@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutri Scan - Futuristic Nutrition Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <meta name="theme-color" content="#020617">
+
+    <style>
+        :root {
+            --glow-color-1: rgba(34, 211, 238, 0.7);
+            --glow-color-2: rgba(139, 92, 246, 0.7);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
+            color: #e5e7eb;
+            overflow-y: auto; /* Allow vertical scrolling */
+        }
+
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .aurora-background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden;
+        }
+
+        .aurora {
+            position: absolute; border-radius: 50%;
+            opacity: 0.3; filter: blur(120px);
+        }
+
+        .aurora-1 {
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, #0891b2, transparent 60%);
+            top: -25%; left: -25%;
+            animation: moveAurora1 35s infinite alternate ease-in-out;
+        }
+
+        .aurora-2 {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, #4f46e5, transparent 60%);
+            bottom: -30%; right: -25%;
+            animation: moveAurora2 40s infinite alternate ease-in-out;
+        }
+
+        .aurora-3 {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, #be185d, transparent 70%);
+            top: 20%; right: -20%;
+            animation: moveAurora2 30s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes moveAurora1 {
+            from { transform: translate(-20%, -20%) rotate(0deg) scale(1); }
+            to { transform: translate(20%, 20%) rotate(180deg) scale(1.2); }
+        }
+
+        @keyframes moveAurora2 {
+            from { transform: translate(20%, 30%) rotate(0deg) scale(1.2); }
+            to { transform: translate(-20%, -30%) rotate(-180deg) scale(1); }
+        }
+
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.65);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-panel:hover {
+             border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .neon-highlight {
+            box-shadow: 0 0 5px var(--glow-color-1), 0 0 10px var(--glow-color-1), 0 0 15px var(--glow-color-1);
+            animation: pulse-neon 2s infinite alternate;
+        }
+        
+        .neon-text { text-shadow: 0 0 4px var(--glow-color-1); }
+        .neon-text-alt { text-shadow: 0 0 4px var(--glow-color-2); }
+
+        @keyframes pulse-neon {
+            from { box-shadow: 0 0 5px var(--glow-color-1), 0 0 10px var(--glow-color-1), 0 0 15px var(--glow-color-1); }
+            to { box-shadow: 0 0 10px var(--glow-color-1), 0 0 20px var(--glow-color-1), 0 0 30px var(--glow-color-1); }
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(34, 211, 238, 0.4); border-radius: 10px; border: 1px solid rgba(34, 211, 238, 0.6); }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(34, 211, 238, 0.6); }
+
+        .control-btn {
+            background-color: rgba(55, 65, 81, 0.5); 
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        .control-btn:hover {
+            background-color: rgba(55, 65, 81, 0.8); 
+            transform: translateY(-2px);
+            border-color: var(--glow-color-1);
+        }
+        .control-btn.active { 
+            background-color: rgba(34, 211, 238, 0.3);
+            color: white; 
+            box-shadow: inset 0 0 10px rgba(34, 211, 238, 0.5);
+            border-color: var(--glow-color-1);
+        }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in-item { animation: fadeIn 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="p-4 sm:p-6">
+
+    <div class="aurora-background">
+        <div class="aurora aurora-1"></div>
+        <div class="aurora aurora-2"></div>
+        <div class="aurora aurora-3"></div>
+    </div>
+    
+    <header class="w-full max-w-7xl mx-auto flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold font-orbitron neon-text flex items-center gap-2">
+            <i data-lucide="scan-eye"></i>Nutri Scan
+        </h1>
+        <button id="install-btn" class="hidden items-center gap-2 bg-indigo-600/80 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-xl transition-all duration-300 hover:scale-105">
+            <i data-lucide="download-cloud" class="w-5 h-5"></i> Install App
+        </button>
+    </header>
+
+    <main class="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
+        <!-- Left Side: Camera and Controls -->
+        <div class="w-full lg:w-1/2 flex flex-col gap-6 lg:sticky lg:top-6 lg:h-screen">
+            <div class="glass-panel rounded-2xl p-4 flex-grow flex flex-col items-center justify-center relative aspect-video">
+                <video id="webcam" class="rounded-lg w-full h-full object-cover transition-opacity duration-300 opacity-0" autoplay playsinline></video>
+                <div id="camera-off-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+                    <i data-lucide="video-off" class="w-16 h-16 text-gray-500 mb-4"></i>
+                    <p class="text-gray-400 font-semibold">Camera is Offline</p>
+                    <p class="text-sm text-gray-500">Press the Start Camera button below</p>
+                </div>
+                <canvas id="canvas" class="hidden"></canvas>
+                <div id="camera-error" class="hidden absolute inset-0 bg-black/50 rounded-lg flex flex-col items-center justify-center text-center p-4">
+                    <p id="camera-error-message" class="text-red-400 font-semibold mb-4">Camera access denied or not available.</p>
+                    <button id="enable-camera-btn" class="bg-cyan-500/80 hover:bg-cyan-500 text-white font-bold py-2 px-4 rounded-xl transition-all duration-300">
+                        Try Again
+                    </button>
+                </div>
+                <div id="loader" class="hidden absolute inset-0 bg-gray-900/70 backdrop-blur-sm rounded-lg flex flex-col items-center justify-center text-center p-4 z-20">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400"></div>
+                    <p class="mt-4 text-cyan-300 font-orbitron">ANALYZING...</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <button id="capture-btn" class="col-span-2 bg-cyan-500/80 hover:bg-cyan-500 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 neon-highlight disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:scale-105 flex items-center justify-center gap-2 text-lg">
+                    <i data-lucide="scan-line"></i> Capture & Analyze
+                </button>
+                <div class="flex gap-2">
+                    <button id="start-stop-btn" title="Start/Stop Camera" class="p-3 w-full rounded-xl control-btn flex items-center justify-center gap-2 font-semibold">
+                       <i data-lucide="video"></i> Start Camera
+                    </button>
+                    <button id="flip-camera-btn" title="Flip Camera" class="p-3 w-full rounded-xl control-btn flex items-center justify-center"><i data-lucide="rotate-camera"></i></button>
+                </div>
+                <button id="history-btn" class="bg-violet-600/80 hover:bg-violet-600 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2">
+                    <i data-lucide="history"></i> View History
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Side: Results -->
+        <div id="results-panel" class="w-full lg:w-1/2 glass-panel rounded-2xl p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 min-h-[50vh]">
+              <h2 class="text-2xl font-bold font-orbitron neon-text mb-4">Analysis Results</h2>
+              <div id="results-content" class="flex-grow space-y-3 pr-2">
+                  <div id="initial-message" class="flex flex-col items-center justify-center h-full text-center text-gray-400">
+                       <i data-lucide="camera" class="w-16 h-16 mb-4"></i>
+                       <p>Start the camera and capture an image of your food to begin analysis.</p>
+                  </div>
+              </div>
+              <div id="totals-container" class="mt-4 pt-4 border-t border-white/10 hidden">
+                  <h3 class="text-lg font-bold font-orbitron text-center mb-4 neon-text-alt">Total Estimated Macros & Calories</h3>
+                  <div class="flex flex-col md:flex-row items-center gap-6">
+                      <div id="chart-container" class="w-40 h-40"></div>
+                      <div id="totals" class="flex-grow text-base font-medium grid grid-cols-2 gap-x-6 gap-y-2"></div>
+                  </div>
+              </div>
+        </div>
+    </main>
+    
+    <!-- Modals -->
+    <div id="history-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+        <div class="w-full max-w-2xl glass-panel rounded-2xl p-6 flex flex-col max-h-[80vh]">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold font-orbitron neon-text-alt">Scan History</h2>
+                <button id="close-history-btn" class="text-gray-300 hover:text-white transition-transform duration-300 hover:rotate-90"><i data-lucide="x"></i></button>
+            </div>
+            <div id="history-content" class="flex-grow overflow-y-auto space-y-4 pr-2"></div>
+            <button id="clear-history-btn" class="mt-4 bg-red-600/80 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-xl transition-all duration-300 hover:scale-105">
+                Clear History
+            </button>
+        </div>
+    </div>
+    <div id="confirm-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+        <div class="w-full max-w-sm glass-panel rounded-2xl p-6 text-center">
+            <h3 id="confirm-title" class="text-lg font-bold font-orbitron mb-2">Are you sure?</h3>
+            <p id="confirm-message" class="text-gray-300 mb-6">This action cannot be undone.</p>
+            <div class="flex gap-4">
+                <button id="confirm-cancel-btn" class="w-full bg-gray-600/80 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-xl transition">Cancel</button>
+                <button id="confirm-ok-btn" class="w-full bg-red-600/80 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-xl transition">Confirm</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="text-center mt-8 pb-4">
+        <p class="text-xs text-gray-500">Disclaimer: For informational purposes only. Not a substitute for professional medical advice.</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        const webcamElement = document.getElementById('webcam'), canvasElement = document.getElementById('canvas'),
+              captureBtn = document.getElementById('capture-btn'), startStopBtn = document.getElementById('start-stop-btn'),
+              flipCameraBtn = document.getElementById('flip-camera-btn'), historyBtn = document.getElementById('history-btn'),
+              cameraOffPlaceholder = document.getElementById('camera-off-placeholder'), closeHistoryBtn = document.getElementById('close-history-btn'),
+              clearHistoryBtn = document.getElementById('clear-history-btn'), historyModal = document.getElementById('history-modal'),
+              historyContent = document.getElementById('history-content'), cameraError = document.getElementById('camera-error'),
+              cameraErrorMessage = document.getElementById('camera-error-message'), enableCameraBtn = document.getElementById('enable-camera-btn'),
+              resultsPanel = document.getElementById('results-panel'), resultsContent = document.getElementById('results-content'),
+              initialMessage = document.getElementById('initial-message'), totalsContainer = document.getElementById('totals-container'),
+              totalsDiv = document.getElementById('totals'), loader = document.getElementById('loader'),
+              confirmModal = document.getElementById('confirm-modal'), confirmOkBtn = document.getElementById('confirm-ok-btn'),
+              confirmCancelBtn = document.getElementById('confirm-cancel-btn'), installBtn = document.getElementById('install-btn'),
+              chartContainer = document.getElementById('chart-container');
+
+        // Expanded nutrition database (nutrients & calories per 100g)
+        const nutritionDB = {
+            'apple': { carbs: 14, protein: 0.3, fat: 0.2, calories: 52 }, 'almond': { carbs: 22, protein: 21, fat: 49, calories: 579 },
+            'avocado': { carbs: 9, protein: 2, fat: 15, calories: 160 }, 'banana': { carbs: 23, protein: 1.1, fat: 0.3, calories: 89 },
+            'beef': { carbs: 0, protein: 26, fat: 15, calories: 250 }, 'bell pepper': { carbs: 6, protein: 1, fat: 0.3, calories: 31 },
+            'blueberry': { carbs: 14, protein: 0.7, fat: 0.3, calories: 57 }, 'bread': { carbs: 49, protein: 9, fat: 3.2, calories: 265 },
+            'broccoli': { carbs: 7, protein: 2.8, fat: 0.4, calories: 34 }, 'cabbage': { carbs: 6, protein: 1.3, fat: 0.1, calories: 25 },
+            'carrot': { carbs: 10, protein: 0.9, fat: 0.2, calories: 41 }, 'cashew': { carbs: 30, protein: 18, fat: 44, calories: 553 },
+            'cauliflower': { carbs: 5, protein: 1.9, fat: 0.3, calories: 25 }, 'cheese': { carbs: 1.3, protein: 25, fat: 33, calories: 402 },
+            'chicken breast': { carbs: 0, protein: 31, fat: 3.6, calories: 165 }, 'chickpea': { carbs: 27, protein: 9, fat: 2.6, calories: 164 },
+            'coffee': { carbs: 0, protein: 0.1, fat: 0, calories: 1 }, 'corn': { carbs: 19, protein: 3.2, fat: 1.2, calories: 86 },
+            'cucumber': { carbs: 3.6, protein: 0.7, fat: 0.1, calories: 15 }, 'dal': { carbs: 20, protein: 9, fat: 0.4, calories: 114 },
+            'egg': { carbs: 0.6, protein: 13, fat: 11, calories: 155 }, 'fish': { carbs: 0, protein: 22, fat: 12, calories: 206 },
+            'grape': { carbs: 18, protein: 0.7, fat: 0.2, calories: 69 }, 'green bean': { carbs: 7, protein: 1.8, fat: 0.1, calories: 31 },
+            'idli': { carbs: 27, protein: 4, fat: 0.2, calories: 130 }, 'kiwi': { carbs: 15, protein: 1.1, fat: 0.5, calories: 61 },
+            'lemon': { carbs: 9, protein: 1.1, fat: 0.3, calories: 29 }, 'lentil': { carbs: 20, protein: 9, fat: 0.4, calories: 116 },
+            'lettuce': { carbs: 2.9, protein: 1.4, fat: 0.2, calories: 15 }, 'mango': { carbs: 15, protein: 0.8, fat: 0.4, calories: 60 },
+            'milk': { carbs: 5, protein: 3.4, fat: 1, calories: 42 }, 'mushroom': { carbs: 3.3, protein: 3.1, fat: 0.3, calories: 22 },
+            'oats': { carbs: 66, protein: 17, fat: 7, calories: 389 }, 'onion': { carbs: 9, protein: 1.1, fat: 0.1, calories: 40 },
+            'orange': { carbs: 12, protein: 0.9, fat: 0.1, calories: 47 }, 'paneer': { carbs: 6, protein: 18, fat: 21, calories: 265 },
+            'pasta': { carbs: 25, protein: 5, fat: 1.1, calories: 131 }, 'peanut': { carbs: 16, protein: 26, fat: 49, calories: 567 },
+            'pear': { carbs: 15, protein: 0.4, fat: 0.1, calories: 57 }, 'pineapple': { carbs: 13, protein: 0.5, fat: 0.1, calories: 50 },
+            'pork': { carbs: 0, protein: 27, fat: 14, calories: 242 }, 'potato': { carbs: 17, protein: 2, fat: 0.1, calories: 77 },
+            'quinoa': { carbs: 21, protein: 4.1, fat: 1.9, calories: 120 }, 'rice': { carbs: 28, protein: 2.7, fat: 0.3, calories: 130 },
+            'roti': { carbs: 49, protein: 9, fat: 3.2, calories: 265 }, 'salmon': { carbs: 0, protein: 20, fat: 13, calories: 208 },
+            'shrimp': { carbs: 0.2, protein: 24, fat: 0.3, calories: 99 }, 'spinach': { carbs: 3.6, protein: 2.9, fat: 0.4, calories: 23 },
+            'strawberry': { carbs: 8, protein: 0.7, fat: 0.3, calories: 32 }, 'sweet potato': { carbs: 20, protein: 1.6, fat: 0.1, calories: 86 },
+            'tofu': { carbs: 1.9, protein: 8, fat: 4.8, calories: 76 }, 'tomato': { carbs: 3.9, protein: 0.9, fat: 0.2, calories: 18 },
+            'turkey': { carbs: 0, protein: 29, fat: 3.7, calories: 189 }, 'watermelon': { carbs: 8, protein: 0.6, fat: 0.2, calories: 30 },
+            'yogurt': { carbs: 4.7, protein: 10, fat: 0.4, calories: 59 }
+        };
+        
+        const supportedFoods = Object.keys(nutritionDB);
+        let detectedFoodsData = [], facingMode = 'environment', currentStream, isCameraOn = false;
+
+        async function startCamera() {
+            stopCamera(); // Ensure any existing stream is stopped
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
+                currentStream = stream;
+                webcamElement.srcObject = stream;
+                webcamElement.classList.remove('opacity-0');
+                cameraOffPlaceholder.classList.add('hidden');
+                cameraError.classList.add('hidden');
+                
+                isCameraOn = true;
+                startStopBtn.innerHTML = `<i data-lucide="video-off"></i> Stop Camera`;
+                startStopBtn.classList.add('active');
+                lucide.createIcons();
+                
+                webcamElement.onloadedmetadata = () => { captureBtn.disabled = false; flipCameraBtn.disabled = false; };
+            } catch (error) {
+                console.error("Error accessing webcam:", error);
+                
+                if (error.name === "NotAllowedError") {
+                    cameraErrorMessage.innerHTML = "Camera access was denied. Please enable it in your browser settings and try again.";
+                } else {
+                    cameraErrorMessage.innerHTML = "Could not access the camera. It may be in use by another application or not available.";
+                }
+                
+                cameraError.classList.remove('hidden');
+                isCameraOn = false;
+                startStopBtn.innerHTML = `<i data-lucide="video"></i> Start Camera`;
+                startStopBtn.classList.remove('active');
+                lucide.createIcons();
+                captureBtn.disabled = true; 
+                flipCameraBtn.disabled = true;
+            }
+        }
+
+        function stopCamera() {
+            if (currentStream) { currentStream.getTracks().forEach(track => track.stop()); }
+            webcamElement.srcObject = null;
+            webcamElement.classList.add('opacity-0');
+            cameraOffPlaceholder.classList.remove('hidden');
+            cameraError.classList.add('hidden');
+            captureBtn.disabled = true; 
+            flipCameraBtn.disabled = true;
+            isCameraOn = false;
+            startStopBtn.innerHTML = `<i data-lucide="video"></i> Start Camera`;
+            startStopBtn.classList.remove('active');
+            lucide.createIcons();
+        }
+        
+        startStopBtn.addEventListener('click', () => {
+             isCameraOn = !isCameraOn;
+             if (isCameraOn) {
+                 startCamera();
+             } else {
+                 stopCamera();
+             }
+        });
+
+        enableCameraBtn.addEventListener('click', startCamera);
+
+        flipCameraBtn.addEventListener('click', () => {
+            if (!isCameraOn) return;
+            facingMode = facingMode === 'user' ? 'environment' : 'user';
+            startCamera(); // Restart camera with new facing mode
+        });
+
+        captureBtn.addEventListener('click', async () => {
+            if (!webcamElement.srcObject) return;
+            loader.classList.remove('hidden');
+            resultsPanel.classList.add('opacity-0', '-translate-y-5');
+            const context = canvasElement.getContext('2d');
+            canvasElement.width = webcamElement.videoWidth;
+            canvasElement.height = webcamElement.videoHeight;
+            context.drawImage(webcamElement, 0, 0, canvasElement.width, canvasElement.height);
+            const base64ImageData = canvasElement.toDataURL('image/jpeg', 0.8).split(',')[1];
+            await detectFood(base64ImageData);
+            loader.classList.add('hidden');
+            resultsPanel.classList.remove('opacity-0', '-translate-y-5');
+        });
+
+        async function detectFood(base64ImageData) {
+    // The URL for our new, secure Netlify Function
+    const functionUrl = '/.netlify/functions/analyze';
+
+    try {
+        const response = await fetch(functionUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                base64ImageData: base64ImageData,
+                supportedFoods: supportedFoods 
+            })
+        });
+
+        if (!response.ok) {
+            const errorResult = await response.json();
+            throw new Error(`Function error ${response.status}: ${errorResult.error || 'Unknown error'}`);
+        }
+
+        const result = await response.json();
+        const textResponse = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!textResponse) throw new Error("Invalid API response format from function.");
+        
+        const jsonString = textResponse.replace(/```json|```/g, '').trim();
+        displayResults(JSON.parse(jsonString));
+    } catch (error) {
+        console.error('Detection error:', error);
+        displayError(`Detection failed. The AI could not process the image. Error: ${error.message}`);
+    }
+}
+        function displayError(message) {
+            resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-red-900/50 text-red-300">${message}</div>`;
+            totalsContainer.classList.add('hidden');
+        }
+
+        function displayResults(items) {
+            resultsContent.innerHTML = '';
+            detectedFoodsData = [];
+
+            if (!Array.isArray(items)) {
+                displayError("The AI returned an invalid data format.");
+                return;
+            }
+
+            if (items.length > 0 && items[0].foodName === 'medicine') {
+                resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-yellow-900/50 text-yellow-300 flex items-center gap-3"><i data-lucide="alert-triangle"></i><span>This application is not designed to analyze medication or provide medical advice.</span></div>`;
+                lucide.createIcons();
+                totalsContainer.classList.add('hidden');
+                return;
+            }
+
+            if (items.length === 0) {
+                resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-800/50 text-gray-300 flex items-center gap-3"><i data-lucide="search-slash"></i><p>No supported food items were detected in the image.</p></div>`;
+                lucide.createIcons();
+                totalsContainer.classList.add('hidden');
+                return;
+            }
+
+            items.forEach((item, index) => {
+                const foodName = item.foodName?.toLowerCase();
+                if (nutritionDB[foodName]) {
+                    const data = { id: `food-${Date.now()}-${index}`, name: foodName, portion: item.estimatedWeight || 100, confidence: item.confidenceScore || 0, ...nutritionDB[foodName] };
+                    detectedFoodsData.push(data);
+                    const confidenceColor = data.confidence > 0.8 ? 'text-green-400' : data.confidence > 0.6 ? 'text-yellow-400' : 'text-red-400';
+                    
+                    const foodElement = document.createElement('div');
+                    foodElement.className = 'p-3 rounded-lg bg-white/5 fade-in-item';
+                    foodElement.style.animationDelay = `${index * 100}ms`;
+                    foodElement.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="font-bold capitalize">${foodName}</span>
+                                <span class="text-xs ${confidenceColor}">(${(data.confidence * 100).toFixed(0)}% confident)</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="number" value="${data.portion}" min="1" step="1" id="portion-${data.id}" class="w-20 bg-transparent border-b border-white/20 text-right focus:outline-none focus:border-cyan-400">
+                                <span>g</span>
+                            </div>
+                        </div>
+                        <div id="nutrients-${data.id}" class="text-sm text-gray-300 mt-2"></div>`;
+                    resultsContent.appendChild(foodElement);
+                    document.getElementById(`portion-${data.id}`).addEventListener('input', (e) => {
+                       const foodItem = detectedFoodsData.find(f => f.id === data.id);
+                       if(foodItem) foodItem.portion = parseInt(e.target.value, 10) || 0;
+                       updateAllCalculations();
+                    });
+                }
+            });
+
+            if (detectedFoodsData.length > 0) {
+                updateAllCalculations();
+                totalsContainer.classList.remove('hidden');
+                saveToHistory();
+            } else {
+                resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-800/50 text-gray-300 flex items-center gap-3"><i data-lucide="database-zap"></i><p>Detected items were not in our nutrition database.</p></div>`;
+                 lucide.createIcons();
+                totalsContainer.classList.add('hidden');
+            }
+        }
+
+        function updateAllCalculations() {
+            let total = { carbs: 0, protein: 0, fat: 0, calories: 0 };
+            detectedFoodsData.forEach(food => {
+                const factor = food.portion / 100;
+                const carbs = food.carbs * factor, protein = food.protein * factor, fat = food.fat * factor;
+                const calories = food.calories * factor;
+                total.carbs += carbs; total.protein += protein; total.fat += fat; total.calories += calories;
+                document.getElementById(`nutrients-${food.id}`).innerHTML = `
+                    <span class="text-cyan-400">C: <strong>${carbs.toFixed(1)}g</strong></span> | 
+                    <span class="text-violet-400">P: <strong>${protein.toFixed(1)}g</strong></span> | 
+                    <span class="text-pink-400">F: <strong>${fat.toFixed(1)}g</strong></span> | 
+                    <span class="text-amber-300"><strong>${calories.toFixed(0)} kcal</strong></span>`;
+            });
+            totalsDiv.innerHTML = `
+                <p>Carbs: <strong class="text-cyan-300">${total.carbs.toFixed(1)}g</strong></p>
+                <p>Protein: <strong class="text-violet-300">${total.protein.toFixed(1)}g</strong></p>
+                <p>Fat: <strong class="text-pink-300">${total.fat.toFixed(1)}g</strong></p>
+                <p class="text-amber-300 font-bold col-span-2 text-lg">Total Calories: <strong>${total.calories.toFixed(0)} kcal</strong></p>`;
+            
+            renderMacroChart(total);
+        }
+
+        function renderMacroChart(totals) {
+            const { carbs, protein, fat } = totals;
+            const totalMacros = carbs + protein + fat;
+            if (totalMacros === 0) {
+                chartContainer.innerHTML = ''; return;
+            }
+
+            const carbP = (carbs / totalMacros);
+            const protP = (protein / totalMacros);
+            const fatP = (fat / totalMacros);
+
+            const carbDeg = carbP * 360;
+            const protDeg = protP * 360;
+
+            chartContainer.innerHTML = `
+                <svg viewBox="0 0 36 36" class="w-full h-full">
+                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3" stroke="#374151" />
+                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#22d3ee" stroke-dasharray="${carbDeg} ${360-carbDeg}" stroke-dashoffset="0" transform="rotate(-90 18 18)" />
+                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#8b5cf6" stroke-dasharray="${protDeg} ${360-protDeg}" stroke-dashoffset="-${carbDeg}" transform="rotate(-90 18 18)" />
+                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#ec4899" stroke-dasharray="${fatP * 360} 360" stroke-dashoffset="-${carbDeg + protDeg}" transform="rotate(-90 18 18)" />
+                    <text x="18" y="20" text-anchor="middle" class="fill-white text-[5px] font-bold">${(totals.calories).toFixed(0)}</text>
+                    <text x="18" y="24" text-anchor="middle" class="fill-gray-400 text-[3px]">kcal</text>
+                </svg>
+            `;
+        }
+        
+        function saveToHistory() {
+            const history = JSON.parse(localStorage.getItem('foodScanHistory') || '[]');
+            history.unshift({ timestamp: new Date().toISOString(), foods: detectedFoodsData.map(f => ({ name: f.name, portion: f.portion })) });
+            if (history.length > 50) history.pop();
+            localStorage.setItem('foodScanHistory', JSON.stringify(history));
+        }
+        
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('foodScanHistory') || '[]');
+            historyContent.innerHTML = history.length === 0 ? '<p class="text-gray-400">No scans saved yet.</p>' : '';
+            clearHistoryBtn.style.display = history.length > 0 ? 'block' : 'none';
+            history.forEach(entry => {
+                const entryDiv = document.createElement('div');
+                entryDiv.className = 'glass-panel p-4 rounded-lg';
+                const date = new Date(entry.timestamp);
+                let totalCals = 0;
+                let foodHtml = entry.foods.map(food => {
+                    const n = nutritionDB[food.name];
+                    if (!n) return '';
+                    const factor = food.portion / 100;
+                    const cals = n.calories * factor;
+                    totalCals += cals;
+                    return `<div class="ml-4 text-sm"><span class="capitalize font-semibold">${food.name} (${food.portion}g):</span> ${cals.toFixed(0)} kcal</div>`;
+                }).join('');
+                entryDiv.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <p class="font-bold">${date.toLocaleDateString()} - ${date.toLocaleTimeString()}</p>
+                        <p class="font-bold text-amber-300">${totalCals.toFixed(0)} kcal</p>
+                    </div>
+                    ${foodHtml}
+                `;
+                historyContent.appendChild(entryDiv);
+            });
+        }
+
+        historyBtn.addEventListener('click', () => { loadHistory(); historyModal.classList.remove('hidden'); });
+        closeHistoryBtn.addEventListener('click', () => historyModal.classList.add('hidden'));
+
+        let confirmCallback = null;
+        function showConfirm(title, message, callback) {
+            document.getElementById('confirm-title').textContent = title;
+            document.getElementById('confirm-message').textContent = message;
+            confirmCallback = callback;
+            confirmModal.classList.remove('hidden');
+        }
+        confirmOkBtn.addEventListener('click', () => { if (confirmCallback) confirmCallback(); confirmModal.classList.add('hidden'); });
+        confirmCancelBtn.addEventListener('click', () => confirmModal.classList.add('hidden'));
+        clearHistoryBtn.addEventListener('click', () => {
+            showConfirm('Clear History?', 'Are you sure you want to delete all scan history?', () => {
+                localStorage.removeItem('foodScanHistory');
+                loadHistory();
+            });
+        });
+
+        // PWA Installation Logic
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.classList.remove('hidden');
+            installBtn.classList.add('flex');
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                installBtn.classList.add('hidden');
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installBtn.classList.add('hidden');
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            captureBtn.disabled = true;
+            flipCameraBtn.disabled = true;
+        });
+    </script>
+</body>
+</html>
+
