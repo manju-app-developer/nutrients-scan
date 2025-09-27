@@ -7,9 +7,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    
+
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#020617">
 
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="NutriScan">
+    
     <style>
         :root {
             --glow-color-1: rgba(34, 211, 238, 0.7);
@@ -137,7 +142,6 @@
     </header>
 
     <main class="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
-        <!-- Left Side: Camera and Controls -->
         <div class="w-full lg:w-1/2 flex flex-col gap-6 lg:sticky lg:top-6 lg:h-screen">
             <div class="glass-panel rounded-2xl p-4 flex-grow flex flex-col items-center justify-center relative aspect-video">
                 <video id="webcam" class="rounded-lg w-full h-full object-cover transition-opacity duration-300 opacity-0" autoplay playsinline></video>
@@ -174,26 +178,24 @@
             </div>
         </div>
 
-        <!-- Right Side: Results -->
         <div id="results-panel" class="w-full lg:w-1/2 glass-panel rounded-2xl p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 min-h-[50vh]">
               <h2 class="text-2xl font-bold font-orbitron neon-text mb-4">Analysis Results</h2>
               <div id="results-content" class="flex-grow space-y-3 pr-2">
-                  <div id="initial-message" class="flex flex-col items-center justify-center h-full text-center text-gray-400">
-                       <i data-lucide="camera" class="w-16 h-16 mb-4"></i>
-                       <p>Start the camera and capture an image of your food to begin analysis.</p>
-                  </div>
+                    <div id="initial-message" class="flex flex-col items-center justify-center h-full text-center text-gray-400">
+                           <i data-lucide="camera" class="w-16 h-16 mb-4"></i>
+                           <p>Start the camera and capture an image of your food to begin analysis.</p>
+                    </div>
               </div>
               <div id="totals-container" class="mt-4 pt-4 border-t border-white/10 hidden">
-                  <h3 class="text-lg font-bold font-orbitron text-center mb-4 neon-text-alt">Total Estimated Macros & Calories</h3>
-                  <div class="flex flex-col md:flex-row items-center gap-6">
-                      <div id="chart-container" class="w-40 h-40"></div>
-                      <div id="totals" class="flex-grow text-base font-medium grid grid-cols-2 gap-x-6 gap-y-2"></div>
-                  </div>
+                    <h3 class="text-lg font-bold font-orbitron text-center mb-4 neon-text-alt">Total Estimated Macros & Calories</h3>
+                    <div class="flex flex-col md:flex-row items-center gap-6">
+                        <div id="chart-container" class="w-40 h-40"></div>
+                        <div id="totals" class="flex-grow text-base font-medium grid grid-cols-2 gap-x-6 gap-y-2"></div>
+                    </div>
               </div>
         </div>
     </main>
     
-    <!-- Modals -->
     <div id="history-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
         <div class="w-full max-w-2xl glass-panel rounded-2xl p-6 flex flex-col max-h-[80vh]">
             <div class="flex justify-between items-center mb-4">
@@ -353,35 +355,37 @@
         });
 
         async function detectFood(base64ImageData) {
-    // The URL for our new, secure Netlify Function
-    const functionUrl = '/.netlify/functions/analyze';
+            // This URL should point to your serverless function endpoint.
+            // For local testing, you might use a local server address.
+            // For production on Netlify, this path is correct.
+            const functionUrl = '/.netlify/functions/analyze';
 
-    try {
-        const response = await fetch(functionUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                base64ImageData: base64ImageData,
-                supportedFoods: supportedFoods 
-            })
-        });
+            try {
+                const response = await fetch(functionUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        base64ImageData: base64ImageData,
+                        supportedFoods: supportedFoods 
+                    })
+                });
 
-        if (!response.ok) {
-            const errorResult = await response.json();
-            throw new Error(`Function error ${response.status}: ${errorResult.error || 'Unknown error'}`);
+                if (!response.ok) {
+                    const errorResult = await response.json();
+                    throw new Error(`Function error ${response.status}: ${errorResult.error || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+                const textResponse = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (!textResponse) throw new Error("Invalid API response format from function.");
+                
+                const jsonString = textResponse.replace(/```json|```/g, '').trim();
+                displayResults(JSON.parse(jsonString));
+            } catch (error) {
+                console.error('Detection error:', error);
+                displayError(`Detection failed. The AI could not process the image. Please try again. Error: ${error.message}`);
+            }
         }
-
-        const result = await response.json();
-        const textResponse = result.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!textResponse) throw new Error("Invalid API response format from function.");
-        
-        const jsonString = textResponse.replace(/```json|```/g, '').trim();
-        displayResults(JSON.parse(jsonString));
-    } catch (error) {
-        console.error('Detection error:', error);
-        displayError(`Detection failed. The AI could not process the image. Error: ${error.message}`);
-    }
-}
         function displayError(message) {
             resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-red-900/50 text-red-300">${message}</div>`;
             totalsContainer.classList.add('hidden');
@@ -554,33 +558,48 @@
             });
         });
 
-        // PWA Installation Logic
+        // --- PWA Installation Logic ---
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
+            e.preventDefault(); // Prevent the default browser prompt
+            deferredPrompt = e; // Stash the event so it can be triggered later
             installBtn.classList.remove('hidden');
             installBtn.classList.add('flex');
         });
 
         installBtn.addEventListener('click', async () => {
             if (deferredPrompt) {
-                deferredPrompt.prompt();
+                deferredPrompt.prompt(); // Show the install prompt
                 const { outcome } = await deferredPrompt.userChoice;
-                deferredPrompt = null;
-                installBtn.classList.add('hidden');
+                console.log(`User response to the install prompt: ${outcome}`);
+                deferredPrompt = null; // We can only use it once.
+                installBtn.classList.add('hidden'); // Hide the button after prompting
             }
         });
 
         window.addEventListener('appinstalled', () => {
-            installBtn.classList.add('hidden');
+            console.log('Nutri Scan was installed.');
+            installBtn.classList.add('hidden'); // Hide button if app is installed
         });
         
         document.addEventListener('DOMContentLoaded', () => {
+            // Initial button states
             captureBtn.disabled = true;
             flipCameraBtn.disabled = true;
+
+            // PWA Service Worker Registration
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(registration => {
+                            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                        })
+                        .catch(err => {
+                            console.log('ServiceWorker registration failed: ', err);
+                        });
+                });
+            }
         });
     </script>
 </body>
 </html>
-
