@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
+    <!-- PWA Manifest Link -->
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#020617">
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1014085303095720"
@@ -147,7 +149,7 @@
                 <div id="camera-off-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
                     <i data-lucide="video-off" class="w-16 h-16 text-gray-500 mb-4"></i>
                     <p class="text-gray-400 font-semibold">Camera is Offline</p>
-                    <p class="text-sm text-gray-500">Press the Start Camera button below</p>
+                    <p class="text-sm text-gray-500">Press the Start Camera button below to analyze nutrients in your food.</p>
                 </div>
                 <canvas id="canvas" class="hidden"></canvas>
                 <div id="camera-error" class="hidden absolute inset-0 bg-black/50 rounded-lg flex flex-col items-center justify-center text-center p-4">
@@ -185,7 +187,9 @@
                      data-ad-format="auto"
                      data-full-width-responsive="true"></ins>
                 <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
+                     setTimeout(() => { 
+                        try { (adsbygoogle = window.adsbygoogle || []).push({}) } catch(e){ console.error("Adsense push error", e)}
+                     }, 100);
                 </script>
             </div>
         </div>
@@ -193,30 +197,27 @@
         <div id="results-panel" class="w-full lg:w-1/2 glass-panel rounded-2xl p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 min-h-[50vh]">
               <h2 class="text-2xl font-bold font-orbitron neon-text mb-4">Analysis Results</h2>
               <div id="results-content" class="flex-grow space-y-3 pr-2">
-                    <div id="initial-message" class="flex flex-col items-center justify-center h-full text-center text-gray-400">
-                           <i data-lucide="camera" class="w-16 h-16 mb-4"></i>
-                           <p>Start the camera and capture an image of your food to begin analysis.</p>
-                    </div>
+                      <div id="initial-message" class="flex flex-col items-center justify-center h-full text-center text-gray-400">
+                              <i data-lucide="camera" class="w-16 h-16 mb-4"></i>
+                              <p>Start the camera and capture an image of your food to begin analysis.</p>
+                      </div>
 
-                    <div id="ad-in-results" class="my-4 glass-panel rounded-lg p-2 text-center text-xs text-gray-400 hidden min-h-[100px] flex flex-col justify-center">
-                        <span class="font-orbitron opacity-50">SPONSORED</span>
-                        <ins class="adsbygoogle"
-                             style="display:block; text-align:center;"
-                             data-ad-layout="in-article"
-                             data-ad-format="fluid"
-                             data-ad-client="ca-pub-1014085303095720"
-                             data-ad-slot="6700421789"></ins>
-                        <script>
-                             (adsbygoogle = window.adsbygoogle || []).push({});
-                        </script>
-                   </div>
+                      <div id="ad-in-results" class="my-4 glass-panel rounded-lg p-2 text-center text-xs text-gray-400 hidden min-h-[100px] flex flex-col justify-center">
+                          <span class="font-orbitron opacity-50">SPONSORED</span>
+                          <ins class="adsbygoogle"
+                               style="display:block; text-align:center;"
+                               data-ad-layout="in-article"
+                               data-ad-format="fluid"
+                               data-ad-client="ca-pub-1014085303095720"
+                               data-ad-slot="6700421789"></ins>
+                     </div>
               </div>
               <div id="totals-container" class="mt-4 pt-4 border-t border-white/10 hidden">
-                    <h3 class="text-lg font-bold font-orbitron text-center mb-4 neon-text-alt">Total Estimated Macros & Calories</h3>
-                    <div class="flex flex-col md:flex-row items-center gap-6">
-                        <div id="chart-container" class="w-40 h-40"></div>
-                        <div id="totals" class="flex-grow text-base font-medium grid grid-cols-2 gap-x-6 gap-y-2"></div>
-                    </div>
+                      <h3 class="text-lg font-bold font-orbitron text-center mb-4 neon-text-alt">Total Estimated Macros & Calories</h3>
+                      <div class="flex flex-col md:flex-row items-center gap-6">
+                          <div id="chart-container" class="w-40 h-40"></div>
+                          <div id="totals" class="flex-grow text-base font-medium grid grid-cols-2 gap-x-6 gap-y-2"></div>
+                      </div>
               </div>
         </div>
     </main>
@@ -237,9 +238,6 @@
                      data-ad-slot="8396646833"
                      data-ad-format="auto"
                      data-full-width-responsive="true"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
             </div>
 
             <button id="clear-history-btn" class="mt-4 bg-red-600/80 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-xl transition-all duration-300 hover:scale-105">
@@ -427,7 +425,7 @@
         function displayError(message) {
             resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-red-900/50 text-red-300">${message}</div>`;
             totalsContainer.classList.add('hidden');
-            if (adInResults) adInResults.style.display = 'none'; // Hide ad on error
+            if (adInResults) adInResults.classList.add('hidden'); // Hide ad on error
         }
 
         function displayResults(items) {
@@ -445,7 +443,7 @@
                 resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-yellow-900/50 text-yellow-300 flex items-center gap-3"><i data-lucide="alert-triangle"></i><span>This application is not designed to analyze medication or provide medical advice.</span></div>`;
                 lucide.createIcons();
                 totalsContainer.classList.add('hidden');
-                if (adInResults) adInResults.style.display = 'none'; // Hide ad
+                if (adInResults) adInResults.classList.add('hidden'); // Hide ad
                 return;
             }
 
@@ -453,7 +451,7 @@
                 resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-800/50 text-gray-300 flex items-center gap-3"><i data-lucide="search-slash"></i><p>No supported food items were detected in the image.</p></div>`;
                 lucide.createIcons();
                 totalsContainer.classList.add('hidden');
-                if (adInResults) adInResults.style.display = 'none'; // Hide ad
+                if (adInResults) adInResults.classList.add('hidden'); // Hide ad
                 return;
             }
 
@@ -492,12 +490,19 @@
                 updateAllCalculations();
                 totalsContainer.classList.remove('hidden');
                 saveToHistory();
-                if (adInResults) adInResults.style.display = 'block'; // Show ad with results
+                if (adInResults) {
+                    adInResults.classList.remove('hidden'); // Show ad with results
+                    try {
+                      (adsbygoogle = window.adsbygoogle || []).push({});
+                    } catch (e) {
+                      console.error("Adsense push error in results:", e);
+                    }
+                }
             } else {
                 resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-800/50 text-gray-300 flex items-center gap-3"><i data-lucide="database-zap"></i><p>Detected items were not in our nutrition database.</p></div>`;
                  lucide.createIcons();
                 totalsContainer.classList.add('hidden');
-                if (adInResults) adInResults.style.display = 'none'; // Hide ad
+                if (adInResults) adInResults.classList.add('hidden'); // Hide ad
             }
         }
 
@@ -584,7 +589,18 @@
             });
         }
 
-        historyBtn.addEventListener('click', () => { loadHistory(); historyModal.classList.remove('hidden'); });
+        historyBtn.addEventListener('click', () => { 
+            loadHistory(); 
+            historyModal.classList.remove('hidden');
+            // Push the ad for the modal now that it is visible
+            setTimeout(() => {
+                try {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                } catch (e) {
+                    console.error("AdSense push error in modal:", e);
+                }
+            }, 50);
+        });
         closeHistoryBtn.addEventListener('click', () => historyModal.classList.add('hidden'));
 
         let confirmCallback = null;
@@ -628,11 +644,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             captureBtn.disabled = true;
             flipCameraBtn.disabled = true;
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            captureBtn.disabled = true;
-            flipCameraBtn.disabled = true;
 
             // PWA Service Worker Registration
             if ('serviceWorker' in navigator) {
@@ -650,6 +661,4 @@
     </script>
 </body>
 </html>
-
-
 
