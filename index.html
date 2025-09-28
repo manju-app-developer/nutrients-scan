@@ -7,14 +7,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-
-    <link rel="manifest" href="manifest.json">
+    
     <meta name="theme-color" content="#020617">
 
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="NutriScan">
-    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+     crossorigin="anonymous"></script>
+
     <style>
         :root {
             --glow-color-1: rgba(34, 211, 238, 0.7);
@@ -176,6 +174,19 @@
                     <i data-lucide="history"></i> View History
                 </button>
             </div>
+            
+            <div class="my-2 glass-panel rounded-2xl p-2 text-center text-xs text-gray-400 min-h-[100px] flex flex-col justify-center">
+                <span class="font-orbitron opacity-50">ADVERTISEMENT</span>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" 
+                     data-ad-slot="YYYYYYYYYY" 
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
         </div>
 
         <div id="results-panel" class="w-full lg:w-1/2 glass-panel rounded-2xl p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 min-h-[50vh]">
@@ -185,6 +196,19 @@
                            <i data-lucide="camera" class="w-16 h-16 mb-4"></i>
                            <p>Start the camera and capture an image of your food to begin analysis.</p>
                     </div>
+
+                    <div id="ad-in-results" class="my-4 glass-panel rounded-lg p-2 text-center text-xs text-gray-400 hidden min-h-[100px] flex flex-col justify-center">
+                        <span class="font-orbitron opacity-50">SPONSORED</span>
+                        <ins class="adsbygoogle"
+                             style="display:block; text-align:center;"
+                             data-ad-layout="in-article"
+                             data-ad-format="fluid"
+                             data-ad-client="ca-pub-1014085303095720"
+                             data-ad-slot="ZZZZZZZZZZ"></ins>
+                        <script>
+                             (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                   </div>
               </div>
               <div id="totals-container" class="mt-4 pt-4 border-t border-white/10 hidden">
                     <h3 class="text-lg font-bold font-orbitron text-center mb-4 neon-text-alt">Total Estimated Macros & Calories</h3>
@@ -197,12 +221,26 @@
     </main>
     
     <div id="history-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-        <div class="w-full max-w-2xl glass-panel rounded-2xl p-6 flex flex-col max-h-[80vh]">
+        <div class="w-full max-w-2xl glass-panel rounded-2xl p-6 flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-bold font-orbitron neon-text-alt">Scan History</h2>
                 <button id="close-history-btn" class="text-gray-300 hover:text-white transition-transform duration-300 hover:rotate-90"><i data-lucide="x"></i></button>
             </div>
             <div id="history-content" class="flex-grow overflow-y-auto space-y-4 pr-2"></div>
+            
+            <div class="mt-4 p-2 text-center text-xs text-gray-400 border-t border-white/10 min-h-[80px] flex flex-col justify-center">
+                <span class="font-orbitron opacity-50">ADVERTISEMENT</span>
+                 <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                     data-ad-slot="WWWWWWWWWW"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+
             <button id="clear-history-btn" class="mt-4 bg-red-600/80 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-xl transition-all duration-300 hover:scale-105">
                 Clear History
             </button>
@@ -237,7 +275,8 @@
               totalsDiv = document.getElementById('totals'), loader = document.getElementById('loader'),
               confirmModal = document.getElementById('confirm-modal'), confirmOkBtn = document.getElementById('confirm-ok-btn'),
               confirmCancelBtn = document.getElementById('confirm-cancel-btn'), installBtn = document.getElementById('install-btn'),
-              chartContainer = document.getElementById('chart-container');
+              chartContainer = document.getElementById('chart-container'),
+              adInResults = document.getElementById('ad-in-results'); // Ad container reference
 
         // Expanded nutrition database (nutrients & calories per 100g)
         const nutritionDB = {
@@ -355,9 +394,7 @@
         });
 
         async function detectFood(base64ImageData) {
-            // This URL should point to your serverless function endpoint.
-            // For local testing, you might use a local server address.
-            // For production on Netlify, this path is correct.
+            // The URL for our new, secure Netlify Function
             const functionUrl = '/.netlify/functions/analyze';
 
             try {
@@ -383,17 +420,20 @@
                 displayResults(JSON.parse(jsonString));
             } catch (error) {
                 console.error('Detection error:', error);
-                displayError(`Detection failed. The AI could not process the image. Please try again. Error: ${error.message}`);
+                displayError(`Detection failed. The AI could not process the image. Error: ${error.message}`);
             }
         }
         function displayError(message) {
             resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-red-900/50 text-red-300">${message}</div>`;
             totalsContainer.classList.add('hidden');
+            if (adInResults) adInResults.style.display = 'none'; // Hide ad on error
         }
 
         function displayResults(items) {
             resultsContent.innerHTML = '';
             detectedFoodsData = [];
+            // Re-add the ad container so it's not wiped out
+            resultsContent.appendChild(adInResults);
 
             if (!Array.isArray(items)) {
                 displayError("The AI returned an invalid data format.");
@@ -404,6 +444,7 @@
                 resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-yellow-900/50 text-yellow-300 flex items-center gap-3"><i data-lucide="alert-triangle"></i><span>This application is not designed to analyze medication or provide medical advice.</span></div>`;
                 lucide.createIcons();
                 totalsContainer.classList.add('hidden');
+                if (adInResults) adInResults.style.display = 'none'; // Hide ad
                 return;
             }
 
@@ -411,6 +452,7 @@
                 resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-800/50 text-gray-300 flex items-center gap-3"><i data-lucide="search-slash"></i><p>No supported food items were detected in the image.</p></div>`;
                 lucide.createIcons();
                 totalsContainer.classList.add('hidden');
+                if (adInResults) adInResults.style.display = 'none'; // Hide ad
                 return;
             }
 
@@ -449,10 +491,12 @@
                 updateAllCalculations();
                 totalsContainer.classList.remove('hidden');
                 saveToHistory();
+                if (adInResults) adInResults.style.display = 'block'; // Show ad with results
             } else {
                 resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-800/50 text-gray-300 flex items-center gap-3"><i data-lucide="database-zap"></i><p>Detected items were not in our nutrition database.</p></div>`;
                  lucide.createIcons();
                 totalsContainer.classList.add('hidden');
+                if (adInResults) adInResults.style.display = 'none'; // Hide ad
             }
         }
 
@@ -558,32 +602,34 @@
             });
         });
 
-        // --- PWA Installation Logic ---
+        // PWA Installation Logic
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); // Prevent the default browser prompt
-            deferredPrompt = e; // Stash the event so it can be triggered later
+            e.preventDefault();
+            deferredPrompt = e;
             installBtn.classList.remove('hidden');
             installBtn.classList.add('flex');
         });
 
         installBtn.addEventListener('click', async () => {
             if (deferredPrompt) {
-                deferredPrompt.prompt(); // Show the install prompt
+                deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                console.log(`User response to the install prompt: ${outcome}`);
-                deferredPrompt = null; // We can only use it once.
-                installBtn.classList.add('hidden'); // Hide the button after prompting
+                deferredPrompt = null;
+                installBtn.classList.add('hidden');
             }
         });
 
         window.addEventListener('appinstalled', () => {
-            console.log('Nutri Scan was installed.');
-            installBtn.classList.add('hidden'); // Hide button if app is installed
+            installBtn.classList.add('hidden');
         });
         
         document.addEventListener('DOMContentLoaded', () => {
-            // Initial button states
+            captureBtn.disabled = true;
+            flipCameraBtn.disabled = true;
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
             captureBtn.disabled = true;
             flipCameraBtn.disabled = true;
 
