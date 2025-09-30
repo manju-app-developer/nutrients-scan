@@ -22,6 +22,10 @@
             --glow-color-2: rgba(139, 92, 246, 0.7);
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #020617;
@@ -143,7 +147,8 @@
     </header>
 
     <main class="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
-        <div class="w-full lg:w-1/2 flex flex-col gap-6 lg:sticky lg:top-6 lg:h-screen">
+        <!-- LEFT PANEL (CAMERA & CONTROLS) -->
+        <div class="w-full lg:w-1/2 flex flex-col gap-6 lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)]">
             <div class="glass-panel rounded-2xl p-4 flex-grow flex flex-col items-center justify-center relative aspect-video">
                 <video id="webcam" class="rounded-lg w-full h-full object-cover transition-opacity duration-300 opacity-0" autoplay playsinline></video>
                 <div id="camera-off-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
@@ -178,6 +183,7 @@
                 </button>
             </div>
             
+            <!-- HOMEPAGE AD UNIT -->
             <div class="my-2 glass-panel rounded-2xl p-2 text-center text-xs text-gray-400 min-h-[100px] flex flex-col justify-center">
                 <span class="font-orbitron opacity-50">ADVERTISEMENT</span>
                 <ins class="adsbygoogle"
@@ -188,40 +194,125 @@
                      data-full-width-responsive="true"></ins>
                 <script>
                      setTimeout(() => { 
-                        try { (adsbygoogle = window.adsbygoogle || []).push({}) } catch(e){ console.error("Adsense push error", e)}
+                         try { (adsbygoogle = window.adsbygoogle || []).push({}) } catch(e){ console.error("Adsense push error", e)}
                      }, 100);
                 </script>
             </div>
         </div>
 
-        <div id="results-panel" class="w-full lg:w-1/2 glass-panel rounded-2xl p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 min-h-[50vh]">
+        <!-- RIGHT PANEL (RESULTS) -->
+        <div id="results-panel" class="w-full lg:w-1/2 glass-panel rounded-2xl p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 min-h-[50vh] lg:min-h-[calc(100vh-3rem)]">
               <h2 class="text-2xl font-bold font-orbitron neon-text mb-4">Analysis Results</h2>
-              <div id="results-content" class="flex-grow space-y-3 pr-2">
-                      <div id="initial-message" class="flex flex-col items-center justify-center h-full text-center text-gray-400">
-                              <i data-lucide="camera" class="w-16 h-16 mb-4"></i>
-                              <p>Start the camera and capture an image of your food to begin analysis.</p>
-                      </div>
-
-                      <div id="ad-in-results" class="my-4 glass-panel rounded-lg p-2 text-center text-xs text-gray-400 hidden min-h-[100px] flex flex-col justify-center">
-                          <span class="font-orbitron opacity-50">SPONSORED</span>
-                          <ins class="adsbygoogle"
-                               style="display:block; text-align:center;"
-                               data-ad-layout="in-article"
-                               data-ad-format="fluid"
-                               data-ad-client="ca-pub-1014085303095720"
-                               data-ad-slot="6700421789"></ins>
-                     </div>
+              <div id="results-content" class="flex-grow space-y-3 pr-2 overflow-y-auto">
+                    <div id="initial-message" class="flex flex-col items-center justify-center h-full text-center text-gray-400">
+                          <i data-lucide="camera" class="w-16 h-16 mb-4"></i>
+                          <p>Start the camera and capture an image of your food to begin analysis.</p>
+                    </div>
               </div>
               <div id="totals-container" class="mt-4 pt-4 border-t border-white/10 hidden">
-                      <h3 class="text-lg font-bold font-orbitron text-center mb-4 neon-text-alt">Total Estimated Macros & Calories</h3>
-                      <div class="flex flex-col md:flex-row items-center gap-6">
-                          <div id="chart-container" class="w-40 h-40"></div>
-                          <div id="totals" class="flex-grow text-base font-medium grid grid-cols-2 gap-x-6 gap-y-2"></div>
-                      </div>
+                    <h3 class="text-lg font-bold font-orbitron text-center mb-4 neon-text-alt">Total Estimated Macros & Calories</h3>
+                    <div class="flex flex-col md:flex-row items-center gap-6">
+                        <div id="chart-container" class="w-40 h-40"></div>
+                        <div id="totals" class="flex-grow text-base font-medium grid grid-cols-2 gap-x-6 gap-y-2"></div>
+                    </div>
               </div>
         </div>
     </main>
     
+    <!-- ====== NEW CONTENT SECTIONS FOR ADSENSE APPROVAL ====== -->
+    <div class="w-full max-w-7xl mx-auto flex flex-col gap-12 mt-16 text-gray-300">
+        
+        <!-- About Section -->
+        <section id="about" class="glass-panel rounded-2xl p-8">
+            <h2 class="text-3xl font-bold font-orbitron neon-text-alt mb-4 text-center">Welcome to the Future of Nutrition</h2>
+            <p class="max-w-3xl mx-auto text-center text-lg leading-relaxed">
+                Nutri Scan is a revolutionary tool that harnesses the power of artificial intelligence to give you instant insights into the nutritional content of your meals. Simply point your camera, and our advanced vision AI will identify food items and estimate their macronutrient and calorie values. We believe that understanding what you eat is the first step towards a healthier lifestyle, and we're making it easier and more accessible than ever.
+            </p>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="glass-panel rounded-2xl p-8">
+            <h2 class="text-3xl font-bold font-orbitron neon-text-alt mb-8 text-center">How It Works</h2>
+            <div class="grid md:grid-cols-4 gap-8 text-center">
+                <div class="flex flex-col items-center gap-3">
+                    <div class="w-16 h-16 bg-cyan-500/20 rounded-xl flex items-center justify-center border border-cyan-500"><i data-lucide="camera" class="w-8 h-8 text-cyan-400"></i></div>
+                    <h3 class="font-bold text-lg">1. Start Camera</h3>
+                    <p class="text-sm text-gray-400">Activate your device's camera with a single click. Our app requests permission once and is ready to go.</p>
+                </div>
+                <div class="flex flex-col items-center gap-3">
+                    <div class="w-16 h-16 bg-cyan-500/20 rounded-xl flex items-center justify-center border border-cyan-500"><i data-lucide="crop" class="w-8 h-8 text-cyan-400"></i></div>
+                    <h3 class="font-bold text-lg">2. Frame Your Food</h3>
+                    <p class="text-sm text-gray-400">Position your meal within the camera view. For best results, ensure good lighting and a clear view of the food items.</p>
+                </div>
+                <div class="flex flex-col items-center gap-3">
+                    <div class="w-16 h-16 bg-cyan-500/20 rounded-xl flex items-center justify-center border border-cyan-500"><i data-lucide="scan-line" class="w-8 h-8 text-cyan-400"></i></div>
+                    <h3 class="font-bold text-lg">3. Capture & Analyze</h3>
+                    <p class="text-sm text-gray-400">Snap a picture, and our AI gets to work. It analyzes the image in seconds to identify what's on your plate.</p>
+                </div>
+                <div class="flex flex-col items-center gap-3">
+                    <div class="w-16 h-16 bg-cyan-500/20 rounded-xl flex items-center justify-center border border-cyan-500"><i data-lucide="pie-chart" class="w-8 h-8 text-cyan-400"></i></div>
+                    <h3 class="font-bold text-lg">4. Get Results</h3>
+                    <p class="text-sm text-gray-400">Receive a detailed breakdown of estimated calories, protein, carbs, and fat for the identified foods.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features & Nutrition Section -->
+        <div class="grid lg:grid-cols-2 gap-12">
+            <section id="features" class="glass-panel rounded-2xl p-8">
+                <h2 class="text-2xl font-bold font-orbitron neon-text mb-6">Key Features</h2>
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-4"><i data-lucide="cpu" class="w-6 h-6 text-violet-400 flex-shrink-0 mt-1"></i><div><h4 class="font-bold">Instant AI Analysis</h4><p class="text-sm text-gray-400">Leverages a powerful vision model to recognize a wide variety of food items from a single image.</p></div></li>
+                    <li class="flex items-start gap-4"><i data-lucide="calculator" class="w-6 h-6 text-violet-400 flex-shrink-0 mt-1"></i><div><h4 class="font-bold">Detailed Macro Breakdown</h4><p class="text-sm text-gray-400">Get estimated values for essential macronutrients—protein, carbohydrates, and fats—along with total calories.</p></div></li>
+                    <li class="flex items-start gap-4"><i data-lucide="scale" class="w-6 h-6 text-violet-400 flex-shrink-0 mt-1"></i><div><h4 class="font-bold">Adjustable Portions</h4><p class="text-sm text-gray-400">Fine-tune the results by adjusting the estimated portion size in grams for greater accuracy.</p></div></li>
+                    <li class="flex items-start gap-4"><i data-lucide="history" class="w-6 h-6 text-violet-400 flex-shrink-0 mt-1"></i><div><h4 class="font-bold">Scan History</h4><p class="text-sm text-gray-400">Your recent scans are saved locally on your device for easy review, helping you track your intake over time.</p></div></li>
+                </ul>
+            </section>
+            
+            <section id="nutrition-guide" class="glass-panel rounded-2xl p-8">
+                <h2 class="text-2xl font-bold font-orbitron neon-text mb-6">Understanding Nutrition</h2>
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-bold text-cyan-300">Carbohydrates</h4>
+                        <p class="text-sm text-gray-400">The body's primary source of energy. Found in foods like bread, pasta, fruits, and vegetables. They fuel your brain and muscles.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-violet-300">Proteins</h4>
+                        <p class="text-sm text-gray-400">Essential for building and repairing tissues, making enzymes, and hormones. Found in meat, dairy, beans, and nuts.</p>
+                    </div>
+                     <div>
+                        <h4 class="font-bold text-pink-300">Fats</h4>
+                        <p class="text-sm text-gray-400">An important energy source that also helps absorb vitamins and protect your organs. Healthy fats are found in avocados, nuts, and olive oil.</p>
+                    </div>
+                     <div>
+                        <h4 class="font-bold text-amber-300">Calories</h4>
+                        <p class="text-sm text-gray-400">A unit of energy. Your body needs calories to function, but balancing calorie intake with energy expenditure is key to weight management.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="glass-panel rounded-2xl p-8">
+            <h2 class="text-3xl font-bold font-orbitron neon-text-alt mb-8 text-center">Frequently Asked Questions</h2>
+            <div class="max-w-3xl mx-auto space-y-6">
+                <div>
+                    <h3 class="font-bold">How accurate is Nutri Scan?</h3>
+                    <p class="text-sm text-gray-400 mt-1">Nutri Scan provides an AI-powered estimation based on visual data. While it's a powerful tool for general guidance, accuracy can be affected by factors like lighting, food presentation, and portion size ambiguity. It is not a scientific measurement tool.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold">Is this a medical device?</h3>
+                    <p class="text-sm text-gray-400 mt-1">No. This application is for informational and educational purposes only. It is not a substitute for professional medical or dietary advice. Always consult a healthcare professional or registered dietitian for personalized health guidance.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold">Is my data safe?</h3>
+                    <p class="text-sm text-gray-400 mt-1">We respect your privacy. The images you capture are processed for analysis and are not stored on our servers. Your scan history is stored locally on your own device and is never uploaded.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- MODALS -->
     <div id="history-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
         <div class="w-full max-w-2xl glass-panel rounded-2xl p-6 flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center mb-4">
@@ -256,8 +347,14 @@
         </div>
     </div>
     
-    <footer class="text-center mt-8 pb-4">
+    <footer class="text-center mt-12 pb-4 space-y-2">
+         <div class="flex justify-center gap-4 text-sm text-cyan-400">
+            <a href="#about" class="hover:underline">About</a>
+            <a href="#how-it-works" class="hover:underline">How It Works</a>
+            <a href="#faq" class="hover:underline">FAQ</a>
+        </div>
         <p class="text-xs text-gray-500">Disclaimer: For informational purposes only. Not a substitute for professional medical advice.</p>
+        <p class="text-xs text-gray-600">&copy; 2024 Nutri Scan. All rights reserved.</p>
     </footer>
 
     <script>
@@ -274,8 +371,7 @@
               totalsDiv = document.getElementById('totals'), loader = document.getElementById('loader'),
               confirmModal = document.getElementById('confirm-modal'), confirmOkBtn = document.getElementById('confirm-ok-btn'),
               confirmCancelBtn = document.getElementById('confirm-cancel-btn'), installBtn = document.getElementById('install-btn'),
-              chartContainer = document.getElementById('chart-container'),
-              adInResults = document.getElementById('ad-in-results'); // Ad container reference
+              chartContainer = document.getElementById('chart-container');
 
         // Expanded nutrition database (nutrients & calories per 100g)
         const nutritionDB = {
@@ -425,14 +521,11 @@
         function displayError(message) {
             resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-red-900/50 text-red-300">${message}</div>`;
             totalsContainer.classList.add('hidden');
-            if (adInResults) adInResults.classList.add('hidden'); // Hide ad on error
         }
 
         function displayResults(items) {
             resultsContent.innerHTML = '';
             detectedFoodsData = [];
-            // Re-add the ad container so it's not wiped out
-            resultsContent.appendChild(adInResults);
 
             if (!Array.isArray(items)) {
                 displayError("The AI returned an invalid data format.");
@@ -443,7 +536,6 @@
                 resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-yellow-900/50 text-yellow-300 flex items-center gap-3"><i data-lucide="alert-triangle"></i><span>This application is not designed to analyze medication or provide medical advice.</span></div>`;
                 lucide.createIcons();
                 totalsContainer.classList.add('hidden');
-                if (adInResults) adInResults.classList.add('hidden'); // Hide ad
                 return;
             }
 
@@ -451,7 +543,6 @@
                 resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-800/50 text-gray-300 flex items-center gap-3"><i data-lucide="search-slash"></i><p>No supported food items were detected in the image.</p></div>`;
                 lucide.createIcons();
                 totalsContainer.classList.add('hidden');
-                if (adInResults) adInResults.classList.add('hidden'); // Hide ad
                 return;
             }
 
@@ -490,19 +581,10 @@
                 updateAllCalculations();
                 totalsContainer.classList.remove('hidden');
                 saveToHistory();
-                if (adInResults) {
-                    adInResults.classList.remove('hidden'); // Show ad with results
-                    try {
-                      (adsbygoogle = window.adsbygoogle || []).push({});
-                    } catch (e) {
-                      console.error("Adsense push error in results:", e);
-                    }
-                }
             } else {
                 resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-800/50 text-gray-300 flex items-center gap-3"><i data-lucide="database-zap"></i><p>Detected items were not in our nutrition database.</p></div>`;
                  lucide.createIcons();
                 totalsContainer.classList.add('hidden');
-                if (adInResults) adInResults.classList.add('hidden'); // Hide ad
             }
         }
 
@@ -661,4 +743,3 @@
     </script>
 </body>
 </html>
-
