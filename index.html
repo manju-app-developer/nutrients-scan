@@ -3,128 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutri Scan - AI-Powered Nutrition Analysis</title>
+    <meta name="description" content="Instantly analyze the nutritional content of your food. Just snap a photo and let our AI provide an estimate of calories, protein, carbs, and fat.">
+    
     <meta name="google-adsense-account" content="ca-pub-1014085303095720">
-    <title>Nutri Scan - Futuristic Nutrition Analyzer</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#020617">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- PWA Manifest Link -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#020617">
-
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1014085303095720"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1014085303095720" crossorigin="anonymous"></script>
 
     <style>
         :root {
             --glow-color-1: rgba(34, 211, 238, 0.7);
             --glow-color-2: rgba(139, 92, 246, 0.7);
         }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif;
             background-color: #020617;
             color: #e5e7eb;
-            overflow-y: auto; /* Allow vertical scrolling */
         }
-
-        .font-orbitron {
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        .aurora-background {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; overflow: hidden;
-        }
-
-        .aurora {
-            position: absolute; border-radius: 50%;
-            opacity: 0.3; filter: blur(120px);
-        }
-
-        .aurora-1 {
-            width: 700px; height: 700px;
-            background: radial-gradient(circle, #0891b2, transparent 60%);
-            top: -25%; left: -25%;
-            animation: moveAurora1 35s infinite alternate ease-in-out;
-        }
-
-        .aurora-2 {
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, #4f46e5, transparent 60%);
-            bottom: -30%; right: -25%;
-            animation: moveAurora2 40s infinite alternate ease-in-out;
-        }
-
-        .aurora-3 {
-            width: 500px; height: 500px;
-            background: radial-gradient(circle, #be185d, transparent 70%);
-            top: 20%; right: -20%;
-            animation: moveAurora2 30s infinite alternate-reverse ease-in-out;
-        }
-
-        @keyframes moveAurora1 {
-            from { transform: translate(-20%, -20%) rotate(0deg) scale(1); }
-            to { transform: translate(20%, 20%) rotate(180deg) scale(1.2); }
-        }
-
-        @keyframes moveAurora2 {
-            from { transform: translate(20%, 30%) rotate(0deg) scale(1.2); }
-            to { transform: translate(-20%, -30%) rotate(-180deg) scale(1); }
-        }
-
-        .glass-panel {
-            background: rgba(17, 24, 39, 0.65);
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            transition: all 0.3s ease;
-        }
-        
-        .glass-panel:hover {
-             border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .neon-highlight {
-            box-shadow: 0 0 5px var(--glow-color-1), 0 0 10px var(--glow-color-1), 0 0 15px var(--glow-color-1);
-            animation: pulse-neon 2s infinite alternate;
-        }
-        
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+        .aurora { position: absolute; border-radius: 50%; opacity: 0.3; filter: blur(120px); }
+        .aurora-1 { width: 700px; height: 700px; background: radial-gradient(circle, #0891b2, transparent 60%); top: -25%; left: -25%; animation: moveAurora1 35s infinite alternate ease-in-out; }
+        .aurora-2 { width: 600px; height: 600px; background: radial-gradient(circle, #4f46e5, transparent 60%); bottom: -30%; right: -25%; animation: moveAurora2 40s infinite alternate ease-in-out; }
+        .aurora-3 { width: 500px; height: 500px; background: radial-gradient(circle, #be185d, transparent 70%); top: 20%; right: -20%; animation: moveAurora2 30s infinite alternate-reverse ease-in-out; }
+        @keyframes moveAurora1 { from { transform: translate(-20%, -20%) rotate(0deg) scale(1); } to { transform: translate(20%, 20%) rotate(180deg) scale(1.2); } }
+        @keyframes moveAurora2 { from { transform: translate(20%, 30%) rotate(0deg) scale(1.2); } to { transform: translate(-20%, -30%) rotate(-180deg) scale(1); } }
+        .glass-panel { background: rgba(17, 24, 39, 0.65); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); transition: all 0.3s ease; }
+        .glass-panel:hover { border-color: rgba(255, 255, 255, 0.15); }
+        .neon-highlight { box-shadow: 0 0 5px var(--glow-color-1), 0 0 10px var(--glow-color-1), 0 0 15px var(--glow-color-1); animation: pulse-neon 2s infinite alternate; }
         .neon-text { text-shadow: 0 0 4px var(--glow-color-1); }
         .neon-text-alt { text-shadow: 0 0 4px var(--glow-color-2); }
-
-        @keyframes pulse-neon {
-            from { box-shadow: 0 0 5px var(--glow-color-1), 0 0 10px var(--glow-color-1), 0 0 15px var(--glow-color-1); }
-            to { box-shadow: 0 0 10px var(--glow-color-1), 0 0 20px var(--glow-color-1), 0 0 30px var(--glow-color-1); }
-        }
-
+        @keyframes pulse-neon { from { box-shadow: 0 0 5px var(--glow-color-1), 0 0 10px var(--glow-color-1); } to { box-shadow: 0 0 10px var(--glow-color-1), 0 0 20px var(--glow-color-1); } }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(34, 211, 238, 0.4); border-radius: 10px; border: 1px solid rgba(34, 211, 238, 0.6); }
         ::-webkit-scrollbar-thumb:hover { background: rgba(34, 211, 238, 0.6); }
-
-        .control-btn {
-            background-color: rgba(55, 65, 81, 0.5); 
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-        }
-        .control-btn:hover {
-            background-color: rgba(55, 65, 81, 0.8); 
-            transform: translateY(-2px);
-            border-color: var(--glow-color-1);
-        }
-        .control-btn.active { 
-            background-color: rgba(34, 211, 238, 0.3);
-            color: white; 
-            box-shadow: inset 0 0 10px rgba(34, 211, 238, 0.5);
-            border-color: var(--glow-color-1);
-        }
-        
+        .control-btn { background-color: rgba(55, 65, 81, 0.5); transition: all 0.3s ease; border: 1px solid transparent; }
+        .control-btn:hover { background-color: rgba(55, 65, 81, 0.8); transform: translateY(-2px); border-color: var(--glow-color-1); }
+        .control-btn.active { background-color: rgba(34, 211, 238, 0.3); color: white; box-shadow: inset 0 0 10px rgba(34, 211, 238, 0.5); border-color: var(--glow-color-1); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in-item { animation: fadeIn 0.5s ease-out forwards; }
     </style>
@@ -138,16 +62,21 @@
     </div>
     
     <header class="w-full max-w-7xl mx-auto flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold font-orbitron neon-text flex items-center gap-2">
+        <a href="#" class="text-3xl font-bold font-orbitron neon-text flex items-center gap-2">
             <i data-lucide="scan-eye"></i>Nutri Scan
-        </h1>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold">
+            <a href="#about" class="hover:text-cyan-300 transition-colors">About</a>
+            <a href="#how-it-works" class="hover:text-cyan-300 transition-colors">How It Works</a>
+            <a href="#features" class="hover:text-cyan-300 transition-colors">Features</a>
+            <a href="#faq" class="hover:text-cyan-300 transition-colors">FAQ</a>
+        </nav>
         <button id="install-btn" class="hidden items-center gap-2 bg-indigo-600/80 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-xl transition-all duration-300 hover:scale-105">
             <i data-lucide="download-cloud" class="w-5 h-5"></i> Install App
         </button>
     </header>
 
     <main class="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
-        <!-- LEFT PANEL (CAMERA & CONTROLS) -->
         <div class="w-full lg:w-1/2 flex flex-col gap-6 lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)]">
             <div class="glass-panel rounded-2xl p-4 flex-grow flex flex-col items-center justify-center relative aspect-video">
                 <video id="webcam" class="rounded-lg w-full h-full object-cover transition-opacity duration-300 opacity-0" autoplay playsinline></video>
@@ -183,13 +112,12 @@
                 </button>
             </div>
             
-            <!-- HOMEPAGE AD UNIT -->
             <div class="my-2 glass-panel rounded-2xl p-2 text-center text-xs text-gray-400 min-h-[100px] flex flex-col justify-center">
                 <span class="font-orbitron opacity-50">ADVERTISEMENT</span>
                 <ins class="adsbygoogle"
                      style="display:block"
-                     data-ad-client="ca-pub-1014085303095720" 
-                     data-ad-slot="1037031566" 
+                     data-ad-client="ca-pub-1014085303095720"
+                     data-ad-slot="1037031566"
                      data-ad-format="auto"
                      data-full-width-responsive="true"></ins>
                 <script>
@@ -200,29 +128,26 @@
             </div>
         </div>
 
-        <!-- RIGHT PANEL (RESULTS) -->
         <div id="results-panel" class="w-full lg:w-1/2 glass-panel rounded-2xl p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 min-h-[50vh] lg:min-h-[calc(100vh-3rem)]">
               <h2 class="text-2xl font-bold font-orbitron neon-text mb-4">Analysis Results</h2>
               <div id="results-content" class="flex-grow space-y-3 pr-2 overflow-y-auto">
-                    <div id="initial-message" class="flex flex-col items-center justify-center h-full text-center text-gray-400">
-                          <i data-lucide="camera" class="w-16 h-16 mb-4"></i>
-                          <p>Start the camera and capture an image of your food to begin analysis.</p>
-                    </div>
+                      <div id="initial-message" class="flex flex-col items-center justify-center h-full text-center text-gray-400">
+                              <i data-lucide="camera" class="w-16 h-16 mb-4"></i>
+                              <p>Start the camera and capture an image of your food to begin analysis.</p>
+                      </div>
               </div>
               <div id="totals-container" class="mt-4 pt-4 border-t border-white/10 hidden">
-                    <h3 class="text-lg font-bold font-orbitron text-center mb-4 neon-text-alt">Total Estimated Macros & Calories</h3>
-                    <div class="flex flex-col md:flex-row items-center gap-6">
-                        <div id="chart-container" class="w-40 h-40"></div>
-                        <div id="totals" class="flex-grow text-base font-medium grid grid-cols-2 gap-x-6 gap-y-2"></div>
-                    </div>
+                      <h3 class="text-lg font-bold font-orbitron text-center mb-4 neon-text-alt">Total Estimated Macros & Calories</h3>
+                      <div class="flex flex-col md:flex-row items-center gap-6">
+                          <div id="chart-container" class="w-40 h-40"></div>
+                          <div id="totals" class="flex-grow text-base font-medium grid grid-cols-2 gap-x-6 gap-y-2"></div>
+                      </div>
               </div>
         </div>
     </main>
     
-    <!-- ====== NEW CONTENT SECTIONS FOR ADSENSE APPROVAL ====== -->
     <div class="w-full max-w-7xl mx-auto flex flex-col gap-12 mt-16 text-gray-300">
         
-        <!-- About Section -->
         <section id="about" class="glass-panel rounded-2xl p-8">
             <h2 class="text-3xl font-bold font-orbitron neon-text-alt mb-4 text-center">Welcome to the Future of Nutrition</h2>
             <p class="max-w-3xl mx-auto text-center text-lg leading-relaxed">
@@ -230,7 +155,6 @@
             </p>
         </section>
 
-        <!-- How It Works Section -->
         <section id="how-it-works" class="glass-panel rounded-2xl p-8">
             <h2 class="text-3xl font-bold font-orbitron neon-text-alt mb-8 text-center">How It Works</h2>
             <div class="grid md:grid-cols-4 gap-8 text-center">
@@ -257,7 +181,6 @@
             </div>
         </section>
 
-        <!-- Features & Nutrition Section -->
         <div class="grid lg:grid-cols-2 gap-12">
             <section id="features" class="glass-panel rounded-2xl p-8">
                 <h2 class="text-2xl font-bold font-orbitron neon-text mb-6">Key Features</h2>
@@ -292,27 +215,48 @@
             </section>
         </div>
 
-        <!-- FAQ Section -->
         <section id="faq" class="glass-panel rounded-2xl p-8">
             <h2 class="text-3xl font-bold font-orbitron neon-text-alt mb-8 text-center">Frequently Asked Questions</h2>
             <div class="max-w-3xl mx-auto space-y-6">
                 <div>
                     <h3 class="font-bold">How accurate is Nutri Scan?</h3>
-                    <p class="text-sm text-gray-400 mt-1">Nutri Scan provides an AI-powered estimation based on visual data. While it's a powerful tool for general guidance, accuracy can be affected by factors like lighting, food presentation, and portion size ambiguity. It is not a scientific measurement tool.</p>
+                    <p class="text-sm text-gray-400 mt-1">Nutri Scan provides an AI-powered estimation based on visual data. While it's a powerful tool for general guidance, accuracy can be affected by factors like lighting, food presentation, and portion size ambiguity. It should be used for informational purposes and is not a scientific measurement tool.</p>
                 </div>
                 <div>
                     <h3 class="font-bold">Is this a medical device?</h3>
-                    <p class="text-sm text-gray-400 mt-1">No. This application is for informational and educational purposes only. It is not a substitute for professional medical or dietary advice. Always consult a healthcare professional or registered dietitian for personalized health guidance.</p>
+                    <p class="text-sm text-gray-400 mt-1">No. This application is for informational and educational purposes only. It is not a substitute for professional medical or dietary advice. Always consult a healthcare professional or registered dietitian for personalized health guidance and before making any changes to your diet.</p>
                 </div>
                 <div>
                     <h3 class="font-bold">Is my data safe?</h3>
-                    <p class="text-sm text-gray-400 mt-1">We respect your privacy. The images you capture are processed for analysis and are not stored on our servers. Your scan history is stored locally on your own device and is never uploaded.</p>
+                    <p class="text-sm text-gray-400 mt-1">We respect your privacy. The images you capture are sent for analysis and are not stored on our servers. Your scan history is stored locally on your own device's browser and is never uploaded. Please see our Privacy Policy for more details.</p>
+                </div>
+                 <div>
+                    <h3 class="font-bold">What foods can it recognize?</h3>
+                    <p class="text-sm text-gray-400 mt-1">Our AI is trained on a wide variety of common food items. While it is constantly improving, it may not recognize every type of food, especially complex or mixed dishes. For best results, try to capture clear images of individual food components.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="legal" class="glass-panel rounded-2xl p-8">
+             <div class="grid md:grid-cols-3 gap-8 text-sm">
+                <div>
+                    <h3 class="font-bold font-orbitron text-lg mb-2 neon-text">About Us</h3>
+                    <p class="text-gray-400">We are a team of health enthusiasts and tech developers passionate about making nutrition accessible to everyone. Nutri Scan was born from a desire to merge cutting-edge AI with the everyday need to understand our food better.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold font-orbitron text-lg mb-2 neon-text">Contact Us</h3>
+                    <p class="text-gray-400">Have questions, feedback, or suggestions? We'd love to hear from you! Please reach out to us at: <a href="mailto:your-email@example.com" class="text-cyan-400 hover:underline">your-email@example.com</a></p>
+                    <p class="text-xs text-gray-500 mt-1">(Replace with your actual contact email)</p>
+                </div>
+                <div>
+                    <h3 class="font-bold font-orbitron text-lg mb-2 neon-text">Privacy Policy</h3>
+                    <p class="text-gray-400">Your privacy is important to us. Our Privacy Policy explains how we handle data. In short: images are not stored, and history is saved only on your device. <a href="/privacy.html" class="text-cyan-400 hover:underline">Read the full policy here</a>.</p>
+                    <p class="text-xs text-gray-500 mt-1">(You must create a privacy.html page)</p>
                 </div>
             </div>
         </section>
     </div>
     
-    <!-- MODALS -->
     <div id="history-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
         <div class="w-full max-w-2xl glass-panel rounded-2xl p-6 flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center mb-4">
@@ -347,14 +291,17 @@
         </div>
     </div>
     
-    <footer class="text-center mt-12 pb-4 space-y-2">
-         <div class="flex justify-center gap-4 text-sm text-cyan-400">
+    <footer class="text-center mt-16 pb-4 space-y-3">
+         <div class="flex justify-center gap-x-6 gap-y-2 flex-wrap text-sm text-cyan-400">
             <a href="#about" class="hover:underline">About</a>
             <a href="#how-it-works" class="hover:underline">How It Works</a>
+            <a href="#features" class="hover:underline">Features</a>
             <a href="#faq" class="hover:underline">FAQ</a>
-        </div>
-        <p class="text-xs text-gray-500">Disclaimer: For informational purposes only. Not a substitute for professional medical advice.</p>
-        <p class="text-xs text-gray-600">&copy; 2024 Nutri Scan. All rights reserved.</p>
+            <a href="#legal" class="hover:underline">Contact</a>
+            <a href="/privacy.html" class="hover:underline">Privacy Policy</a>
+         </div>
+         <p class="text-xs text-gray-500 max-w-2xl mx-auto"><strong>Disclaimer:</strong> Nutri Scan provides AI-based estimations for informational purposes only. It is not a medical device and should not be used as a substitute for professional medical or dietary advice. Consult a healthcare professional for personalized health guidance.</p>
+         <p class="text-xs text-gray-600">&copy; 2025 Nutri Scan. All rights reserved.</p>
     </footer>
 
     <script>
