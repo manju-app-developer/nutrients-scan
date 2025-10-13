@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nutri Scan - AI-Powered Nutrition Analysis</title>
-    <meta name="description" content="Instantly analyze the nutritional content of your food. Just snap a photo and let our AI provide an estimate of calories, protein, carbs, and fat.">
+    <title>Nutri Scan - Advanced AI Nutrition Analysis</title>
+    <meta name="description" content="Instantly analyze the nutritional content of your food, including calories, macros, fiber, sugar, and sodium. Snap a photo and let our AI provide a detailed breakdown.">
     
     <meta name="google-adsense-account" content="ca-pub-1014085303095720">
     <link rel="manifest" href="/manifest.json">
@@ -14,7 +14,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    
+    <script src="data.js" defer></script>
+
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1014085303095720" crossorigin="anonymous"></script>
 
     <style>
@@ -137,10 +138,10 @@
                       </div>
               </div>
               <div id="totals-container" class="mt-4 pt-4 border-t border-white/10 hidden">
-                      <h3 class="text-lg font-bold font-orbitron text-center mb-4 neon-text-alt">Total Estimated Macros & Calories</h3>
+                      <h3 class="text-lg font-bold font-orbitron text-center mb-4 neon-text-alt">Total Estimated Nutrition</h3>
                       <div class="flex flex-col md:flex-row items-center gap-6">
-                          <div id="chart-container" class="w-40 h-40"></div>
-                          <div id="totals" class="flex-grow text-base font-medium grid grid-cols-2 gap-x-6 gap-y-2"></div>
+                          <div id="chart-container" class="w-32 h-32 md:w-40 md:h-40 flex-shrink-0"></div>
+                          <div id="totals" class="flex-grow text-sm font-medium grid grid-cols-2 gap-x-6 gap-y-2 w-full"></div>
                       </div>
               </div>
         </div>
@@ -186,7 +187,7 @@
                 <h2 class="text-2xl font-bold font-orbitron neon-text mb-6">Key Features</h2>
                 <ul class="space-y-4">
                     <li class="flex items-start gap-4"><i data-lucide="cpu" class="w-6 h-6 text-violet-400 flex-shrink-0 mt-1"></i><div><h4 class="font-bold">Instant AI Analysis</h4><p class="text-sm text-gray-400">Leverages a powerful vision model to recognize a wide variety of food items from a single image.</p></div></li>
-                    <li class="flex items-start gap-4"><i data-lucide="calculator" class="w-6 h-6 text-violet-400 flex-shrink-0 mt-1"></i><div><h4 class="font-bold">Detailed Macro Breakdown</h4><p class="text-sm text-gray-400">Get estimated values for essential macronutrients—protein, carbohydrates, and fats—along with total calories.</p></div></li>
+                    <li class="flex items-start gap-4"><i data-lucide="calculator" class="w-6 h-6 text-violet-400 flex-shrink-0 mt-1"></i><div><h4 class="font-bold">Detailed Nutrition Breakdown</h4><p class="text-sm text-gray-400">Get estimated values for calories, macronutrients, fiber, sugar, and sodium.</p></div></li>
                     <li class="flex items-start gap-4"><i data-lucide="scale" class="w-6 h-6 text-violet-400 flex-shrink-0 mt-1"></i><div><h4 class="font-bold">Adjustable Portions</h4><p class="text-sm text-gray-400">Fine-tune the results by adjusting the estimated portion size in grams for greater accuracy.</p></div></li>
                     <li class="flex items-start gap-4"><i data-lucide="history" class="w-6 h-6 text-violet-400 flex-shrink-0 mt-1"></i><div><h4 class="font-bold">Scan History</h4><p class="text-sm text-gray-400">Your recent scans are saved locally on your device for easy review, helping you track your intake over time.</p></div></li>
                 </ul>
@@ -194,22 +195,30 @@
             
             <section id="nutrition-guide" class="glass-panel rounded-2xl p-8">
                 <h2 class="text-2xl font-bold font-orbitron neon-text mb-6">Understanding Nutrition</h2>
-                <div class="space-y-4">
+                <div class="space-y-3">
                     <div>
                         <h4 class="font-bold text-cyan-300">Carbohydrates</h4>
-                        <p class="text-sm text-gray-400">The body's primary source of energy. Found in foods like bread, pasta, fruits, and vegetables. They fuel your brain and muscles.</p>
+                        <p class="text-sm text-gray-400">The body's primary source of energy, fueling your brain and muscles.</p>
                     </div>
                     <div>
                         <h4 class="font-bold text-violet-300">Proteins</h4>
-                        <p class="text-sm text-gray-400">Essential for building and repairing tissues, making enzymes, and hormones. Found in meat, dairy, beans, and nuts.</p>
+                        <p class="text-sm text-gray-400">Essential for building and repairing tissues, making enzymes, and hormones.</p>
                     </div>
                      <div>
                         <h4 class="font-bold text-pink-300">Fats</h4>
-                        <p class="text-sm text-gray-400">An important energy source that also helps absorb vitamins and protect your organs. Healthy fats are found in avocados, nuts, and olive oil.</p>
+                        <p class="text-sm text-gray-400">An important energy source that helps absorb vitamins and protect organs.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-emerald-300">Fiber</h4>
+                        <p class="text-sm text-gray-400">A type of carbohydrate that aids digestion and helps maintain stable blood sugar levels.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-rose-300">Sugar</h4>
+                        <p class="text-sm text-gray-400">A simple carbohydrate providing quick energy. It's important to monitor intake of added sugars.</p>
                     </div>
                      <div>
-                        <h4 class="font-bold text-amber-300">Calories</h4>
-                        <p class="text-sm text-gray-400">A unit of energy. Your body needs calories to function, but balancing calorie intake with energy expenditure is key to weight management.</p>
+                        <h4 class="font-bold text-sky-300">Sodium</h4>
+                        <p class="text-sm text-gray-400">A mineral that's vital for fluid balance and nerve function, but excess can be harmful.</p>
                     </div>
                 </div>
             </section>
@@ -220,7 +229,7 @@
             <div class="max-w-3xl mx-auto space-y-6">
                 <div>
                     <h3 class="font-bold">How accurate is Nutri Scan?</h3>
-                    <p class="text-sm text-gray-400 mt-1">Nutri Scan provides an AI-powered estimation based on visual data. While it's a powerful tool for general guidance, accuracy can be affected by factors like lighting, food presentation, and portion size ambiguity. It should be used for informational purposes and is not a scientific measurement tool.</p>
+                    <p class="text-sm text-gray-400 mt-1">Nutri Scan provides an AI-powered estimation based on visual data and a standard nutritional database. While it's a powerful tool for general guidance, accuracy can be affected by factors like lighting, food preparation, and portion size ambiguity. It should be used for informational purposes and is not a scientific measurement tool.</p>
                 </div>
                 <div>
                     <h3 class="font-bold">Is this a medical device?</h3>
@@ -232,26 +241,27 @@
                 </div>
                  <div>
                     <h3 class="font-bold">What foods can it recognize?</h3>
-                    <p class="text-sm text-gray-400 mt-1">Our AI is trained on a wide variety of common food items. While it is constantly improving, it may not recognize every type of food, especially complex or mixed dishes. For best results, try to capture clear images of individual food components.</p>
+                    <p class="text-sm text-gray-400 mt-1">Our AI is trained on a wide variety of common food items, and our database contains over 250 entries. While it is constantly improving, it may not recognize every type of food, especially complex or mixed dishes. For best results, try to capture clear images of individual food components.</p>
                 </div>
             </div>
         </section>
 
         <section id="legal" class="glass-panel rounded-2xl p-8">
              <div class="grid md:grid-cols-3 gap-8 text-sm">
-                <div>
-                    <h3 class="font-bold font-orbitron text-lg mb-2 neon-text">About Us</h3>
-                    <p class="text-gray-400">We are a team of health enthusiasts and tech developers passionate about making nutrition accessible to everyone. Nutri Scan was born from a desire to merge cutting-edge AI with the everyday need to understand our food better.</p>
-                </div>
-                <div>
-                    <h3 class="font-bold font-orbitron text-lg mb-2 neon-text">Contact Us</h3>
-                    <p class="text-gray-400">Have questions, feedback, or suggestions? We'd love to hear from you! Please reach out to us at: <a href="mailto:taskzyee@gmail.com" class="text-cyan-400 hover:underline">taskzyee@gmail.com</a></p>
-                    
-                </div>
-                <div>
-                    <h3 class="font-bold font-orbitron text-lg mb-2 neon-text">Privacy Policy</h3>
-                    <p class="text-gray-400">Your privacy is important to us. Our Privacy Policy explains how we handle data. In short: images are not stored, and history is saved only on your device. <a href="/privacy.html" class="text-cyan-400 hover:underline">Read the full policy here</a>.</p>
-                </div>
+                 <div>
+                     <h3 class="font-bold font-orbitron text-lg mb-2 neon-text">About Us</h3>
+                     <p class="text-gray-400">We are a team of health enthusiasts and tech developers passionate about making nutrition accessible to everyone. Nutri Scan was born from a desire to merge cutting-edge AI with the everyday need to understand our food better.</p>
+                 </div>
+                 <div>
+                     <h3 class="font-bold font-orbitron text-lg mb-2 neon-text">Contact Us</h3>
+                     <p class="text-gray-400">Have questions, feedback, or suggestions? We'd love to hear from you! Please reach out to us at: <a href="mailto:your-email@example.com" class="text-cyan-400 hover:underline">taskzyee@gmail.com</a></p>
+                     
+                 </div>
+                 <div>
+                     <h3 class="font-bold font-orbitron text-lg mb-2 neon-text">Privacy Policy</h3>
+                     <p class="text-gray-400">Your privacy is important to us. Our Privacy Policy explains how we handle data. In short: images are not stored, and history is saved only on your device. <a href="privacy.html" class="text-cyan-400 hover:underline">Read the full policy here</a>.</p>
+                     
+                 </div>
             </div>
         </section>
     </div>
@@ -297,7 +307,7 @@
             <a href="#features" class="hover:underline">Features</a>
             <a href="#faq" class="hover:underline">FAQ</a>
             <a href="#legal" class="hover:underline">Contact</a>
-            <a href="/privacy.html" class="hover:underline">Privacy Policy</a>
+            <a href="privacy.html" class="hover:underline">Privacy Policy</a>
          </div>
          <p class="text-xs text-gray-500 max-w-2xl mx-auto"><strong>Disclaimer:</strong> Nutri Scan provides AI-based estimations for informational purposes only. It is not a medical device and should not be used as a substitute for professional medical or dietary advice. Consult a healthcare professional for personalized health guidance.</p>
          <p class="text-xs text-gray-600">&copy; 2025 Nutri Scan. All rights reserved.</p>
@@ -318,39 +328,8 @@
               confirmModal = document.getElementById('confirm-modal'), confirmOkBtn = document.getElementById('confirm-ok-btn'),
               confirmCancelBtn = document.getElementById('confirm-cancel-btn'), installBtn = document.getElementById('install-btn'),
               chartContainer = document.getElementById('chart-container');
-
-        // Expanded nutrition database (nutrients & calories per 100g)
-        const nutritionDB = {
-            'apple': { carbs: 14, protein: 0.3, fat: 0.2, calories: 52 }, 'almond': { carbs: 22, protein: 21, fat: 49, calories: 579 },
-            'avocado': { carbs: 9, protein: 2, fat: 15, calories: 160 }, 'banana': { carbs: 23, protein: 1.1, fat: 0.3, calories: 89 },
-            'beef': { carbs: 0, protein: 26, fat: 15, calories: 250 }, 'bell pepper': { carbs: 6, protein: 1, fat: 0.3, calories: 31 },
-            'blueberry': { carbs: 14, protein: 0.7, fat: 0.3, calories: 57 }, 'bread': { carbs: 49, protein: 9, fat: 3.2, calories: 265 },
-            'broccoli': { carbs: 7, protein: 2.8, fat: 0.4, calories: 34 }, 'cabbage': { carbs: 6, protein: 1.3, fat: 0.1, calories: 25 },
-            'carrot': { carbs: 10, protein: 0.9, fat: 0.2, calories: 41 }, 'cashew': { carbs: 30, protein: 18, fat: 44, calories: 553 },
-            'cauliflower': { carbs: 5, protein: 1.9, fat: 0.3, calories: 25 }, 'cheese': { carbs: 1.3, protein: 25, fat: 33, calories: 402 },
-            'chicken breast': { carbs: 0, protein: 31, fat: 3.6, calories: 165 }, 'chickpea': { carbs: 27, protein: 9, fat: 2.6, calories: 164 },
-            'coffee': { carbs: 0, protein: 0.1, fat: 0, calories: 1 }, 'corn': { carbs: 19, protein: 3.2, fat: 1.2, calories: 86 },
-            'cucumber': { carbs: 3.6, protein: 0.7, fat: 0.1, calories: 15 }, 'dal': { carbs: 20, protein: 9, fat: 0.4, calories: 114 },
-            'egg': { carbs: 0.6, protein: 13, fat: 11, calories: 155 }, 'fish': { carbs: 0, protein: 22, fat: 12, calories: 206 },
-            'grape': { carbs: 18, protein: 0.7, fat: 0.2, calories: 69 }, 'green bean': { carbs: 7, protein: 1.8, fat: 0.1, calories: 31 },
-            'idli': { carbs: 27, protein: 4, fat: 0.2, calories: 130 }, 'kiwi': { carbs: 15, protein: 1.1, fat: 0.5, calories: 61 },
-            'lemon': { carbs: 9, protein: 1.1, fat: 0.3, calories: 29 }, 'lentil': { carbs: 20, protein: 9, fat: 0.4, calories: 116 },
-            'lettuce': { carbs: 2.9, protein: 1.4, fat: 0.2, calories: 15 }, 'mango': { carbs: 15, protein: 0.8, fat: 0.4, calories: 60 },
-            'milk': { carbs: 5, protein: 3.4, fat: 1, calories: 42 }, 'mushroom': { carbs: 3.3, protein: 3.1, fat: 0.3, calories: 22 },
-            'oats': { carbs: 66, protein: 17, fat: 7, calories: 389 }, 'onion': { carbs: 9, protein: 1.1, fat: 0.1, calories: 40 },
-            'orange': { carbs: 12, protein: 0.9, fat: 0.1, calories: 47 }, 'paneer': { carbs: 6, protein: 18, fat: 21, calories: 265 },
-            'pasta': { carbs: 25, protein: 5, fat: 1.1, calories: 131 }, 'peanut': { carbs: 16, protein: 26, fat: 49, calories: 567 },
-            'pear': { carbs: 15, protein: 0.4, fat: 0.1, calories: 57 }, 'pineapple': { carbs: 13, protein: 0.5, fat: 0.1, calories: 50 },
-            'pork': { carbs: 0, protein: 27, fat: 14, calories: 242 }, 'potato': { carbs: 17, protein: 2, fat: 0.1, calories: 77 },
-            'quinoa': { carbs: 21, protein: 4.1, fat: 1.9, calories: 120 }, 'rice': { carbs: 28, protein: 2.7, fat: 0.3, calories: 130 },
-            'roti': { carbs: 49, protein: 9, fat: 3.2, calories: 265 }, 'salmon': { carbs: 0, protein: 20, fat: 13, calories: 208 },
-            'shrimp': { carbs: 0.2, protein: 24, fat: 0.3, calories: 99 }, 'spinach': { carbs: 3.6, protein: 2.9, fat: 0.4, calories: 23 },
-            'strawberry': { carbs: 8, protein: 0.7, fat: 0.3, calories: 32 }, 'sweet potato': { carbs: 20, protein: 1.6, fat: 0.1, calories: 86 },
-            'tofu': { carbs: 1.9, protein: 8, fat: 4.8, calories: 76 }, 'tomato': { carbs: 3.9, protein: 0.9, fat: 0.2, calories: 18 },
-            'turkey': { carbs: 0, protein: 29, fat: 3.7, calories: 189 }, 'watermelon': { carbs: 8, protein: 0.6, fat: 0.2, calories: 30 },
-            'yogurt': { carbs: 4.7, protein: 10, fat: 0.4, calories: 59 }
-        };
         
+        // The nutritionDB constant is now loaded from data.js
         const supportedFoods = Object.keys(nutritionDB);
         let detectedFoodsData = [], facingMode = 'environment', currentStream, isCameraOn = false;
 
@@ -513,7 +492,7 @@
                                 <span>g</span>
                             </div>
                         </div>
-                        <div id="nutrients-${data.id}" class="text-sm text-gray-300 mt-2"></div>`;
+                        <div id="nutrients-${data.id}" class="text-sm text-gray-300 mt-2 grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-1"></div>`;
                     resultsContent.appendChild(foodElement);
                     document.getElementById(`portion-${data.id}`).addEventListener('input', (e) => {
                        const foodItem = detectedFoodsData.find(f => f.id === data.id);
@@ -535,23 +514,40 @@
         }
 
         function updateAllCalculations() {
-            let total = { carbs: 0, protein: 0, fat: 0, calories: 0 };
+            let total = { carbs: 0, protein: 0, fat: 0, calories: 0, fiber: 0, sugar: 0, sodium: 0 };
             detectedFoodsData.forEach(food => {
                 const factor = food.portion / 100;
-                const carbs = food.carbs * factor, protein = food.protein * factor, fat = food.fat * factor;
-                const calories = food.calories * factor;
-                total.carbs += carbs; total.protein += protein; total.fat += fat; total.calories += calories;
+                const nutrients = {
+                    carbs: (food.carbs || 0) * factor,
+                    protein: (food.protein || 0) * factor,
+                    fat: (food.fat || 0) * factor,
+                    calories: (food.calories || 0) * factor,
+                    fiber: (food.fiber || 0) * factor,
+                    sugar: (food.sugar || 0) * factor,
+                    sodium: (food.sodium || 0) * factor
+                };
+
+                Object.keys(total).forEach(key => total[key] += nutrients[key]);
+                
                 document.getElementById(`nutrients-${food.id}`).innerHTML = `
-                    <span class="text-cyan-400">C: <strong>${carbs.toFixed(1)}g</strong></span> | 
-                    <span class="text-violet-400">P: <strong>${protein.toFixed(1)}g</strong></span> | 
-                    <span class="text-pink-400">F: <strong>${fat.toFixed(1)}g</strong></span> | 
-                    <span class="text-amber-300"><strong>${calories.toFixed(0)} kcal</strong></span>`;
+                    <span class="text-amber-300 col-span-full font-bold">${nutrients.calories.toFixed(0)} kcal</span>
+                    <span class="text-cyan-400">Carbs: <strong>${nutrients.carbs.toFixed(1)}g</strong></span> 
+                    <span class="text-violet-400">Protein: <strong>${nutrients.protein.toFixed(1)}g</strong></span>
+                    <span class="text-pink-400">Fat: <strong>${nutrients.fat.toFixed(1)}g</strong></span>
+                    <span class="text-emerald-400">Fiber: <strong>${nutrients.fiber.toFixed(1)}g</strong></span>
+                    <span class="text-rose-400">Sugar: <strong>${nutrients.sugar.toFixed(1)}g</strong></span>
+                    <span class="text-sky-400">Sodium: <strong>${nutrients.sodium.toFixed(0)}mg</strong></span>
+                    `;
             });
             totalsDiv.innerHTML = `
+                <p class="col-span-2 text-amber-300 font-bold text-lg">Total Calories: <strong>${total.calories.toFixed(0)} kcal</strong></p>
                 <p>Carbs: <strong class="text-cyan-300">${total.carbs.toFixed(1)}g</strong></p>
                 <p>Protein: <strong class="text-violet-300">${total.protein.toFixed(1)}g</strong></p>
                 <p>Fat: <strong class="text-pink-300">${total.fat.toFixed(1)}g</strong></p>
-                <p class="text-amber-300 font-bold col-span-2 text-lg">Total Calories: <strong>${total.calories.toFixed(0)} kcal</strong></p>`;
+                <p>Fiber: <strong class="text-emerald-300">${total.fiber.toFixed(1)}g</strong></p>
+                <p>Sugar: <strong class="text-rose-300">${total.sugar.toFixed(1)}g</strong></p>
+                <p>Sodium: <strong class="text-sky-300">${total.sodium.toFixed(0)}mg</strong></p>
+                `;
             
             renderMacroChart(total);
         }
@@ -689,5 +685,3 @@
     </script>
 </body>
 </html>
-
-
