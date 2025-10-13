@@ -1,7 +1,9 @@
 // data.js - Comprehensive Nutritional Database for Nutri Scan
 // All nutrient values are approximate and based on a 100g serving. Actual values can vary widely with preparation methods.
+// This function provides the nutrition data to the front-end application.
 
-const nutritionDB = {
+exports.handler = async function(event, context) {
+  const nutritionDB = {
     // Fruits
     'apple': { calories: 52, protein: 0.3, carbs: 14, fat: 0.2, fiber: 2.4, sugar: 10, sodium: 1 },
     'apricot': { calories: 48, protein: 1.4, carbs: 11, fat: 0.4, fiber: 2, sugar: 9, sodium: 1 },
@@ -288,4 +290,12 @@ const nutritionDB = {
     'pretzels': { calories: 380, protein: 10, carbs: 80, fat: 2.6, fiber: 3.4, sugar: 2.2, sodium: 1266 },
     'sugar': { calories: 387, protein: 0, carbs: 100, fat: 0, fiber: 0, sugar: 100, sodium: 1 },
     'waffles': { calories: 291, protein: 8, carbs: 33, fat: 14, fiber: 1.9, sugar: 10, sodium: 530 },
+};
+  return {
+    statusCode: 200,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(nutritionDB),
+  };
 };
