@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nutri Scan - AI-Powered Nutrition Analysis</title>
-    <meta name="description" content="Instantly analyze the nutritional content of your food. Just snap a photo and let our AI provide an estimate of calories, protein, carbs, and fat.">
+    <meta name="description" content="Instantly analyze the nutritional content of your food. Just snap a photo or upload an image and let our AI provide an estimate of calories, protein, carbs, and fat.">
     
     <meta name="google-adsense-account" content="ca-pub-1014085303095720">
     <link rel="manifest" href="/manifest.json">
@@ -80,10 +80,11 @@
         <div class="w-full lg:w-1/2 flex flex-col gap-6 lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)]">
             <div class="glass-panel rounded-2xl p-4 flex-grow flex flex-col items-center justify-center relative aspect-video">
                 <video id="webcam" class="rounded-lg w-full h-full object-cover transition-opacity duration-300 opacity-0" autoplay playsinline></video>
+                <img id="image-preview" class="hidden rounded-lg w-full h-full object-contain" />
                 <div id="camera-off-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
-                    <i data-lucide="video-off" class="w-16 h-16 text-gray-500 mb-4"></i>
-                    <p class="text-gray-400 font-semibold">Camera is Offline</p>
-                    <p class="text-sm text-gray-500">Press the Start Camera button below to analyze nutrients in your food.</p>
+                    <i data-lucide="image-off" class="w-16 h-16 text-gray-500 mb-4"></i>
+                    <p class="text-gray-400 font-semibold">Ready to Scan</p>
+                    <p class="text-sm text-gray-500">Start your camera or upload an image to begin.</p>
                 </div>
                 <canvas id="canvas" class="hidden"></canvas>
                 <div id="camera-error" class="hidden absolute inset-0 bg-black/50 rounded-lg flex flex-col items-center justify-center text-center p-4">
@@ -97,19 +98,23 @@
                     <p class="mt-4 text-cyan-300 font-orbitron">ANALYZING...</p>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-4">
-                <button id="capture-btn" class="col-span-2 bg-cyan-500/80 hover:bg-cyan-500 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 neon-highlight disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:scale-105 flex items-center justify-center gap-2 text-lg">
+            <div class="flex flex-col gap-4">
+                <button id="capture-btn" class="w-full bg-cyan-500/80 hover:bg-cyan-500 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 neon-highlight disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:scale-105 flex items-center justify-center gap-2 text-lg">
                     <i data-lucide="scan-line"></i> Capture & Analyze
                 </button>
-                <div class="flex gap-2">
-                    <button id="start-stop-btn" title="Start/Stop Camera" class="p-3 w-full rounded-xl control-btn flex items-center justify-center gap-2 font-semibold">
-                       <i data-lucide="video"></i> Start Camera
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <button id="start-stop-btn" title="Start/Stop Camera" class="p-3 rounded-xl control-btn flex items-center justify-center gap-2 font-semibold">
+                       <i data-lucide="video"></i> Camera
                     </button>
-                    <button id="flip-camera-btn" title="Flip Camera" class="p-3 w-full rounded-xl control-btn flex items-center justify-center"><i data-lucide="rotate-camera"></i></button>
+                    <button id="flip-camera-btn" title="Flip Camera" class="p-3 rounded-xl control-btn flex items-center justify-center"><i data-lucide="rotate-camera"></i></button>
+                    <button id="upload-btn" class="p-3 rounded-xl control-btn flex items-center justify-center gap-2 font-semibold">
+                        <i data-lucide="upload"></i> Upload
+                    </button>
+                    <input type="file" id="upload-input" class="hidden" accept="image/*">
+                    <button id="history-btn" class="bg-violet-600/80 hover:bg-violet-600 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 sm:col-span-3">
+                        <i data-lucide="history"></i> View History
+                    </button>
                 </div>
-                <button id="history-btn" class="bg-violet-600/80 hover:bg-violet-600 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2">
-                    <i data-lucide="history"></i> View History
-                </button>
             </div>
             
             <div class="my-2 glass-panel rounded-2xl p-2 text-center text-xs text-gray-400 min-h-[100px] flex flex-col justify-center">
@@ -133,7 +138,7 @@
               <div id="results-content" class="flex-grow space-y-3 pr-2 overflow-y-auto">
                       <div id="initial-message" class="flex flex-col items-center justify-center h-full text-center text-gray-400">
                               <i data-lucide="camera" class="w-16 h-16 mb-4"></i>
-                              <p>Start the camera and capture an image of your food to begin analysis.</p>
+                              <p>Capture or upload an image of your food to begin analysis.</p>
                       </div>
               </div>
               <div id="totals-container" class="mt-4 pt-4 border-t border-white/10 hidden">
@@ -161,22 +166,22 @@
                 <div class="flex flex-col items-center gap-3">
                     <div class="w-16 h-16 bg-cyan-500/20 rounded-xl flex items-center justify-center border border-cyan-500"><i data-lucide="camera" class="w-8 h-8 text-cyan-400"></i></div>
                     <h3 class="font-bold text-lg">1. Start Camera</h3>
-                    <p class="text-sm text-gray-400">Activate your device's camera with a single click. Our app requests permission once and is ready to go.</p>
+                    <p class="text-sm text-gray-400">Activate your device's camera or choose to upload an image from your gallery.</p>
                 </div>
                 <div class="flex flex-col items-center gap-3">
                     <div class="w-16 h-16 bg-cyan-500/20 rounded-xl flex items-center justify-center border border-cyan-500"><i data-lucide="crop" class="w-8 h-8 text-cyan-400"></i></div>
                     <h3 class="font-bold text-lg">2. Frame Your Food</h3>
-                    <p class="text-sm text-gray-400">Position your meal within the camera view. For best results, ensure good lighting and a clear view of the food items.</p>
+                    <p class="text-sm text-gray-400">Position your meal within the camera view. For best results, ensure good lighting and a clear view.</p>
                 </div>
                 <div class="flex flex-col items-center gap-3">
                     <div class="w-16 h-16 bg-cyan-500/20 rounded-xl flex items-center justify-center border border-cyan-500"><i data-lucide="scan-line" class="w-8 h-8 text-cyan-400"></i></div>
-                    <h3 class="font-bold text-lg">3. Capture & Analyze</h3>
-                    <p class="text-sm text-gray-400">Snap a picture, and our AI gets to work. It analyzes the image in seconds to identify what's on your plate.</p>
+                    <h3 class="font-bold text-lg">3. Capture or Upload</h3>
+                    <p class="text-sm text-gray-400">Snap a picture or select one, and our AI gets to work analyzing the image in seconds.</p>
                 </div>
                 <div class="flex flex-col items-center gap-3">
                     <div class="w-16 h-16 bg-cyan-500/20 rounded-xl flex items-center justify-center border border-cyan-500"><i data-lucide="pie-chart" class="w-8 h-8 text-cyan-400"></i></div>
                     <h3 class="font-bold text-lg">4. Get Results</h3>
-                    <p class="text-sm text-gray-400">Receive a detailed breakdown of estimated calories, protein, carbs, and fat for the identified foods.</p>
+                    <p class="text-sm text-gray-400">Receive a detailed breakdown of estimated calories, protein, carbs, and fat.</p>
                 </div>
             </div>
         </section>
@@ -245,13 +250,13 @@
                 </div>
                 <div>
                     <h3 class="font-bold font-orbitron text-lg mb-2 neon-text">Contact Us</h3>
-                    <p class="text-gray-400">Have questions, feedback, or suggestions? We'd love to hear from you! Please reach out to us at: <a href="mailto:your-email@example.com" class="text-cyan-400 hover:underline">your-email@example.com</a></p>
-                    <p class="text-xs text-gray-500 mt-1">(Replace with your actual contact email)</p>
+                    <p class="text-gray-400">Have questions, feedback, or suggestions? We'd love to hear from you! Please reach out to us at: <a href="mailto:taskzyee@gmail.com" class="text-cyan-400 hover:underline">your-email@example.com</a></p>
+                    
                 </div>
                 <div>
                     <h3 class="font-bold font-orbitron text-lg mb-2 neon-text">Privacy Policy</h3>
-                    <p class="text-gray-400">Your privacy is important to us. Our Privacy Policy explains how we handle data. In short: images are not stored, and history is saved only on your device. <a href="/privacy.html" class="text-cyan-400 hover:underline">Read the full policy here</a>.</p>
-                    <p class="text-xs text-gray-500 mt-1">(You must create a privacy.html page)</p>
+                    <p class="text-gray-400">Your privacy is important to us. Our Privacy Policy explains how we handle data. In short: images are not stored, and history is saved only on your device. <a href="privacy.html" class="text-cyan-400 hover:underline">Read the full policy here</a>.</p>
+                    
                 </div>
             </div>
         </section>
@@ -304,383 +309,400 @@
          <p class="text-xs text-gray-600">&copy; 2025 Nutri Scan. All rights reserved.</p>
     </footer>
 
-   <script>
-    lucide.createIcons();
-    const webcamElement = document.getElementById('webcam'), canvasElement = document.getElementById('canvas'),
-          captureBtn = document.getElementById('capture-btn'), startStopBtn = document.getElementById('start-stop-btn'),
-          flipCameraBtn = document.getElementById('flip-camera-btn'), historyBtn = document.getElementById('history-btn'),
-          cameraOffPlaceholder = document.getElementById('camera-off-placeholder'), closeHistoryBtn = document.getElementById('close-history-btn'),
-          clearHistoryBtn = document.getElementById('clear-history-btn'), historyModal = document.getElementById('history-modal'),
-          historyContent = document.getElementById('history-content'), cameraError = document.getElementById('camera-error'),
-          cameraErrorMessage = document.getElementById('camera-error-message'), enableCameraBtn = document.getElementById('enable-camera-btn'),
-          resultsPanel = document.getElementById('results-panel'), resultsContent = document.getElementById('results-content'),
-          initialMessage = document.getElementById('initial-message'), totalsContainer = document.getElementById('totals-container'),
-          totalsDiv = document.getElementById('totals'), loader = document.getElementById('loader'),
-          confirmModal = document.getElementById('confirm-modal'), confirmOkBtn = document.getElementById('confirm-ok-btn'),
-          confirmCancelBtn = document.getElementById('confirm-cancel-btn'), installBtn = document.getElementById('install-btn'),
-          chartContainer = document.getElementById('chart-container');
+    <script>
+        lucide.createIcons();
+        // --- DOM Element Declarations ---
+        const webcamElement = document.getElementById('webcam'), canvasElement = document.getElementById('canvas'),
+              captureBtn = document.getElementById('capture-btn'), startStopBtn = document.getElementById('start-stop-btn'),
+              flipCameraBtn = document.getElementById('flip-camera-btn'), historyBtn = document.getElementById('history-btn'),
+              cameraOffPlaceholder = document.getElementById('camera-off-placeholder'), closeHistoryBtn = document.getElementById('close-history-btn'),
+              clearHistoryBtn = document.getElementById('clear-history-btn'), historyModal = document.getElementById('history-modal'),
+              historyContent = document.getElementById('history-content'), cameraError = document.getElementById('camera-error'),
+              cameraErrorMessage = document.getElementById('camera-error-message'), enableCameraBtn = document.getElementById('enable-camera-btn'),
+              resultsPanel = document.getElementById('results-panel'), resultsContent = document.getElementById('results-content'),
+              initialMessage = document.getElementById('initial-message'), totalsContainer = document.getElementById('totals-container'),
+              totalsDiv = document.getElementById('totals'), loader = document.getElementById('loader'),
+              confirmModal = document.getElementById('confirm-modal'), confirmOkBtn = document.getElementById('confirm-ok-btn'),
+              confirmCancelBtn = document.getElementById('confirm-cancel-btn'), installBtn = document.getElementById('install-btn'),
+              chartContainer = document.getElementById('chart-container');
+        
+        // NEW: Image Upload Elements
+        const uploadBtn = document.getElementById('upload-btn');
+        const uploadInput = document.getElementById('upload-input');
+        const imagePreview = document.getElementById('image-preview');
 
-    // Initialize variables for fetched data
-    let nutritionDB = {};
-    let supportedFoods = [];
-    
-    // NEW: Function to fetch nutrition data from Netlify Function
-    async function fetchFoodData() {
-        try {
-            // Fetch data from the specified serverless function endpoint
-            const response = await fetch('/.netlify/functions/data');
-            if (!response.ok) {
-                throw new Error(`Network response was not ok. Status: ${response.status}`);
+        let nutritionDB = {};
+        let supportedFoods = [];
+        
+        async function fetchFoodData() {
+            try {
+                const response = await fetch('/.netlify/functions/data');
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok. Status: ${response.status}`);
+                }
+                const data = await response.json();
+                nutritionDB = data;
+                supportedFoods = Object.keys(nutritionDB);
+                console.log("Food data loaded successfully.");
+            } catch (error) {
+                console.error("Failed to fetch food data:", error);
+                displayError("Could not load the nutrition database. Please try refreshing the page.");
             }
-            const data = await response.json();
-            nutritionDB = data; // Assign fetched data
-            supportedFoods = Object.keys(nutritionDB); // Populate supported foods list
-            console.log("Food data loaded successfully.");
-        } catch (error) {
-            console.error("Failed to fetch food data:", error);
-            // Optionally, display an error message to the user on the page
-            displayError("Could not load the nutrition database. Please try refreshing the page.");
         }
-    }
 
-    let detectedFoodsData = [], facingMode = 'environment', currentStream, isCameraOn = false;
+        let detectedFoodsData = [], facingMode = 'environment', currentStream, isCameraOn = false;
 
-    async function startCamera() {
-        stopCamera(); // Ensure any existing stream is stopped
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
-            currentStream = stream;
-            webcamElement.srcObject = stream;
-            webcamElement.classList.remove('opacity-0');
-            cameraOffPlaceholder.classList.add('hidden');
-            cameraError.classList.add('hidden');
-            
-            isCameraOn = true;
-            startStopBtn.innerHTML = `<i data-lucide="video-off"></i> Stop Camera`;
-            startStopBtn.classList.add('active');
-            lucide.createIcons();
-            
-            webcamElement.onloadedmetadata = () => { captureBtn.disabled = false; flipCameraBtn.disabled = false; };
-        } catch (error) {
-            console.error("Error accessing webcam:", error);
-            
-            if (error.name === "NotAllowedError") {
-                cameraErrorMessage.innerHTML = "Camera access was denied. Please enable it in your browser settings and try again.";
-            } else {
-                cameraErrorMessage.innerHTML = "Could not access the camera. It may be in use by another application or not available.";
+        async function startCamera() {
+            stopCamera();
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
+                currentStream = stream;
+                webcamElement.srcObject = stream;
+                webcamElement.classList.remove('hidden', 'opacity-0');
+                imagePreview.classList.add('hidden');
+                cameraOffPlaceholder.classList.add('hidden');
+                cameraError.classList.add('hidden');
+                
+                isCameraOn = true;
+                startStopBtn.innerHTML = `<i data-lucide="video-off"></i> Camera`;
+                startStopBtn.classList.add('active');
+                lucide.createIcons();
+                
+                webcamElement.onloadedmetadata = () => { captureBtn.disabled = false; flipCameraBtn.disabled = false; };
+            } catch (error) {
+                console.error("Error accessing webcam:", error);
+                cameraErrorMessage.innerHTML = error.name === "NotAllowedError" 
+                    ? "Camera access was denied. Please enable it in your browser settings and try again."
+                    : "Could not access the camera. It may be in use by another application or not available.";
+                
+                cameraError.classList.remove('hidden');
+                isCameraOn = false;
+                startStopBtn.innerHTML = `<i data-lucide="video"></i> Camera`;
+                startStopBtn.classList.remove('active');
+                lucide.createIcons();
+                captureBtn.disabled = true; 
+                flipCameraBtn.disabled = true;
             }
-            
-            cameraError.classList.remove('hidden');
-            isCameraOn = false;
-            startStopBtn.innerHTML = `<i data-lucide="video"></i> Start Camera`;
-            startStopBtn.classList.remove('active');
-            lucide.createIcons();
+        }
+
+        function stopCamera() {
+            if (currentStream) { currentStream.getTracks().forEach(track => track.stop()); }
+            webcamElement.srcObject = null;
+            webcamElement.classList.add('hidden', 'opacity-0');
+            if (!imagePreview.src) {
+                cameraOffPlaceholder.classList.remove('hidden');
+            }
+            cameraError.classList.add('hidden');
             captureBtn.disabled = true; 
             flipCameraBtn.disabled = true;
+            isCameraOn = false;
+            startStopBtn.innerHTML = `<i data-lucide="video"></i> Camera`;
+            startStopBtn.classList.remove('active');
+            lucide.createIcons();
         }
-    }
+        
+        startStopBtn.addEventListener('click', () => {
+            isCameraOn ? stopCamera() : startCamera();
+        });
 
-    function stopCamera() {
-        if (currentStream) { currentStream.getTracks().forEach(track => track.stop()); }
-        webcamElement.srcObject = null;
-        webcamElement.classList.add('opacity-0');
-        cameraOffPlaceholder.classList.remove('hidden');
-        cameraError.classList.add('hidden');
-        captureBtn.disabled = true; 
-        flipCameraBtn.disabled = true;
-        isCameraOn = false;
-        startStopBtn.innerHTML = `<i data-lucide="video"></i> Start Camera`;
-        startStopBtn.classList.remove('active');
-        lucide.createIcons();
-    }
-    
-    startStopBtn.addEventListener('click', () => {
-         isCameraOn = !isCameraOn;
-         if (isCameraOn) {
-             startCamera();
-         } else {
-             stopCamera();
-         }
-    });
+        enableCameraBtn.addEventListener('click', startCamera);
 
-    enableCameraBtn.addEventListener('click', startCamera);
+        flipCameraBtn.addEventListener('click', () => {
+            if (!isCameraOn) return;
+            facingMode = facingMode === 'user' ? 'environment' : 'user';
+            startCamera();
+        });
 
-    flipCameraBtn.addEventListener('click', () => {
-        if (!isCameraOn) return;
-        facingMode = facingMode === 'user' ? 'environment' : 'user';
-        startCamera(); // Restart camera with new facing mode
-    });
+        captureBtn.addEventListener('click', async () => {
+            if (!webcamElement.srcObject || webcamElement.paused) return;
+            loader.classList.remove('hidden');
+            resultsPanel.classList.add('opacity-0', '-translate-y-5');
+            
+            const context = canvasElement.getContext('2d');
+            canvasElement.width = webcamElement.videoWidth;
+            canvasElement.height = webcamElement.videoHeight;
+            context.drawImage(webcamElement, 0, 0, canvasElement.width, canvasElement.height);
+            const base64ImageData = canvasElement.toDataURL('image/jpeg', 0.8).split(',')[1];
+            
+            await detectFood(base64ImageData);
+            
+            loader.classList.add('hidden');
+            resultsPanel.classList.remove('opacity-0', '-translate-y-5');
+        });
 
-    captureBtn.addEventListener('click', async () => {
-        if (!webcamElement.srcObject) return;
-        loader.classList.remove('hidden');
-        resultsPanel.classList.add('opacity-0', '-translate-y-5');
-        const context = canvasElement.getContext('2d');
-        canvasElement.width = webcamElement.videoWidth;
-        canvasElement.height = webcamElement.videoHeight;
-        context.drawImage(webcamElement, 0, 0, canvasElement.width, canvasElement.height);
-        const base64ImageData = canvasElement.toDataURL('image/jpeg', 0.8).split(',')[1];
-        await detectFood(base64ImageData);
-        loader.classList.add('hidden');
-        resultsPanel.classList.remove('opacity-0', '-translate-y-5');
-    });
+        // --- NEW: Image Upload Logic ---
+        uploadBtn.addEventListener('click', () => uploadInput.click());
 
-    async function detectFood(base64ImageData) {
-        // The URL for our new, secure Netlify Function
-        const functionUrl = '/.netlify/functions/analyze';
+        uploadInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
 
-        try {
-            const response = await fetch(functionUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    base64ImageData: base64ImageData,
-                    supportedFoods: supportedFoods 
-                })
-            });
+            stopCamera(); // Stop camera if it's running
 
-            if (!response.ok) {
-                const errorResult = await response.json();
-                throw new Error(`Function error ${response.status}: ${errorResult.error || 'Unknown error'}`);
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const base64ImageData = event.target.result.split(',')[1];
+                
+                imagePreview.src = event.target.result;
+                imagePreview.classList.remove('hidden');
+                cameraOffPlaceholder.classList.add('hidden');
+
+                loader.classList.remove('hidden');
+                resultsPanel.classList.add('opacity-0', '-translate-y-5');
+                
+                await detectFood(base64ImageData);
+                
+                loader.classList.add('hidden');
+                resultsPanel.classList.remove('opacity-0', '-translate-y-5');
+            };
+            reader.readAsDataURL(file);
+            e.target.value = null; // Reset input to allow re-uploading the same file
+        });
+
+
+        async function detectFood(base64ImageData) {
+            const functionUrl = '/.netlify/functions/analyze';
+            try {
+                const response = await fetch(functionUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        base64ImageData: base64ImageData,
+                        supportedFoods: supportedFoods 
+                    })
+                });
+                if (!response.ok) {
+                    const errorResult = await response.json();
+                    throw new Error(`Function error ${response.status}: ${errorResult.error || 'Unknown error'}`);
+                }
+                const result = await response.json();
+                const textResponse = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (!textResponse) throw new Error("Invalid API response format from function.");
+                
+                const jsonString = textResponse.replace(/```json|```/g, '').trim();
+                displayResults(JSON.parse(jsonString));
+            } catch (error) {
+                console.error('Detection error:', error);
+                displayError(`Detection failed. The AI could not process the image. Error: ${error.message}`);
+            }
+        }
+        function displayError(message) {
+            resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-red-900/50 text-red-300">${message}</div>`;
+            totalsContainer.classList.add('hidden');
+        }
+
+        function displayResults(items) {
+            resultsContent.innerHTML = '';
+            detectedFoodsData = [];
+
+            if (!Array.isArray(items)) {
+                displayError("The AI returned an invalid data format.");
+                return;
             }
 
-            const result = await response.json();
-            const textResponse = result.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (!textResponse) throw new Error("Invalid API response format from function.");
+            if (items.length > 0 && items[0].foodName === 'medicine') {
+                resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-yellow-900/50 text-yellow-300 flex items-center gap-3"><i data-lucide="alert-triangle"></i><span>This application is not designed to analyze medication or provide medical advice.</span></div>`;
+                lucide.createIcons();
+                totalsContainer.classList.add('hidden');
+                return;
+            }
+
+            if (items.length === 0) {
+                resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-800/50 text-gray-300 flex items-center gap-3"><i data-lucide="search-slash"></i><p>No supported food items were detected in the image.</p></div>`;
+                lucide.createIcons();
+                totalsContainer.classList.add('hidden');
+                return;
+            }
+
+            items.forEach((item, index) => {
+                const foodName = item.foodName?.toLowerCase();
+                if (nutritionDB[foodName]) {
+                    const data = { id: `food-${Date.now()}-${index}`, name: foodName, portion: item.estimatedWeight || 100, confidence: item.confidenceScore || 0, ...nutritionDB[foodName] };
+                    detectedFoodsData.push(data);
+                    const confidenceColor = data.confidence > 0.8 ? 'text-green-400' : data.confidence > 0.6 ? 'text-yellow-400' : 'text-red-400';
+                    
+                    const foodElement = document.createElement('div');
+                    foodElement.className = 'p-3 rounded-lg bg-white/5 fade-in-item';
+                    foodElement.style.animationDelay = `${index * 100}ms`;
+                    foodElement.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="font-bold capitalize">${foodName}</span>
+                                <span class="text-xs ${confidenceColor}">(${(data.confidence * 100).toFixed(0)}% confident)</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="number" value="${data.portion}" min="1" step="1" id="portion-${data.id}" class="w-20 bg-transparent border-b border-white/20 text-right focus:outline-none focus:border-cyan-400">
+                                <span>g</span>
+                            </div>
+                        </div>
+                        <div id="nutrients-${data.id}" class="text-sm text-gray-300 mt-2"></div>`;
+                    resultsContent.appendChild(foodElement);
+                    document.getElementById(`portion-${data.id}`).addEventListener('input', (e) => {
+                       const foodItem = detectedFoodsData.find(f => f.id === data.id);
+                       if(foodItem) foodItem.portion = parseInt(e.target.value, 10) || 0;
+                       updateAllCalculations();
+                    });
+                }
+            });
+
+            if (detectedFoodsData.length > 0) {
+                updateAllCalculations();
+                totalsContainer.classList.remove('hidden');
+                saveToHistory();
+            } else {
+                resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-800/50 text-gray-300 flex items-center gap-3"><i data-lucide="database-zap"></i><p>Detected items were not in our nutrition database.</p></div>`;
+                 lucide.createIcons();
+                totalsContainer.classList.add('hidden');
+            }
+        }
+
+        function updateAllCalculations() {
+            let total = { carbs: 0, protein: 0, fat: 0, calories: 0 };
+            detectedFoodsData.forEach(food => {
+                const factor = food.portion / 100;
+                const carbs = food.carbs * factor, protein = food.protein * factor, fat = food.fat * factor;
+                const calories = food.calories * factor;
+                total.carbs += carbs; total.protein += protein; total.fat += fat; total.calories += calories;
+                document.getElementById(`nutrients-${food.id}`).innerHTML = `
+                    <span class="text-cyan-400">C: <strong>${carbs.toFixed(1)}g</strong></span> | 
+                    <span class="text-violet-400">P: <strong>${protein.toFixed(1)}g</strong></span> | 
+                    <span class="text-pink-400">F: <strong>${fat.toFixed(1)}g</strong></span> | 
+                    <span class="text-amber-300"><strong>${calories.toFixed(0)} Calories</strong></span>`; // FIXED
+            });
+            totalsDiv.innerHTML = `
+                <p>Carbs: <strong class="text-cyan-300">${total.carbs.toFixed(1)}g</strong></p>
+                <p>Protein: <strong class="text-violet-300">${total.protein.toFixed(1)}g</strong></p>
+                <p>Fat: <strong class="text-pink-300">${total.fat.toFixed(1)}g</strong></p>
+                <p class="text-amber-300 font-bold col-span-2 text-lg">Total Calories: <strong>${total.calories.toFixed(0)} Calories</strong></p>`; // FIXED
             
-            const jsonString = textResponse.replace(/```json|```/g, '').trim();
-            displayResults(JSON.parse(jsonString));
-        } catch (error) {
-            console.error('Detection error:', error);
-            displayError(`Detection failed. The AI could not process the image. Error: ${error.message}`);
-        }
-    }
-    function displayError(message) {
-        resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-red-900/50 text-red-300">${message}</div>`;
-        totalsContainer.classList.add('hidden');
-    }
-
-    function displayResults(items) {
-        resultsContent.innerHTML = '';
-        detectedFoodsData = [];
-
-        if (!Array.isArray(items)) {
-            displayError("The AI returned an invalid data format.");
-            return;
+            renderMacroChart(total);
         }
 
-        if (items.length > 0 && items[0].foodName === 'medicine') {
-            resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-yellow-900/50 text-yellow-300 flex items-center gap-3"><i data-lucide="alert-triangle"></i><span>This application is not designed to analyze medication or provide medical advice.</span></div>`;
-            lucide.createIcons();
-            totalsContainer.classList.add('hidden');
-            return;
-        }
+        function renderMacroChart(totals) {
+            const { carbs, protein, fat } = totals;
+            const totalMacros = carbs + protein + fat;
+            if (totalMacros === 0) {
+                chartContainer.innerHTML = ''; return;
+            }
 
-        if (items.length === 0) {
-            resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-800/50 text-gray-300 flex items-center gap-3"><i data-lucide="search-slash"></i><p>No supported food items were detected in the image.</p></div>`;
-            lucide.createIcons();
-            totalsContainer.classList.add('hidden');
-            return;
-        }
+            const carbP = (carbs / totalMacros);
+            const protP = (protein / totalMacros);
+            const fatP = (fat / totalMacros);
 
-        items.forEach((item, index) => {
-            const foodName = item.foodName?.toLowerCase();
-            if (nutritionDB[foodName]) {
-                const data = { id: `food-${Date.now()}-${index}`, name: foodName, portion: item.estimatedWeight || 100, confidence: item.confidenceScore || 0, ...nutritionDB[foodName] };
-                detectedFoodsData.push(data);
-                const confidenceColor = data.confidence > 0.8 ? 'text-green-400' : data.confidence > 0.6 ? 'text-yellow-400' : 'text-red-400';
-                
-                const foodElement = document.createElement('div');
-                foodElement.className = 'p-3 rounded-lg bg-white/5 fade-in-item';
-                foodElement.style.animationDelay = `${index * 100}ms`;
-                foodElement.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <span class="font-bold capitalize">${foodName}</span>
-                            <span class="text-xs ${confidenceColor}">(${(data.confidence * 100).toFixed(0)}% confident)</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <input type="number" value="${data.portion}" min="1" step="1" id="portion-${data.id}" class="w-20 bg-transparent border-b border-white/20 text-right focus:outline-none focus:border-cyan-400">
-                            <span>g</span>
-                        </div>
+            const carbDeg = carbP * 360;
+            const protDeg = protP * 360;
+
+            chartContainer.innerHTML = `
+                <svg viewBox="0 0 36 36" class="w-full h-full">
+                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3" stroke="#374151" />
+                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#22d3ee" stroke-dasharray="${carbDeg} ${360-carbDeg}" stroke-dashoffset="0" transform="rotate(-90 18 18)" />
+                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#8b5cf6" stroke-dasharray="${protDeg} ${360-protDeg}" stroke-dashoffset="-${carbDeg}" transform="rotate(-90 18 18)" />
+                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#ec4899" stroke-dasharray="${fatP * 360} 360" stroke-dashoffset="-${carbDeg + protDeg}" transform="rotate(-90 18 18)" />
+                    <text x="18" y="20" text-anchor="middle" class="fill-white text-[5px] font-bold">${(totals.calories).toFixed(0)}</text>
+                    <text x="18" y="24" text-anchor="middle" class="fill-gray-400 text-[3px]">Calories</text>
+                </svg>
+            `; // FIXED
+        }
+        
+        function saveToHistory() {
+            const history = JSON.parse(localStorage.getItem('foodScanHistory') || '[]');
+            history.unshift({ timestamp: new Date().toISOString(), foods: detectedFoodsData.map(f => ({ name: f.name, portion: f.portion })) });
+            if (history.length > 50) history.pop();
+            localStorage.setItem('foodScanHistory', JSON.stringify(history));
+        }
+        
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('foodScanHistory') || '[]');
+            historyContent.innerHTML = history.length === 0 ? '<p class="text-gray-400">No scans saved yet.</p>' : '';
+            clearHistoryBtn.style.display = history.length > 0 ? 'block' : 'none';
+            history.forEach(entry => {
+                const entryDiv = document.createElement('div');
+                entryDiv.className = 'glass-panel p-4 rounded-lg';
+                const date = new Date(entry.timestamp);
+                let totalCals = 0;
+                let foodHtml = entry.foods.map(food => {
+                    const n = nutritionDB[food.name];
+                    if (!n) return '';
+                    const factor = food.portion / 100;
+                    const cals = n.calories * factor;
+                    totalCals += cals;
+                    return `<div class="ml-4 text-sm"><span class="capitalize font-semibold">${food.name} (${food.portion}g):</span> ${cals.toFixed(0)} Calories</div>`; // FIXED
+                }).join('');
+                entryDiv.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <p class="font-bold">${date.toLocaleDateString()} - ${date.toLocaleTimeString()}</p>
+                        <p class="font-bold text-amber-300">${totalCals.toFixed(0)} Calories</p>
                     </div>
-                    <div id="nutrients-${data.id}" class="text-sm text-gray-300 mt-2"></div>`;
-                resultsContent.appendChild(foodElement);
-                document.getElementById(`portion-${data.id}`).addEventListener('input', (e) => {
-                   const foodItem = detectedFoodsData.find(f => f.id === data.id);
-                   if(foodItem) foodItem.portion = parseInt(e.target.value, 10) || 0;
-                   updateAllCalculations();
+                    ${foodHtml}
+                `; // FIXED
+                historyContent.appendChild(entryDiv);
+            });
+        }
+
+        historyBtn.addEventListener('click', () => { 
+            loadHistory(); 
+            historyModal.classList.remove('hidden');
+            setTimeout(() => {
+                try {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                } catch (e) {
+                    console.error("AdSense push error in modal:", e);
+                }
+            }, 50);
+        });
+        closeHistoryBtn.addEventListener('click', () => historyModal.classList.add('hidden'));
+
+        let confirmCallback = null;
+        function showConfirm(title, message, callback) {
+            document.getElementById('confirm-title').textContent = title;
+            document.getElementById('confirm-message').textContent = message;
+            confirmCallback = callback;
+            confirmModal.classList.remove('hidden');
+        }
+        confirmOkBtn.addEventListener('click', () => { if (confirmCallback) confirmCallback(); confirmModal.classList.add('hidden'); });
+        confirmCancelBtn.addEventListener('click', () => confirmModal.classList.add('hidden'));
+        clearHistoryBtn.addEventListener('click', () => {
+            showConfirm('Clear History?', 'Are you sure you want to delete all scan history?', () => {
+                localStorage.removeItem('foodScanHistory');
+                loadHistory();
+            });
+        });
+
+        // PWA Installation Logic
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.classList.remove('hidden');
+            installBtn.classList.add('flex');
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                installBtn.classList.add('hidden');
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installBtn.classList.add('hidden');
+        });
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchFoodData();
+            captureBtn.disabled = true;
+            flipCameraBtn.disabled = true;
+
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(reg => console.log('ServiceWorker registration successful.', reg.scope))
+                        .catch(err => console.log('ServiceWorker registration failed: ', err));
                 });
             }
         });
-
-        if (detectedFoodsData.length > 0) {
-            updateAllCalculations();
-            totalsContainer.classList.remove('hidden');
-            saveToHistory();
-        } else {
-            resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-800/50 text-gray-300 flex items-center gap-3"><i data-lucide="database-zap"></i><p>Detected items were not in our nutrition database.</p></div>`;
-             lucide.createIcons();
-            totalsContainer.classList.add('hidden');
-        }
-    }
-
-    function updateAllCalculations() {
-        let total = { carbs: 0, protein: 0, fat: 0, calories: 0 };
-        detectedFoodsData.forEach(food => {
-            const factor = food.portion / 100;
-            const carbs = food.carbs * factor, protein = food.protein * factor, fat = food.fat * factor;
-            const calories = food.calories * factor;
-            total.carbs += carbs; total.protein += protein; total.fat += fat; total.calories += calories;
-            document.getElementById(`nutrients-${food.id}`).innerHTML = `
-                <span class="text-cyan-400">C: <strong>${carbs.toFixed(1)}g</strong></span> | 
-                <span class="text-violet-400">P: <strong>${protein.toFixed(1)}g</strong></span> | 
-                <span class="text-pink-400">F: <strong>${fat.toFixed(1)}g</strong></span> | 
-                <span class="text-amber-300"><strong>${calories.toFixed(0)} kcal</strong></span>`;
-        });
-        totalsDiv.innerHTML = `
-            <p>Carbs: <strong class="text-cyan-300">${total.carbs.toFixed(1)}g</strong></p>
-            <p>Protein: <strong class="text-violet-300">${total.protein.toFixed(1)}g</strong></p>
-            <p>Fat: <strong class="text-pink-300">${total.fat.toFixed(1)}g</strong></p>
-            <p class="text-amber-300 font-bold col-span-2 text-lg">Total Calories: <strong>${total.calories.toFixed(0)} kcal</strong></p>`;
-        
-        renderMacroChart(total);
-    }
-
-    function renderMacroChart(totals) {
-        const { carbs, protein, fat } = totals;
-        const totalMacros = carbs + protein + fat;
-        if (totalMacros === 0) {
-            chartContainer.innerHTML = ''; return;
-        }
-
-        const carbP = (carbs / totalMacros);
-        const protP = (protein / totalMacros);
-        const fatP = (fat / totalMacros);
-
-        const carbDeg = carbP * 360;
-        const protDeg = protP * 360;
-
-        chartContainer.innerHTML = `
-            <svg viewBox="0 0 36 36" class="w-full h-full">
-                <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3" stroke="#374151" />
-                <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#22d3ee" stroke-dasharray="${carbDeg} ${360-carbDeg}" stroke-dashoffset="0" transform="rotate(-90 18 18)" />
-                <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#8b5cf6" stroke-dasharray="${protDeg} ${360-protDeg}" stroke-dashoffset="-${carbDeg}" transform="rotate(-90 18 18)" />
-                <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#ec4899" stroke-dasharray="${fatP * 360} 360" stroke-dashoffset="-${carbDeg + protDeg}" transform="rotate(-90 18 18)" />
-                <text x="18" y="20" text-anchor="middle" class="fill-white text-[5px] font-bold">${(totals.calories).toFixed(0)}</text>
-                <text x="18" y="24" text-anchor="middle" class="fill-gray-400 text-[3px]">kcal</text>
-            </svg>
-        `;
-    }
-    
-    function saveToHistory() {
-        const history = JSON.parse(localStorage.getItem('foodScanHistory') || '[]');
-        history.unshift({ timestamp: new Date().toISOString(), foods: detectedFoodsData.map(f => ({ name: f.name, portion: f.portion })) });
-        if (history.length > 50) history.pop();
-        localStorage.setItem('foodScanHistory', JSON.stringify(history));
-    }
-    
-    function loadHistory() {
-        const history = JSON.parse(localStorage.getItem('foodScanHistory') || '[]');
-        historyContent.innerHTML = history.length === 0 ? '<p class="text-gray-400">No scans saved yet.</p>' : '';
-        clearHistoryBtn.style.display = history.length > 0 ? 'block' : 'none';
-        history.forEach(entry => {
-            const entryDiv = document.createElement('div');
-            entryDiv.className = 'glass-panel p-4 rounded-lg';
-            const date = new Date(entry.timestamp);
-            let totalCals = 0;
-            let foodHtml = entry.foods.map(food => {
-                const n = nutritionDB[food.name];
-                if (!n) return '';
-                const factor = food.portion / 100;
-                const cals = n.calories * factor;
-                totalCals += cals;
-                return `<div class="ml-4 text-sm"><span class="capitalize font-semibold">${food.name} (${food.portion}g):</span> ${cals.toFixed(0)} kcal</div>`;
-            }).join('');
-            entryDiv.innerHTML = `
-                <div class="flex justify-between items-center">
-                    <p class="font-bold">${date.toLocaleDateString()} - ${date.toLocaleTimeString()}</p>
-                    <p class="font-bold text-amber-300">${totalCals.toFixed(0)} kcal</p>
-                </div>
-                ${foodHtml}
-            `;
-            historyContent.appendChild(entryDiv);
-        });
-    }
-
-    historyBtn.addEventListener('click', () => { 
-        loadHistory(); 
-        historyModal.classList.remove('hidden');
-        // Push the ad for the modal now that it is visible
-        setTimeout(() => {
-            try {
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            } catch (e) {
-                console.error("AdSense push error in modal:", e);
-            }
-        }, 50);
-    });
-    closeHistoryBtn.addEventListener('click', () => historyModal.classList.add('hidden'));
-
-    let confirmCallback = null;
-    function showConfirm(title, message, callback) {
-        document.getElementById('confirm-title').textContent = title;
-        document.getElementById('confirm-message').textContent = message;
-        confirmCallback = callback;
-        confirmModal.classList.remove('hidden');
-    }
-    confirmOkBtn.addEventListener('click', () => { if (confirmCallback) confirmCallback(); confirmModal.classList.add('hidden'); });
-    confirmCancelBtn.addEventListener('click', () => confirmModal.classList.add('hidden'));
-    clearHistoryBtn.addEventListener('click', () => {
-        showConfirm('Clear History?', 'Are you sure you want to delete all scan history?', () => {
-            localStorage.removeItem('foodScanHistory');
-            loadHistory();
-        });
-    });
-
-    // PWA Installation Logic
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        installBtn.classList.remove('hidden');
-        installBtn.classList.add('flex');
-    });
-
-    installBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            deferredPrompt = null;
-            installBtn.classList.add('hidden');
-        }
-    });
-
-    window.addEventListener('appinstalled', () => {
-        installBtn.classList.add('hidden');
-    });
-    
-    // MODIFIED: Make DOMContentLoaded async to await the data fetch
-    document.addEventListener('DOMContentLoaded', async () => {
-        // Await the new function to ensure data is loaded first
-        await fetchFoodData();
-
-        captureBtn.disabled = true;
-        flipCameraBtn.disabled = true;
-
-        // PWA Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                    })
-                    .catch(err => {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
-            });
-        }
-    });
-</script>
+    </script>
 </body>
 </html>
