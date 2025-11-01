@@ -152,6 +152,11 @@
             padding: 0.75rem; animation: fadeIn 0.5s ease-out forwards;
         }
 
+        /* N-Score Circle Style */
+        #n-score-circle {
+            transition: stroke-dasharray 0.8s ease-out, stroke 0.8s ease;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -226,9 +231,43 @@
               </div>
               
               <div id="totals-container" class="mt-4 pt-4 border-t border-gray-300/50 hidden flex-shrink-0">
+                    
+                    <!-- === NEW N-SCORE SECTION === -->
+                    <div id="n-score-container" class="mb-5 pb-4 border-b border-gray-300/50 text-center hidden">
+                        <div id="n-score-loader" class="flex items-center justify-center gap-2 text-gray-500 py-4">
+                            <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+                            <span>Calculating N-Score...</span>
+                        </div>
+                        <div id="n-score-content" class="hidden">
+                            <div class="relative w-28 h-28 mx-auto">
+                                <svg class="w-full h-full" viewBox="0 0 36 36">
+                                    <path class="text-gray-200"
+                                          d="M18 2.0845
+                                             a 15.9155 15.9155 0 0 1 0 31.831
+                                             a 15.9155 15.9155 0 0 1 0 -31.831"
+                                          fill="none" stroke="currentColor" stroke-width="3" />
+                                    <path id="n-score-circle" class="text-blue-600"
+                                          stroke="currentColor" stroke-width="3.5" stroke-linecap="round"
+                                          fill="none"
+                                          transform="rotate(-90 18 18)"
+                                          d="M18 2.0845
+                                             a 15.9155 15.9155 0 0 1 0 31.831
+                                             a 15.9155 15.9155 0 0 1 0 -31.831"
+                                          stroke-dasharray="0, 100" />
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <span id="n-score-value" class="text-3xl font-bold text-gray-900">0</span>
+                                    <span class="text-xs font-medium text-gray-500">N-Score</span>
+                                </div>
+                            </div>
+                            <p id="n-score-message" class="mt-3 text-base font-medium text-gray-700 px-4 italic">Loading message...</p>
+                        </div>
+                    </div>
+                    <!-- === END N-SCORE SECTION === -->
+
                     <h3 class="text-lg font-semibold text-gray-800 text-center mb-4">Total Estimated Macros</h3>
                     <div class="flex flex-col md:flex-row items-center gap-6">
-                        <div id="chart-container" class="w-40 h-40"></div>
+                        <div id="chart-container" class="w-40 h-40 flex-shrink-0"></div>
                         <div id="totals" class="flex-grow text-base font-medium grid grid-cols-2 gap-x-6 gap-y-2"></div>
                     </div>
               </div>
@@ -278,6 +317,14 @@
               confirmCancelBtn = document.getElementById('confirm-cancel-btn'),
               chartContainer = document.getElementById('chart-container');
         
+        // --- NEW N-Score DOM Elements ---
+        const nScoreContainer = document.getElementById('n-score-container'),
+              nScoreLoader = document.getElementById('n-score-loader'),
+              nScoreContent = document.getElementById('n-score-content'),
+              nScoreCircle = document.getElementById('n-score-circle'),
+              nScoreValue = document.getElementById('n-score-value'),
+              nScoreMessage = document.getElementById('n-score-message');
+
         const uploadBtn = document.getElementById('upload-btn');
         const uploadInput = document.getElementById('upload-input');
         const imagePreview = document.getElementById('image-preview');
@@ -365,9 +412,6 @@
             startCamera();
         });
 
-        //
-        // --- THIS IS THE MODIFIED SECTION ---
-        //
         captureBtn.addEventListener('click', async () => {
             if (!webcamElement.srcObject || webcamElement.paused) return;
             
@@ -398,8 +442,6 @@
             loader.classList.add('hidden');
             resultsPanel.classList.remove('opacity-0', '-translate-y-5');
         });
-        // --- END OF MODIFIED SECTION ---
-        //
 
         uploadBtn.addEventListener('click', () => uploadInput.click());
 
@@ -460,6 +502,7 @@
         function displayError(message) {
             resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-red-100 text-red-700">${message}</div>`;
             totalsContainer.classList.add('hidden');
+            nScoreContainer.classList.add('hidden'); // Hide N-Score on error
         }
 
         function displayResults(items) {
@@ -475,6 +518,7 @@
                 resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-yellow-100 text-yellow-800 flex items-center gap-3"><i data-lucide="alert-triangle"></i><span>This application is not designed to analyze medication.</span></div>`;
                 lucide.createIcons();
                 totalsContainer.classList.add('hidden');
+                nScoreContainer.classList.add('hidden'); // Hide N-Score
                 return;
             }
 
@@ -482,6 +526,7 @@
                 resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-100 text-gray-600 flex items-center gap-3"><i data-lucide="search-slash"></i><p>No supported food items were detected.</p></div>`;
                 lucide.createIcons();
                 totalsContainer.classList.add('hidden');
+                nScoreContainer.classList.add('hidden'); // Hide N-Score
                 return;
             }
 
@@ -517,36 +562,140 @@
             });
 
             if (detectedFoodsData.length > 0) {
-                updateAllCalculations();
+                // Show N-Score container and its loader
+                nScoreContainer.classList.remove('hidden');
+                nScoreLoader.classList.remove('hidden');
+                nScoreContent.classList.add('hidden');
+
+                updateAllCalculations(); // This will now trigger the N-Score fetch
                 totalsContainer.classList.remove('hidden');
-                saveToHistory();
+                // saveToHistory() is now called *after* N-Score is fetched
             } else {
                 resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-100 text-gray-600 flex items-center gap-3"><i data-lucide="database-zap"></i><p>Detected items were not in our nutrition database.</p></div>`;
                  lucide.createIcons();
                 totalsContainer.classList.add('hidden');
+                nScoreContainer.classList.add('hidden'); // Hide N-Score
             }
         }
 
+        /**
+         * NEW: Displays the N-Score and AI-generated message.
+         * Also triggers saving the result to history.
+         */
+        function displayNScore(nScore, message) {
+            // 1. Update text
+            nScoreValue.textContent = nScore;
+            nScoreMessage.textContent = message;
+
+            // 2. Update circle gauge
+            const circumference = 100; // Simplified circumference
+            nScoreCircle.style.strokeDasharray = `${nScore} ${circumference - nScore}`;
+            
+            // 3. Set color based on score
+            let scoreColorClass = "text-blue-600";
+            let textColorClass = "text-blue-900";
+            if (nScore >= 80) { scoreColorClass = "text-green-600"; textColorClass = "text-green-900"; }
+            else if (nScore >= 60) { scoreColorClass = "text-blue-600"; textColorClass = "text-blue-900"; }
+            else if (nScore >= 40) { scoreColorClass = "text-yellow-600"; textColorClass = "text-yellow-900"; }
+            else { scoreColorClass = "text-red-600"; textColorClass = "text-red-900"; }
+            
+            const colorClasses = ["text-green-600", "text-blue-600", "text-yellow-600", "text-red-600"];
+            const textClasses = ["text-green-900", "text-blue-900", "text-yellow-900", "text-red-900"];
+
+            nScoreCircle.classList.remove(...colorClasses);
+            nScoreCircle.classList.add(scoreColorClass);
+            nScoreValue.classList.remove(...textClasses);
+            nScoreValue.classList.add(textColorClass);
+
+            // 4. Show content, hide loader
+            nScoreLoader.classList.add('hidden');
+            nScoreContent.classList.remove('hidden');
+
+            // 5. NOW save to history, since we have all data
+            saveToHistory(nScore, message);
+        }
+
+        /**
+         * NEW: Fetches the N-Score from the serverless function.
+         */
+        async function fetchNScore(totalNutrition, foodNames) {
+            // Show loader every time we fetch (e.g., on portion change)
+            nScoreLoader.classList.remove('hidden');
+            nScoreContent.classList.add('hidden');
+
+            try {
+                const response = await fetch('/.netlify/functions/get-n-score', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ totalNutrition, foodNames })
+                });
+                if (!response.ok) {
+                    throw new Error(`N-Score API error: ${response.status}`);
+                }
+                const { nScore, message } = await response.json();
+                if (nScore === undefined || message === undefined) {
+                    throw new Error("Invalid JSON response from N-Score function.");
+                }
+                displayNScore(nScore, message);
+            } catch (error) {
+                console.error("Failed to fetch N-Score:", error);
+                // Display an error in the N-Score message area
+                nScoreLoader.classList.add('hidden');
+                nScoreContent.classList.remove('hidden');
+                nScoreValue.textContent = "N/A";
+                nScoreMessage.textContent = "Could not calculate N-Score.";
+                nScoreCircle.style.strokeDasharray = "0 100";
+            }
+        }
+
+        /**
+         * UPDATED: Calculates all nutrients and triggers N-Score fetch.
+         */
         function updateAllCalculations() {
-            let total = { carbs: 0, protein: 0, fat: 0, calories: 0 };
+            let totalNutrition = { carbs: 0, protein: 0, fat: 0, calories: 0, fiber: 0, sugar: 0, sodium: 0 };
+            let foodNames = []; // Array of food names for the prompt
+
             detectedFoodsData.forEach(food => {
                 const factor = food.portion / 100;
-                const carbs = food.carbs * factor, protein = food.protein * factor, fat = food.fat * factor;
+                const carbs = food.carbs * factor;
+                const protein = food.protein * factor;
+                const fat = food.fat * factor;
                 const calories = food.calories * factor;
-                total.carbs += carbs; total.protein += protein; total.fat += fat; total.calories += calories;
+                
+                // Add all nutrients to the total
+                totalNutrition.carbs += carbs;
+                totalNutrition.protein += protein;
+                totalNutrition.fat += fat;
+                totalNutrition.calories += calories;
+                totalNutrition.fiber += (food.fiber || 0) * factor;
+                totalNutrition.sugar += (food.sugar || 0) * factor;
+                totalNutrition.sodium += (food.sodium || 0) * factor;
+                
+                foodNames.push(food.name); // Collect food names
+
+                // Update individual item UI
                 document.getElementById(`nutrients-${food.id}`).innerHTML = `
                     <span class="text-blue-600">C: <strong>${carbs.toFixed(1)}g</strong></span> | 
                     <span class="text-purple-600">P: <strong>${protein.toFixed(1)}g</strong></span> | 
                     <span class="text-pink-600">F: <strong>${fat.toFixed(1)}g</strong></span> | 
                     <span class="text-orange-600"><strong>${calories.toFixed(0)} Cal</strong></span>`;
             });
+
+            // Update totals UI
             totalsDiv.innerHTML = `
-                <p>Carbs: <strong class="text-blue-600">${total.carbs.toFixed(1)}g</strong></p>
-                <p>Protein: <strong class="text-purple-600">${total.protein.toFixed(1)}g</strong></p>
-                <p>Fat: <strong class="text-pink-600">${total.fat.toFixed(1)}g</strong></p>
-                <p class="text-orange-600 font-bold col-span-2 text-lg">Total Calories: <strong>${total.calories.toFixed(0)} Cal</strong></p>`;
+                <p>Carbs: <strong class="text-blue-600">${totalNutrition.carbs.toFixed(1)}g</strong></p>
+                <p>Protein: <strong class="text-purple-600">${totalNutrition.protein.toFixed(1)}g</strong></p>
+                <p>Fat: <strong class="text-pink-600">${totalNutrition.fat.toFixed(1)}g</strong></p>
+                <p class="text-orange-600 font-bold col-span-2 text-lg">Total Calories: <strong>${totalNutrition.calories.toFixed(0)} Cal</strong></p>`;
             
-            renderMacroChart(total);
+            // Update macro chart
+            renderMacroChart(totalNutrition);
+
+            // --- NEW CALL ---
+            // Fetch the N-Score with the complete data
+            // Use a unique list of food names
+            const uniqueFoodNames = [...new Set(foodNames)];
+            fetchNScore(totalNutrition, uniqueFoodNames);
         }
 
         function renderMacroChart(totals) {
@@ -574,13 +723,24 @@
             `;
         }
         
-        function saveToHistory() {
+        /**
+         * UPDATED: Now saves nScore and message to history.
+         */
+        function saveToHistory(nScore, message) {
             const history = JSON.parse(localStorage.getItem('foodScanHistory') || '[]');
-            history.unshift({ timestamp: new Date().toISOString(), foods: detectedFoodsData.map(f => ({ name: f.name, portion: f.portion })) });
+            history.unshift({ 
+                timestamp: new Date().toISOString(), 
+                foods: detectedFoodsData.map(f => ({ name: f.name, portion: f.portion })),
+                nScore: nScore, // Save the score
+                message: message // Save the message
+            });
             if (history.length > 50) history.pop();
             localStorage.setItem('foodScanHistory', JSON.stringify(history));
         }
         
+        /**
+         * UPDATED: Now displays nScore and message from history.
+         */
         function loadHistory() {
             const history = JSON.parse(localStorage.getItem('foodScanHistory') || '[]');
             historyContent.innerHTML = history.length === 0 ? '<p class="text-gray-500">No scans saved yet.</p>' : '';
@@ -598,12 +758,30 @@
                     totalCals += cals;
                     return `<div class="ml-4 text-sm"><span class="capitalize font-semibold">${food.name} (${food.portion}g):</span> ${cals.toFixed(0)} Calories</div>`;
                 }).join('');
+
+                // NEW: Add nScore and message if they exist
+                let nScoreColor = "bg-blue-100 text-blue-700";
+                if(entry.nScore) {
+                    if (entry.nScore >= 80) nScoreColor = "bg-green-100 text-green-700";
+                    else if (entry.nScore >= 60) nScoreColor = "bg-blue-100 text-blue-700";
+                    else if (entry.nScore >= 40) nScoreColor = "bg-yellow-100 text-yellow-700";
+                    else nScoreColor = "bg-red-100 text-red-700";
+                }
+
+                const nScoreHtml = entry.nScore !== undefined ? `
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 mt-2">
+                        <span class="text-sm font-bold px-2 py-0.5 rounded-full ${nScoreColor} self-start">N-Score: ${entry.nScore}</span>
+                        <span class="text-sm text-gray-600 italic">"${entry.message}"</span>
+                    </div>
+                ` : '';
+                
                 entryDiv.innerHTML = `
                     <div class="flex justify-between items-center">
                         <p class="font-bold text-sm">${date.toLocaleDateString()} - ${date.toLocaleTimeString()}</p>
                         <p class="font-bold text-orange-600">${totalCals.toFixed(0)} Calories</p>
                     </div>
                     ${foodHtml}
+                    ${nScoreHtml}
                 `;
                 historyContent.appendChild(entryDiv);
             });
