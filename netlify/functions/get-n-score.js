@@ -25,11 +25,12 @@ exports.handler = async function(event) {
         // --- The New Prompt ---
         // This prompt is specifically designed to generate the score and message.
         const prompt = `
-You are 'N-Score', the analysis AI for the "Nutri Scan" app. Your tone is playful, motivating, and insightful, like a fun health coach. You NEVER give medical advice.
+You are 'N-Score', a stringent analysis AI for the "Nutri Scan" app. Your tone is playful, motivating, and insightful, like a fun health coach. You NEVER give medical advice.
 
 A user just ate a meal consisting of: ${foodNames.join(', ') || 'a food item'}.
 
 The meal's total nutritional breakdown is:
+- Total Weight: ${totalNutrition.totalWeight.toFixed(0)}g
 - Calories: ${totalNutrition.calories.toFixed(0)}
 - Protein: ${totalNutrition.protein.toFixed(1)}g
 - Fat: ${totalNutrition.fat.toFixed(1)}g
@@ -38,23 +39,26 @@ The meal's total nutritional breakdown is:
 - Fiber: ${totalNutrition.fiber.toFixed(1)}g
 - Sodium: ${totalNutrition.sodium.toFixed(0)}mg
 
-Based on this data, provide two things in a valid JSON object:
-1.  "nScore": A holistic "N-Score" from 0 (least healthy) to 100 (most healthy). Base this on a good balance of macros (protein, fat, carbs), high fiber, and low sugar & sodium.
-2.  "message": A short, fun, and insightful statement (1-2 sentences) about the meal, using one of these tones: Playful Awareness, Fun Comparison, Positive Reinforcement, Smart Suggestion, or Educational Insight.
+**Scoring-Rules (CRITICAL):**
+Your "nScore" (0-100) MUST be accurate and strict.
+1.  **HIGHLY REWARD:**
+    * **High Fiber:** Very important.
+    * **High Protein-to-Calorie Ratio:** Good.
+    * **Whole Foods:** Foods like 'apple', 'broccoli', 'chicken breast', 'lentil' are excellent.
+2.  **HEAVILY PENALIZE:**
+    * **High Sugar:** Especially if fiber is low.
+    * **High Sodium:** Anything over 500mg for a meal is bad.
+    * **High Fat:** Especially if protein is low.
+    * **Processed/Fried Foods:** Foods like 'samosa', 'pani puri', 'pizza', 'donut' are unhealthy and must get a LOW score.
 
-Example 1 (Healthy):
-{"nScore": 92, "message": "Broccoli wins again! 🥦 You’re fueling clean — your body’s high-fiving you right now 👏."}
+**Example Scoring:**
+* **An 'apple' (150g):** (Cal: 78, P: 0.5g, F: 0.3g, C: 21g, Sugar: 15g, Fiber: 3.6g, Na: 2mg) -> This is a perfect whole food. **nScore: 95-100**. Message: "An apple a day... 🍎 That's a perfect 100-point snack! Fueling smart."
+* **A 'samosa' (100g):** (Cal: 262, P: 5g, F: 17g, C: 24g, Sugar: 2g, Fiber: 2.5g, Na: 420mg) -> This is fried, high-fat, high-sodium. **nScore: 15-25**. Message: "That samosa was a tasty detour! 🧪 Just know it's heavy on refined carbs and fat."
+* **'Pani Puri' (100g):** (Cal: 270, P: 6g, F: 10g, C: 40g, Sugar: 5g, Fiber: 4g, Na: 300mg) -> Fried, high-carb, high-sodium. **nScore: 20-30**. Message: "Pani puri! 🥳 A flavor explosion, but also a sneak attack of fried carbs and sodium."
+* **A 'salad' (200g):** (Cal: 150, P: 10g, F: 5g, C: 15g, Sugar: 5g, Fiber: 8g, Na: 150mg) -> Excellent, high fiber, good protein. **nScore: 85-95**. Message: "Now THAT is a power-up! 🥦 You’re fueling clean — your body’s high-fiving you right now 👏."
 
-Example 2 (Unhealthy):
-{"nScore": 28, "message": "This snack is ultra-processed 🧪 and packed with quick carbs ⚡ — good for taste buds, not your goals!"}
-
-Example 3 (Mixed):
-{"nScore": 65, "message": "This meal's score dropped because it's high in sodium. A little less sauce next time = a higher N-Score! 📈"}
-
-Example 4 (Sugary):
-{"nScore": 40, "message": "You just had 3 cookies’ worth of sugar 🍪… disguised as a ‘healthy bar’ 🤭."}
-
-Now, analyze the user's meal and provide the JSON response.
+Now, analyze the user's meal based on these strict rules and provide the JSON response:
+{"nScore": ..., "message": "..."}
 `;
 
         const payload = {
@@ -134,3 +138,4 @@ Now, analyze the user's meal and provide the JSON response.
         };
     }
 };
+
