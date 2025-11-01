@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Nutri Scan - AI Nutrition Analysis</title>
     <meta name="description" content="Instantly analyze the nutritional content of your food. Just snap a photo or upload an image and let our AI provide an estimate.">
     
@@ -29,10 +29,15 @@
             position: relative;
             overflow-x: hidden;
             min-height: 100vh;
+            
+            /* --- KEY CHANGE: Respects phone notches/islands --- */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
         }
 
-        /* --- NEW: Dynamic blurred background --- */
-        /* This creates the colorful orbs for the glass panels to blur */
+        /* --- Dynamic blurred background (Unchanged) --- */
         body::before,
         body::after {
             content: '';
@@ -60,21 +65,33 @@
 
         /* --- ENHANCED: Liquid Glass Panel --- */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.65); /* More translucent */
+            background: rgba(255, 255, 255, 0.65);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.2); /* Shinier "edge" */
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1); /* Softer shadow */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
             transition: all 0.3s ease;
+            /* --- KEY CHANGE: Softer, more iOS-like radius --- */
+            border-radius: 1.75rem; /* 28px */
+        }
+        
+        /* --- KEY CHANGE: Native App Feel --- */
+        #results-content, #history-content {
+            /* Adds momentum-based scrolling on iOS */
+            -webkit-overflow-scrolling: touch;
+        }
+        button, input, a {
+            /* Removes the gray tap highlight on mobile */
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* System-like scrollbar */
+        /* System-like scrollbar (Unchanged) */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
 
-        /* --- ENHANCED: Primary "Apple Blue" button --- */
+        /* Primary "Apple Blue" button (Unchanged) */
         .btn-primary {
             background-color: #007aff;
             color: white;
@@ -103,10 +120,10 @@
             transform: none;
         }
 
-        /* --- ENHANCED: Secondary control buttons --- */
+        /* Secondary control buttons (Unchanged) */
         .control-btn {
-            background-color: #e5e5ea; /* Light gray */
-            color: #1d1d1f; /* Dark text */
+            background-color: #e5e5ea;
+            color: #1d1d1f;
             transition: all 0.2s ease;
             border: 1px solid transparent;
             border-radius: 0.75rem;
@@ -126,13 +143,14 @@
             border-color: transparent;
         }
         
-        /* --- ENHANCED: Secondary "ghost" button --- */
+        /* Secondary "ghost" button (Unchanged) */
         .btn-secondary {
              background-color: rgba(255, 255, 255, 0.4);
              color: #007aff;
              border: 1px solid #d2d2d7;
              font-weight: 500;
              transition: all 0.2s ease;
+             border-radius: 0.75rem; /* 12px */
         }
         .btn-secondary:hover {
             background-color: rgba(255, 255, 255, 0.7);
@@ -142,7 +160,7 @@
              transform: scale(0.98);
         }
         
-        /* --- NEW: Danger button style --- */
+        /* Danger button style (Unchanged) */
         .btn-danger {
             background-color: #ff3b30;
             color: white;
@@ -160,11 +178,11 @@
             transform: scale(0.98);
         }
 
-        /* --- NEW: Polished input field --- */
+        /* Polished input field (Unchanged) */
         .portion-input {
-            background-color: rgba(229, 229, 234, 0.6); /* bg-gray-200/60 */
+            background-color: rgba(229, 229, 234, 0.6); 
             border: 1px solid transparent;
-            border-radius: 0.5rem; /* rounded-lg */
+            border-radius: 0.5rem; /* 8px */
             padding: 0.25rem 0.5rem;
             font-weight: 500;
             transition: all 0.2s ease;
@@ -176,9 +194,9 @@
             box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
         }
         
-        /* --- NEW: Polished result item card --- */
+        /* Polished result item card (Unchanged) */
         .result-item {
-            background: rgba(255, 255, 255, 0.4); /* Sits inside the glass panel */
+            background: rgba(255, 255, 255, 0.4); 
             border-radius: 0.75rem; /* 12px */
             padding: 0.75rem;
             animation: fadeIn 0.5s ease-out forwards;
@@ -190,19 +208,19 @@
         }
     </style>
 </head>
-<body class="p-4 sm:p-6 min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col">
     
-    <header class="w-full max-w-5xl mx-auto flex justify-between items-center mb-6 flex-shrink-0">
+    <header class="w-full max-w-5xl mx-auto flex justify-between items-center mb-6 flex-shrink-0 px-4 sm:px-6 pt-4">
         <a href="#" class="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12a5 5 0 0 1 5-5"/><path d="M12 17a5 5 0 0 0 5-5"/><path d="M7 12a5 5 0 0 0 5 5"/><path d="M12 7a5 5 0 0 1 5 5"/></svg>
             Nutri Scan
         </a>
     </header>
 
-    <main class="w-full max-w-5xl mx-auto flex flex-col lg:flex-row gap-6 flex-grow">
+    <main class="w-full max-w-5xl mx-auto flex flex-col lg:flex-row gap-6 flex-grow px-4 sm:px-6 pb-4">
         
         <div class="w-full lg:w-1/2 flex flex-col gap-5 lg:sticky lg:top-6 lg:h-[calc(100vh-6rem)]">
-            <div class="glass-panel rounded-3xl p-3 flex-grow flex flex-col items-center justify-center relative aspect-video lg:aspect-auto lg:h-full">
+            <div class="glass-panel p-3 flex-grow flex flex-col items-center justify-center relative aspect-video lg:aspect-auto lg:h-full">
                 <video id="webcam" class="rounded-2xl w-full h-full object-cover transition-opacity duration-300 opacity-0" autoplay playsinline></video>
                 <img id="image-preview" class="hidden rounded-2xl w-full h-full object-contain" />
                 
@@ -247,7 +265,7 @@
             </div>
         </div>
 
-        <div id="results-panel" class="w-full lg:w-1/2 glass-panel rounded-3xl p-4 sm:p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 min-h-[50vh] lg:min-h-[calc(100vh-6rem)]">
+        <div id="results-panel" class="w-full lg:w-1/2 glass-panel p-4 sm:p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 min-h-[50vh] lg:min-h-[calc(100vh-6rem)]">
               <h2 class="text-2xl font-bold text-gray-900 mb-4 flex-shrink-0">Analysis Results</h2>
               
               <div id="results-content" class="flex-grow space-y-3 pr-2 -mr-2 overflow-y-auto">
@@ -268,26 +286,26 @@
     </main>
     
     <div id="history-modal" class="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-        <div class="w-full max-w-2xl glass-panel rounded-3xl p-6 flex flex-col max-h-[90vh]">
+        <div class="w-full max-w-2xl glass-panel p-6 flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-bold text-gray-900">Scan History</h2>
                 <button id="close-history-btn" class="text-gray-500 hover:text-gray-900 transition-transform duration-300 hover:rotate-90"><i data-lucide="x"></i></button>
             </div>
             <div id="history-content" class="flex-grow overflow-y-auto space-y-4 pr-2 -mr-2">
                 </div>
-            <button id="clear-history-btn" class="mt-4 btn-danger py-2 px-4">
+            <button id="clear-history-btn" class="mt-4 btn-danger py-2 px-4 rounded-xl">
                 Clear History
             </button>
         </div>
     </div>
     
     <div id="confirm-modal" class="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-        <div class="w-full max-w-sm glass-panel rounded-3xl p-6 text-center">
+        <div class="w-full max-w-sm glass-panel p-6 text-center">
             <h3 id="confirm-title" class="text-lg font-semibold mb-2">Are you sure?</h3>
             <p id="confirm-message" class="text-gray-600 mb-6">This action cannot be undone.</p>
             <div class="flex gap-4">
-                <button id="confirm-cancel-btn" class="w-full control-btn py-2 px-4">Cancel</button>
-                <button id="confirm-ok-btn" class="w-full btn-danger py-2 px-4">Confirm</button>
+                <button id="confirm-cancel-btn" class="w-full control-btn py-2 px-4 rounded-xl">Cancel</button>
+                <button id="confirm-ok-btn" class="w-full btn-danger py-2 px-4 rounded-xl">Confirm</button>
             </div>
         </div>
     </div>
@@ -505,8 +523,7 @@
                     const confidenceColor = data.confidence > 0.8 ? 'text-green-600' : data.confidence > 0.6 ? 'text-yellow-600' : 'text-red-600';
                     
                     const foodElement = document.createElement('div');
-                    // --- STYLISTIC CHANGE HERE ---
-                    foodElement.className = 'result-item'; // Use new polished class
+                    foodElement.className = 'result-item';
                     foodElement.style.animationDelay = `${index * 100}ms`;
                     foodElement.innerHTML = `
                         <div class="flex items-center justify-between">
@@ -601,7 +618,7 @@
             clearHistoryBtn.style.display = history.length > 0 ? 'block' : 'none';
             history.forEach(entry => {
                 const entryDiv = document.createElement('div');
-                entryDiv.className = 'result-item'; // Use same polished class for history
+                entryDiv.className = 'result-item'; 
                 const date = new Date(entry.timestamp);
                 let totalCals = 0;
                 let foodHtml = entry.foods.map(food => {
