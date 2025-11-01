@@ -28,7 +28,6 @@
             -moz-osx-font-smoothing: grayscale;
             position: relative;
             overflow-x: hidden;
-            /* Makes the body at least the screen height */
             min-height: 100vh; 
             
             padding-top: env(safe-area-inset-top);
@@ -37,7 +36,6 @@
             padding-right: env(safe-area-inset-right);
         }
 
-        /* Dynamic blurred background (Unchanged) */
         body::before,
         body::after {
             content: '';
@@ -63,7 +61,6 @@
             right: -200px;
         }
 
-        /* Liquid Glass Panel (Unchanged) */
         .glass-panel {
             background: rgba(255, 255, 255, 0.65);
             backdrop-filter: blur(30px);
@@ -74,7 +71,6 @@
             border-radius: 1.75rem; /* 28px */
         }
         
-        /* Native App Feel (Unchanged) */
         #results-content, #history-content {
             -webkit-overflow-scrolling: touch;
         }
@@ -82,16 +78,13 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- NEW: Premium Loader Text --- */
         #loader p {
-            letter-spacing: 0.05em; /* Adds elegance */
+            letter-spacing: 0.05em;
         }
 
-        /* --- NEW: Premium Modal Animations --- */
         .modal-wrapper {
             opacity: 0;
             transition: opacity 0.2s ease-out;
-            /* Ensures it's on top */
             z-index: 50; 
         }
         .modal-wrapper .glass-panel {
@@ -105,13 +98,11 @@
             transform: scale(1.0);
         }
 
-        /* System-like scrollbar (Unchanged) */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
 
-        /* Buttons (Unchanged) */
         .btn-primary {
             background-color: #007aff; color: white; font-weight: 600; padding: 0.75rem 1rem;
             border-radius: 0.75rem; transition: all 0.2s ease; display: flex; align-items: center;
@@ -146,7 +137,6 @@
         .btn-danger:hover { background-color: #e02b20; transform: scale(1.02); }
         .btn-danger:active { transform: scale(0.98); }
 
-        /* Polished input field (Unchanged) */
         .portion-input {
             background-color: rgba(229, 229, 234, 0.6); border: 1px solid transparent;
             border-radius: 0.5rem; padding: 0.25rem 0.5rem; font-weight: 500;
@@ -157,7 +147,6 @@
             box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
         }
         
-        /* Polished result item card (Unchanged) */
         .result-item {
             background: rgba(255, 255, 255, 0.4); border-radius: 0.75rem;
             padding: 0.75rem; animation: fadeIn 0.5s ease-out forwards;
@@ -253,7 +242,7 @@
                 <button id="close-history-btn" class="text-gray-500 hover:text-gray-900 transition-transform duration-300 hover:rotate-90"><i data-lucide="x"></i></button>
             </div>
             <div id="history-content" class="flex-grow overflow-y-auto space-y-4 pr-2 -mr-2">
-                </div>
+            </div>
             <button id="clear-history-btn" class="mt-4 btn-danger py-2 px-4 rounded-xl">
                 Clear History
             </button>
@@ -321,7 +310,7 @@
                 currentStream = stream;
                 webcamElement.srcObject = stream;
                 webcamElement.classList.remove('hidden', 'opacity-0');
-                imagePreview.classList.add('hidden');
+                imagePreview.classList.add('hidden'); // Hide static preview
                 cameraOffPlaceholder.classList.add('hidden');
                 cameraError.classList.add('hidden');
                 
@@ -351,7 +340,8 @@
             if (currentStream) { currentStream.getTracks().forEach(track => track.stop()); }
             webcamElement.srcObject = null;
             webcamElement.classList.add('hidden', 'opacity-0');
-            if (!imagePreview.src) {
+            // If no static preview is set, show the placeholder
+            if (!imagePreview.src || imagePreview.classList.contains('hidden')) {
                 cameraOffPlaceholder.classList.remove('hidden');
             }
             cameraError.classList.add('hidden');
@@ -375,22 +365,41 @@
             startCamera();
         });
 
+        //
+        // --- THIS IS THE MODIFIED SECTION ---
+        //
         captureBtn.addEventListener('click', async () => {
             if (!webcamElement.srcObject || webcamElement.paused) return;
+            
             loader.classList.remove('hidden');
             resultsPanel.classList.add('opacity-0', '-translate-y-5');
             
+            // 1. Draw the current frame to the canvas
             const context = canvasElement.getContext('2d');
             canvasElement.width = webcamElement.videoWidth;
             canvasElement.height = webcamElement.videoHeight;
             context.drawImage(webcamElement, 0, 0, canvasElement.width, canvasElement.height);
-            const base64ImageData = canvasElement.toDataURL('image/jpeg', 0.8).split(',')[1];
             
+            // 2. Get the captured image as a DataURL
+            const capturedImage = canvasElement.toDataURL('image/jpeg', 0.8);
+            const base64ImageData = capturedImage.split(',')[1];
+            
+            // 3. Set the static image preview's source
+            imagePreview.src = capturedImage;
+            // 4. Show the static preview
+            imagePreview.classList.remove('hidden');
+            
+            // 5. NOW, stop the live camera feed
+            stopCamera();
+            
+            // 6. Proceed with detection
             await detectFood(base64ImageData);
             
             loader.classList.add('hidden');
             resultsPanel.classList.remove('opacity-0', '-translate-y-5');
         });
+        // --- END OF MODIFIED SECTION ---
+        //
 
         uploadBtn.addEventListener('click', () => uploadInput.click());
 
@@ -398,7 +407,7 @@
             const file = e.target.files[0];
             if (!file) return;
 
-            stopCamera(); 
+            stopCamera(); // Stop any active camera
 
             const reader = new FileReader();
             reader.onload = async (event) => {
@@ -600,15 +609,14 @@
             });
         }
 
-        // --- KEY CHANGE: Updated modal open/close logic ---
         historyBtn.addEventListener('click', () => { 
             loadHistory(); 
             historyModal.classList.remove('hidden');
-            setTimeout(() => historyModal.classList.add('modal-open'), 10); // Fade in
+            setTimeout(() => historyModal.classList.add('modal-open'), 10); 
         });
         closeHistoryBtn.addEventListener('click', () => {
             historyModal.classList.remove('modal-open');
-            setTimeout(() => historyModal.classList.add('hidden'), 200); // Wait for fade out
+            setTimeout(() => historyModal.classList.add('hidden'), 200); 
         });
 
         let confirmCallback = null;
@@ -617,18 +625,18 @@
             document.getElementById('confirm-message').textContent = message;
             confirmCallback = callback;
             confirmModal.classList.remove('hidden');
-            setTimeout(() => confirmModal.classList.add('modal-open'), 10); // Fade in
+            setTimeout(() => confirmModal.classList.add('modal-open'), 10); 
         }
         
         confirmOkBtn.addEventListener('click', () => { 
             if (confirmCallback) confirmCallback(); 
             confirmModal.classList.remove('modal-open');
-            setTimeout(() => confirmModal.classList.add('hidden'), 200); // Wait for fade out
+            setTimeout(() => confirmModal.classList.add('hidden'), 200); 
         });
         
         confirmCancelBtn.addEventListener('click', () => {
             confirmModal.classList.remove('modal-open');
-            setTimeout(() => confirmModal.classList.add('hidden'), 200); // Wait for fade out
+            setTimeout(() => confirmModal.classList.add('hidden'), 200); 
         });
         
         clearHistoryBtn.addEventListener('click', () => {
