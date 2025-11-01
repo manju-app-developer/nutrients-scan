@@ -9,9 +9,8 @@ exports.handler = async function(event) {
     }
 
     const apiKey = process.env.GOOGLE_API_KEY;
-    // Note: Using a specific model like 'gemini-1.5-flash-latest' is recommended.
-    // Update the model name as new ones become available.
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+    // Updated to use the gemini-2.5-flash model
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
     try {
         // Get the total nutrition data and food names from the client
@@ -68,7 +67,36 @@ Now, analyze the user's meal and provide the JSON response.
             }
         };
 
-        const response = await fetch(apiUrl, {
+        // Helper function for fetch with retry
+        async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.ok) {
+                        return response;
+                    }
+                    // Don't retry on client errors (4xx)
+                    if (response.status >= 400 && response.status < 500) {
+                        return response;
+                    }
+                    // Retry on server errors (5xx) or rate limits (429)
+                    if (i < retries - 1) {
+                        await new Promise(res => setTimeout(res, delay * Math.pow(2, i)));
+                    }
+                } catch (error) {
+                    if (i < retries - 1) {
+                        await new Promise(res => setTimeout(res, delay * Math.pow(2, i)));
+                    } else {
+                        throw error;
+                    }
+                }
+            }
+            // If all retries fail, return the last response or throw
+            return await fetch(url, options);
+        }
+
+
+        const response = await fetchWithRetry(apiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -76,10 +104,17 @@ Now, analyze the user's meal and provide the JSON response.
 
         if (!response.ok) {
             const errorText = await response.text();
+            console.error(`API error ${response.status}: ${errorText}`);
             throw new Error(`API error ${response.status}: ${errorText}`);
         }
 
         const result = await response.json();
+
+        // Error handling for API response structure
+        if (!result.candidates || !result.candidates[0] || !result.candidates[0].content || !result.candidates[0].content.parts[0] || !result.candidates[0].content.parts[0].text) {
+            console.error('Invalid API response structure:', JSON.stringify(result));
+            throw new Error('Invalid API response structure.');
+        }
 
         // Extract the JSON text from the API's response
         const generatedJson = result.candidates[0].content.parts[0].text;
