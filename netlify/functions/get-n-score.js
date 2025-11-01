@@ -1,6 +1,7 @@
 // /netlify/functions/get-n-score.js
-// This function receives aggregated nutritional data from the client
-// and asks the AI to generate an N-Score and a fun, insightful message.
+// This function receives aggregated nutritional data from the client,
+// sends it to the Gemini API, and returns a JSON object with an
+// N-Score and a fun, insightful message.
 
 exports.handler = async function(event) {
     // Only allow POST requests
@@ -9,7 +10,7 @@ exports.handler = async function(event) {
     }
 
     const apiKey = process.env.GOOGLE_API_KEY;
-    // Updated to use the gemini-2.5-flash model
+    // Using the specified gemini-2.5-flash model
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
     try {
@@ -22,56 +23,71 @@ exports.handler = async function(event) {
             return { statusCode: 400, body: JSON.stringify({ error: 'Missing totalNutrition data.' }) };
         }
 
-        // --- The New Prompt ---
-        // This prompt is specifically designed to generate the score and message.
-        const prompt = `
+        // --- System Prompt (The AI's "Rules") ---
+        // This defines the AI's persona, its goal, and the output format.
+        // It's separate from the user's data for better clarity.
+        const systemPrompt = `
 You are 'N-Score', the analysis AI for the "Nutri Scan" app. Your tone is playful, motivating, and insightful, like a fun health coach. You NEVER give medical advice.
 
-A user just ate a meal consisting of: ${foodNames.join(', ') || 'a food item'}.
+You will be given a meal's nutritional data and must respond *only* with a valid JSON object.
 
-The meal's total nutritional breakdown is:
-- Calories: ${totalNutrition.calories.toFixed(0)}
-- Protein: ${totalNutrition.protein.toFixed(1)}g
-- Fat: ${totalNutrition.fat.toFixed(1)}g
-- Carbohydrates: ${totalNutrition.carbs.toFixed(1)}g
-- Sugar: ${totalNutrition.sugar.toFixed(1)}g
-- Fiber: ${totalNutrition.fiber.toFixed(1)}g
-- Sodium: ${totalNutrition.sodium.toFixed(0)}mg
-
-Based on this data, provide two things in a valid JSON object:
+The JSON object must contain:
 1.  "nScore": A holistic "N-Score" from 0 (least healthy) to 100 (most healthy). Base this on a good balance of macros (protein, fat, carbs), high fiber, and low sugar & sodium.
-2.  "message": A short, fun, and insightful statement (1-2 sentences) about the meal, using one of these tones: Playful Awareness, Fun Comparison, Positive Reinforcement, Smart Suggestion, or Educational Insight.
+2.  "message": A short, fun, and insightful statement (1-2 sentences) about the meal.
 
-Example 1 (Healthy):
-{"nScore": 92, "message": "Broccoli wins again! 🥦 You’re fueling clean — your body’s high-fiving you right now 👏."}
+Example Tones:
+- Healthy: "Broccoli wins again! 🥦 You’re fueling clean — your body’s high-fiving you right now 👏."
+- Unhealthy: "That was a high-sodium, high-fat hit! 💥 Great for a treat, but think of it like a cheat code for your taste buds, not your fuel tank."
+- Mixed: "This meal's score dropped because it's high in sodium. A little less sauce next time = a higher N-Score! 📈"
+- Sugary: "You just had 3 cookies’ worth of sugar 🍪… disguised as a ‘healthy bar’ 🤭."
 
-Example 2 (Unhealthy):
-{"nScore": 28, "message": "This snack is ultra-processed 🧪 and packed with quick carbs ⚡ — good for taste buds, not your goals!"}
-
-Example 3 (Mixed):
-{"nScore": 65, "message": "This meal's score dropped because it's high in sodium. A little less sauce next time = a higher N-Score! 📈"}
-
-Example 4 (Sugary):
-{"nScore": 40, "message": "You just had 3 cookies’ worth of sugar 🍪… disguised as a ‘healthy bar’ 🤭."}
-
-Now, analyze the user's meal and provide the JSON response.
+Analyze the user's meal and provide the JSON response. Do not add any other text.
 `;
+
+        // --- User Prompt (The "Data" for this specific request) ---
+        const userPrompt = `
+        Analyze the following meal:
+        - Meal: ${foodNames.join(', ') || 'a food item'}
+        - Calories: ${totalNutrition.calories.toFixed(0)}
+        - Protein: ${totalNutrition.protein.toFixed(1)}g
+        - Fat: ${totalNutrition.fat.toFixed(1)}g
+        - Carbohydrates: ${totalNutrition.carbs.toFixed(1)}g
+        - Sugar: ${totalNutrition.sugar.toFixed(1)}g
+        - Fiber: ${totalNutrition.fiber.toFixed(1)}g
+        - Sodium: ${totalNutrition.sodium.toFixed(0)}mg
+        `;
+
+        // --- Response Schema (The "Guarantee" of JSON shape) ---
+        // This tells the AI the *exact* structure the JSON must have.
+        const responseSchema = {
+            type: "OBJECT",
+            properties: {
+                "nScore": { "type": "NUMBER" },
+                "message": { "type": "STRING" }
+            },
+            required: ["nScore", "message"]
+        };
 
         const payload = {
             contents: [{
-                parts: [{ text: prompt }]
+                parts: [{ text: userPrompt }]
             }],
-            // Adding generation config to ensure JSON output
+            systemInstruction: {
+                parts: [{ text: systemPrompt }]
+            },
             generationConfig: {
                 "responseMimeType": "application/json",
+                "responseSchema": responseSchema
             }
         };
 
-        // Helper function for fetch with retry
+        // Helper function for fetch with exponential backoff
         async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
             for (let i = 0; i < retries; i++) {
                 try {
+                    // Use 'fetch' directly (available in modern Netlify Node.js runtimes)
                     const response = await fetch(url, options);
+                    
                     if (response.ok) {
                         return response;
                     }
@@ -82,19 +98,20 @@ Now, analyze the user's meal and provide the JSON response.
                     // Retry on server errors (5xx) or rate limits (429)
                     if (i < retries - 1) {
                         await new Promise(res => setTimeout(res, delay * Math.pow(2, i)));
+                    } else {
+                        // Last retry failed
+                        return response; 
                     }
                 } catch (error) {
                     if (i < retries - 1) {
                         await new Promise(res => setTimeout(res, delay * Math.pow(2, i)));
                     } else {
+                        // All retries failed on network error
                         throw error;
                     }
                 }
             }
-            // If all retries fail, return the last response or throw
-            return await fetch(url, options);
         }
-
 
         const response = await fetchWithRetry(apiUrl, {
             method: 'POST',
