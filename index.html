@@ -28,16 +28,16 @@
             -moz-osx-font-smoothing: grayscale;
             position: relative;
             overflow-x: hidden;
-            min-height: 100vh;
+            /* Makes the body at least the screen height */
+            min-height: 100vh; 
             
-            /* --- KEY CHANGE: Respects phone notches/islands --- */
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
             padding-left: env(safe-area-inset-left);
             padding-right: env(safe-area-inset-right);
         }
 
-        /* --- Dynamic blurred background (Unchanged) --- */
+        /* Dynamic blurred background (Unchanged) */
         body::before,
         body::after {
             content: '';
@@ -63,7 +63,7 @@
             right: -200px;
         }
 
-        /* --- ENHANCED: Liquid Glass Panel --- */
+        /* Liquid Glass Panel (Unchanged) */
         .glass-panel {
             background: rgba(255, 255, 255, 0.65);
             backdrop-filter: blur(30px);
@@ -71,18 +71,38 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
             transition: all 0.3s ease;
-            /* --- KEY CHANGE: Softer, more iOS-like radius --- */
             border-radius: 1.75rem; /* 28px */
         }
         
-        /* --- KEY CHANGE: Native App Feel --- */
+        /* Native App Feel (Unchanged) */
         #results-content, #history-content {
-            /* Adds momentum-based scrolling on iOS */
             -webkit-overflow-scrolling: touch;
         }
         button, input, a {
-            /* Removes the gray tap highlight on mobile */
             -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- NEW: Premium Loader Text --- */
+        #loader p {
+            letter-spacing: 0.05em; /* Adds elegance */
+        }
+
+        /* --- NEW: Premium Modal Animations --- */
+        .modal-wrapper {
+            opacity: 0;
+            transition: opacity 0.2s ease-out;
+            /* Ensures it's on top */
+            z-index: 50; 
+        }
+        .modal-wrapper .glass-panel {
+            transform: scale(0.95);
+            transition: transform 0.2s ease-out;
+        }
+        .modal-wrapper.modal-open {
+            opacity: 1;
+        }
+        .modal-wrapper.modal-open .glass-panel {
+            transform: scale(1.0);
         }
 
         /* System-like scrollbar (Unchanged) */
@@ -91,115 +111,56 @@
         ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
 
-        /* Primary "Apple Blue" button (Unchanged) */
+        /* Buttons (Unchanged) */
         .btn-primary {
-            background-color: #007aff;
-            color: white;
-            font-weight: 600;
-            padding: 0.75rem 1rem;
-            border-radius: 0.75rem; /* 12px */
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            border: none;
-            cursor: pointer;
+            background-color: #007aff; color: white; font-weight: 600; padding: 0.75rem 1rem;
+            border-radius: 0.75rem; transition: all 0.2s ease; display: flex; align-items: center;
+            justify-content: center; gap: 0.5rem; border: none; cursor: pointer;
         }
-        .btn-primary:hover {
-            background-color: #0070e0;
-            transform: scale(1.02);
-        }
-        .btn-primary:active {
-            transform: scale(0.98);
-        }
+        .btn-primary:hover { background-color: #0070e0; transform: scale(1.02); }
+        .btn-primary:active { transform: scale(0.98); }
         .btn-primary:disabled {
-            background-color: #e5e5ea;
-            color: #8e8e93;
-            cursor: not-allowed;
-            transform: none;
+            background-color: #e5e5ea; color: #8e8e93;
+            cursor: not-allowed; transform: none;
         }
-
-        /* Secondary control buttons (Unchanged) */
         .control-btn {
-            background-color: #e5e5ea;
-            color: #1d1d1f;
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-            border-radius: 0.75rem;
-            font-weight: 500;
+            background-color: #e5e5ea; color: #1d1d1f; transition: all 0.2s ease;
+            border: 1px solid transparent; border-radius: 0.75rem; font-weight: 500;
         }
-        .control-btn:hover {
-            background-color: #dcdce0;
-            transform: scale(1.03);
-        }
-        .control-btn:active {
-            transform: scale(0.97);
-        }
+        .control-btn:hover { background-color: #dcdce0; transform: scale(1.03); }
+        .control-btn:active { transform: scale(0.97); }
         .control-btn.active {
-            background-color: #007aff;
-            color: white;
-            box-shadow: none;
-            border-color: transparent;
+            background-color: #007aff; color: white;
+            box-shadow: none; border-color: transparent;
         }
-        
-        /* Secondary "ghost" button (Unchanged) */
         .btn-secondary {
-             background-color: rgba(255, 255, 255, 0.4);
-             color: #007aff;
-             border: 1px solid #d2d2d7;
-             font-weight: 500;
-             transition: all 0.2s ease;
-             border-radius: 0.75rem; /* 12px */
+             background-color: rgba(255, 255, 255, 0.4); color: #007aff; border: 1px solid #d2d2d7;
+             font-weight: 500; transition: all 0.2s ease; border-radius: 0.75rem;
         }
-        .btn-secondary:hover {
-            background-color: rgba(255, 255, 255, 0.7);
-            transform: scale(1.02);
-        }
-        .btn-secondary:active {
-             transform: scale(0.98);
-        }
-        
-        /* Danger button style (Unchanged) */
+        .btn-secondary:hover { background-color: rgba(255, 255, 255, 0.7); transform: scale(1.02); }
+        .btn-secondary:active { transform: scale(0.98); }
         .btn-danger {
-            background-color: #ff3b30;
-            color: white;
-            font-weight: 600;
-            padding: 0.5rem 1rem;
-            border-radius: 0.75rem;
-            transition: all 0.2s ease;
-            border: none;
+            background-color: #ff3b30; color: white; font-weight: 600; padding: 0.5rem 1rem;
+            border-radius: 0.75rem; transition: all 0.2s ease; border: none;
         }
-        .btn-danger:hover {
-            background-color: #e02b20;
-            transform: scale(1.02);
-        }
-        .btn-danger:active {
-            transform: scale(0.98);
-        }
+        .btn-danger:hover { background-color: #e02b20; transform: scale(1.02); }
+        .btn-danger:active { transform: scale(0.98); }
 
         /* Polished input field (Unchanged) */
         .portion-input {
-            background-color: rgba(229, 229, 234, 0.6); 
-            border: 1px solid transparent;
-            border-radius: 0.5rem; /* 8px */
-            padding: 0.25rem 0.5rem;
-            font-weight: 500;
+            background-color: rgba(229, 229, 234, 0.6); border: 1px solid transparent;
+            border-radius: 0.5rem; padding: 0.25rem 0.5rem; font-weight: 500;
             transition: all 0.2s ease;
         }
         .portion-input:focus {
-            outline: none;
-            border-color: #007aff;
-            background-color: rgba(255, 255, 255, 0.8);
+            outline: none; border-color: #007aff; background-color: rgba(255, 255, 255, 0.8);
             box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
         }
         
         /* Polished result item card (Unchanged) */
         .result-item {
-            background: rgba(255, 255, 255, 0.4); 
-            border-radius: 0.75rem; /* 12px */
-            padding: 0.75rem;
-            animation: fadeIn 0.5s ease-out forwards;
+            background: rgba(255, 255, 255, 0.4); border-radius: 0.75rem;
+            padding: 0.75rem; animation: fadeIn 0.5s ease-out forwards;
         }
 
         @keyframes fadeIn {
@@ -210,16 +171,16 @@
 </head>
 <body class="min-h-screen flex flex-col">
     
-    <header class="w-full max-w-5xl mx-auto flex justify-between items-center mb-6 flex-shrink-0 px-4 sm:px-6 pt-4">
-        <a href="#" class="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12a5 5 0 0 1 5-5"/><path d="M12 17a5 5 0 0 0 5-5"/><path d="M7 12a5 5 0 0 0 5 5"/><path d="M12 7a5 5 0 0 1 5 5"/></svg>
+    <header class="w-full max-w-5xl mx-auto flex justify-between items-center mb-6 flex-shrink-0 px-4 sm:px-6 pt-6">
+        <a href="#" class="text-3xl font-bold text-gray-900 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12a5 5 0 0 1 5-5"/><path d="M12 17a5 5 0 0 0 5-5"/><path d="M7 12a5 5 0 0 0 5 5"/><path d="M12 7a5 5 0 0 1 5 5"/></svg>
             Nutri Scan
         </a>
     </header>
 
-    <main class="w-full max-w-5xl mx-auto flex flex-col lg:flex-row gap-6 flex-grow px-4 sm:px-6 pb-4">
+    <main class="w-full max-w-5xl mx-auto flex flex-col lg:flex-row gap-6 flex-grow px-4 sm:px-6 pb-6">
         
-        <div class="w-full lg:w-1/2 flex flex-col gap-5 lg:sticky lg:top-6 lg:h-[calc(100vh-6rem)]">
+        <div class="w-full lg:w-1/2 flex flex-col gap-5 lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)] flex-shrink-0">
             <div class="glass-panel p-3 flex-grow flex flex-col items-center justify-center relative aspect-video lg:aspect-auto lg:h-full">
                 <video id="webcam" class="rounded-2xl w-full h-full object-cover transition-opacity duration-300 opacity-0" autoplay playsinline></video>
                 <img id="image-preview" class="hidden rounded-2xl w-full h-full object-contain" />
@@ -265,7 +226,7 @@
             </div>
         </div>
 
-        <div id="results-panel" class="w-full lg:w-1/2 glass-panel p-4 sm:p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 min-h-[50vh] lg:min-h-[calc(100vh-6rem)]">
+        <div id="results-panel" class="w-full lg:w-1/2 glass-panel p-4 sm:p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 flex-grow">
               <h2 class="text-2xl font-bold text-gray-900 mb-4 flex-shrink-0">Analysis Results</h2>
               
               <div id="results-content" class="flex-grow space-y-3 pr-2 -mr-2 overflow-y-auto">
@@ -285,7 +246,7 @@
         </div>
     </main>
     
-    <div id="history-modal" class="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div id="history-modal" class="modal-wrapper fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 hidden">
         <div class="w-full max-w-2xl glass-panel p-6 flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-bold text-gray-900">Scan History</h2>
@@ -299,7 +260,7 @@
         </div>
     </div>
     
-    <div id="confirm-modal" class="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div id="confirm-modal" class="modal-wrapper fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 hidden">
         <div class="w-full max-w-sm glass-panel p-6 text-center">
             <h3 id="confirm-title" class="text-lg font-semibold mb-2">Are you sure?</h3>
             <p id="confirm-message" class="text-gray-600 mb-6">This action cannot be undone.</p>
@@ -589,7 +550,6 @@
             const carbP = (carbs / totalMacros);
             const protP = (protein / totalMacros);
             const fatP = (fat / totalMacros);
-
             const carbDeg = carbP * 360;
             const protDeg = protP * 360;
 
@@ -640,11 +600,16 @@
             });
         }
 
+        // --- KEY CHANGE: Updated modal open/close logic ---
         historyBtn.addEventListener('click', () => { 
             loadHistory(); 
             historyModal.classList.remove('hidden');
+            setTimeout(() => historyModal.classList.add('modal-open'), 10); // Fade in
         });
-        closeHistoryBtn.addEventListener('click', () => historyModal.classList.add('hidden'));
+        closeHistoryBtn.addEventListener('click', () => {
+            historyModal.classList.remove('modal-open');
+            setTimeout(() => historyModal.classList.add('hidden'), 200); // Wait for fade out
+        });
 
         let confirmCallback = null;
         function showConfirm(title, message, callback) {
@@ -652,9 +617,20 @@
             document.getElementById('confirm-message').textContent = message;
             confirmCallback = callback;
             confirmModal.classList.remove('hidden');
+            setTimeout(() => confirmModal.classList.add('modal-open'), 10); // Fade in
         }
-        confirmOkBtn.addEventListener('click', () => { if (confirmCallback) confirmCallback(); confirmModal.classList.add('hidden'); });
-        confirmCancelBtn.addEventListener('click', () => confirmModal.classList.add('hidden'));
+        
+        confirmOkBtn.addEventListener('click', () => { 
+            if (confirmCallback) confirmCallback(); 
+            confirmModal.classList.remove('modal-open');
+            setTimeout(() => confirmModal.classList.add('hidden'), 200); // Wait for fade out
+        });
+        
+        confirmCancelBtn.addEventListener('click', () => {
+            confirmModal.classList.remove('modal-open');
+            setTimeout(() => confirmModal.classList.add('hidden'), 200); // Wait for fade out
+        });
+        
         clearHistoryBtn.addEventListener('click', () => {
             showConfirm('Clear History?', 'Are you sure you want to delete all scan history?', () => {
                 localStorage.removeItem('foodScanHistory');
