@@ -377,6 +377,29 @@ exports.handler = async function(event, context) {
     'tea (black)': { calories: 1, protein: 0.1, carbs: 0.2, fat: 0, fiber: 0, sugar: 0, sodium: 3 },
     'wine (red)': { calories: 85, protein: 0.1, carbs: 2.6, fat: 0, fiber: 0, sugar: 0.6, sodium: 4 },
 
+    // Soups
+    'tomato soup (canned, prepared)': { calories: 30, protein: 0.7, carbs: 6.5, fat: 0.2, fiber: 0.8, sugar: 4, sodium: 290 },
+    'chicken noodle soup (canned, prepared)': { calories: 35, protein: 1.5, carbs: 4.5, fat: 1, fiber: 0.5, sugar: 1, sodium: 350 },
+    'vegetable soup (canned, prepared)': { calories: 32, protein: 1, carbs: 6, fat: 0.5, fiber: 1.5, sugar: 3, sodium: 380 },
+    'lentil soup (canned, prepared)': { calories: 55, protein: 3, carbs: 9, fat: 0.5, fiber: 3, sugar: 2, sodium: 330 },
+    'cream of mushroom soup (canned, prepared)': { calories: 40, protein: 0.8, carbs: 4, fat: 2.5, fiber: 0.5, sugar: 2.5, sodium: 340 },
+    'minestrone soup (canned, prepared)': { calories: 45, protein: 2, carbs: 8, fat: 0.5, fiber: 2, sugar: 3, sodium: 360 },
+    'broccoli cheddar soup': { calories: 90, protein: 3, carbs: 6, fat: 6, fiber: 1.5, sugar: 2, sodium: 450 },
+    'black bean soup': { calories: 70, protein: 4, carbs: 12, fat: 0.5, fiber: 4, sugar: 1, sodium: 390 },
+    'new england clam chowder': { calories: 80, protein: 3, carbs: 8, fat: 4, fiber: 0.8, sugar: 1.5, sodium: 380 },
+    'miso soup': { calories: 25, protein: 2, carbs: 2.5, fat: 1, fiber: 0.5, sugar: 1, sodium: 300 },
+    'hot and sour soup': { calories: 35, protein: 2, carbs: 5, fat: 1, fiber: 0.8, sugar: 2.5, sodium: 400 },
+    'rasam': { calories: 20, protein: 0.8, carbs: 4, fat: 0.2, fiber: 1, sugar: 2, sodium: 250 },
+    'sambar': { calories: 50, protein: 2.5, carbs: 8, fat: 1.5, fiber: 3, sugar: 3, sodium: 300 },
+    'butternut squash soup': { calories: 45, protein: 1.1, carbs: 10, fat: 0.5, fiber: 2, sugar: 3.5, sodium: 310 },
+    'french onion soup': { calories: 55, protein: 3, carbs: 6, fat: 2.5, fiber: 0.8, sugar: 3, sodium: 390 },
+    'manchow soup': { calories: 46, protein: 1.5, carbs: 5.8, fat: 1.9, fiber: 0.8, sugar: 1.2, sodium: 350 },
+    'wonton soup': { calories: 32, protein: 2.1, carbs: 5.2, fat: 0.3, fiber: 0.2, sugar: 0.3, sodium: 406 },
+    'tom yum soup': { calories: 38, protein: 1.9, carbs: 3.8, fat: 1.1, fiber: 0.8, sugar: 1.1, sodium: 302 },
+    'gazpacho': { calories: 46, protein: 0.8, carbs: 2.9, fat: 3.6, fiber: 0.7, sugar: 2.5, sodium: 300 },
+    'pumpkin soup': { calories: 43, protein: 1, carbs: 7.4, fat: 1.2, fiber: 1, sugar: 3, sodium: 350 },
+    'potato leek soup': { calories: 42, protein: 1.3, carbs: 7.5, fat: 0.8, fiber: 0.8, sugar: 2.5, sodium: 200 },
+
     // Sweets & Snacks
     'brownie': { calories: 466, protein: 5, carbs: 56, fat: 26, fiber: 2.7, sugar: 48, sodium: 170 },
     'cake': { calories: 350, protein: 4, carbs: 50, fat: 15, fiber: 1.5, sugar: 35, sodium: 300 },
@@ -400,7 +423,6 @@ exports.handler = async function(event, context) {
     'pretzels': { calories: 380, protein: 10, carbs: 80, fat: 2.6, fiber: 3.4, sugar: 2.2, sodium: 1266 },
     'sugar': { calories: 387, protein: 0, carbs: 100, fat: 0, fiber: 0, sugar: 100, sodium: 1 },
     'waffles': { calories: 291, protein: 8, carbs: 33, fat: 14, fiber: 1.9, sugar: 10, sodium: 530 },
-    
     // Herbs & Spices (per 100g - note: serving sizes are tiny, e.g., 1-2g)
     'basil (fresh)': { calories: 23, protein: 3.2, carbs: 2.7, fat: 0.6, fiber: 1.6, sugar: 0.3, sodium: 4 },
     'chili powder': { calories: 282, protein: 13, carbs: 50, fat: 14, fiber: 34, sugar: 7, sodium: 30 },
