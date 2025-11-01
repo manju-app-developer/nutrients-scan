@@ -198,12 +198,13 @@ exports.handler = async function(event, context) {
     'tempeh': { calories: 192, protein: 20, carbs: 8, fat: 11, fiber: 0, sugar: 0, sodium: 9 },
     'tofu (firm)': { calories: 76, protein: 8, carbs: 1.9, fat: 4.8, fiber: 1.9, sugar: 0.3, sodium: 7 },
 
-    // Indian Main Dishes & Curries
+        // --- Indian Main Dishes & Curries (from your list) ---
     'aloo gobi': { calories: 98, protein: 2.5, carbs: 12, fat: 5, fiber: 3, sugar: 4, sodium: 300 },
     'avial': { calories: 110, protein: 3, carbs: 10, fat: 7, fiber: 4, sugar: 5, sodium: 250 },
     'baingan bharta': { calories: 80, protein: 2, carbs: 10, fat: 4, fiber: 4.5, sugar: 5, sodium: 320 },
     'bhindi masala': { calories: 115, protein: 2.5, carbs: 12, fat: 7, fiber: 4, sugar: 4, sodium: 350 },
     'biryani (chicken)': { calories: 195, protein: 10, carbs: 28, fat: 5, fiber: 2, sugar: 2, sodium: 450 },
+    'biryani (plain rice base)': { calories: 145, protein: 2, carbs: 28, fat: 3, fiber: 2, sugar: 2, sodium: 430 },
     'biryani (veg)': { calories: 180, protein: 8, carbs: 25, fat: 5, fiber: 2, sugar: 2, sodium: 400 },
     'butter chicken': { calories: 210, protein: 14, carbs: 8, fat: 13, fiber: 2, sugar: 5, sodium: 450 },
     'chana masala': { calories: 150, protein: 7, carbs: 22, fat: 4, fiber: 6, sugar: 3, sodium: 380 },
@@ -229,7 +230,7 @@ exports.handler = async function(event, context) {
     'vada': { calories: 280, protein: 9, carbs: 30, fat: 14, fiber: 6, sugar: 1, sodium: 400 },
     'vindaloo (pork)': { calories: 230, protein: 18, carbs: 7, fat: 14, fiber: 2, sugar: 4, sodium: 520 },
 
-    // Indian Snacks & Sweets
+    // --- Indian Snacks & Sweets (from your list) ---
     'barfi': { calories: 420, protein: 8, carbs: 55, fat: 19, fiber: 1, sugar: 50, sodium: 80 },
     'bhel puri': { calories: 180, protein: 4, carbs: 35, fat: 3, fiber: 3, sugar: 8, sodium: 350 },
     'chakli': { calories: 500, protein: 8, carbs: 58, fat: 26, fiber: 5, sugar: 1, sodium: 700 },
@@ -250,6 +251,79 @@ exports.handler = async function(event, context) {
     'sev': { calories: 540, protein: 10, carbs: 50, fat: 33, fiber: 8, sugar: 1, sodium: 600 },
     'soan papdi': { calories: 500, protein: 7, carbs: 65, fat: 24, fiber: 2, sugar: 60, sodium: 30 },
     'vada pav': { calories: 290, protein: 7, carbs: 48, fat: 8, fiber: 4, sugar: 5, sodium: 500 },
+
+    // --- Breads (Rotis, Parathas, etc.) ---
+    'roti/chapati': { calories: 90, protein: 3, carbs: 18, fat: 1, fiber: 3, sugar: 0.5, sodium: 150 },
+    'naan (plain)': { calories: 260, protein: 8, carbs: 45, fat: 5, fiber: 2, sugar: 2, sodium: 450 },
+    'naan (garlic)': { calories: 310, protein: 9, carbs: 48, fat: 9, fiber: 2, sugar: 2, sodium: 500 },
+    'paratha (plain)': { calories: 180, protein: 4, carbs: 25, fat: 7, fiber: 3, sugar: 1, sodium: 250 },
+    'aloo paratha': { calories: 280, protein: 6, carbs: 40, fat: 10, fiber: 5, sugar: 2, sodium: 400 },
+    'gobi paratha': { calories: 240, protein: 6, carbs: 35, fat: 8, fiber: 6, sugar: 3, sodium: 380 },
+    'paneer paratha': { calories: 320, protein: 10, carbs: 38, fat: 14, fiber: 4, sugar: 2, sodium: 420 },
+    'kulcha': { calories: 220, protein: 6, carbs: 40, fat: 4, fiber: 2, sugar: 3, sodium: 350 },
+    'puri (2 pcs)': { calories: 210, protein: 3, carbs: 25, fat: 11, fiber: 2, sugar: 0.5, sodium: 200 },
+    'thepla': { calories: 130, protein: 3, carbs: 18, fat: 5, fiber: 4, sugar: 1, sodium: 280 },
+    'makki di roti': { calories: 140, protein: 3, carbs: 25, fat: 3, fiber: 4, sugar: 1, sodium: 180 },
+    'appam': { calories: 100, protein: 2, carbs: 22, fat: 0.5, fiber: 1, sugar: 1, sodium: 120 },
+
+    // --- Rice Dishes ---
+    'pulao (veg)': { calories: 280, protein: 6, carbs: 50, fat: 6, fiber: 4, sugar: 3, sodium: 350 },
+    'puliyogare palav': { calories: 340, protein: 7, carbs: 60, fat: 9, fiber: 4, sugar: 4, sodium: 420 },
+    'jeera rice': { calories: 220, protein: 4, carbs: 40, fat: 5, fiber: 1, sugar: 0.5, sodium: 200 },
+    'lemon rice': { calories: 300, protein: 5, carbs: 55, fat: 7, fiber: 2, sugar: 2, sodium: 300 },
+    'tamarind rice (puliyogare)': { calories: 330, protein: 6, carbs: 58, fat: 9, fiber: 3, sugar: 4, sodium: 400 },
+    'bisi bele bath': { calories: 360, protein: 10, carbs: 60, fat: 9, fiber: 8, sugar: 5, sodium: 450 },
+    'curd rice': { calories: 270, protein: 7, carbs: 45, fat: 6, fiber: 1.5, sugar: 3, sodium: 250 },
+    
+    // --- More Dals, Curries & Regional Specialties ---
+    'dal fry': { calories: 140, protein: 8, carbs: 19, fat: 4, fiber: 7, sugar: 2, sodium: 310 },
+    'masoor dal': { calories: 120, protein: 7, carbs: 18, fat: 2.5, fiber: 6, sugar: 1, sodium: 280 },
+    'moong dal': { calories: 110, protein: 6, carbs: 17, fat: 2, fiber: 5, sugar: 1, sodium: 270 },
+    'panchmel dal': { calories: 150, protein: 9, carbs: 20, fat: 4, fiber: 8, sugar: 2, sodium: 330 },
+    'rasam': { calories: 60, protein: 2, carbs: 12, fat: 0.5, fiber: 2, sugar: 3, sodium: 380 },
+    'sarson ka saag': { calories: 160, protein: 5, carbs: 15, fat: 9, fiber: 6, sugar: 4, sodium: 350 },
+    'kadhi pakora': { calories: 270, protein: 8, carbs: 28, fat: 14, fiber: 5, sugar: 6, sodium: 480 },
+    'aloo tikki (2 pcs)': { calories: 280, protein: 6, carbs: 40, fat: 11, fiber: 5, sugar: 3, sodium: 400 },
+    'goan fish curry': { calories: 320, protein: 20, carbs: 10, fat: 22, fiber: 3, sugar: 4, sodium: 450 },
+    'macher jhol': { calories: 250, protein: 18, carbs: 8, fat: 16, fiber: 2, sugar: 3, sodium: 400 },
+    'litti chokha': { calories: 380, protein: 10, carbs: 60, fat: 10, fiber: 9, sugar: 5, sodium: 500 },
+    'dum aloo': { calories: 180, protein: 4, carbs: 20, fat: 9, fiber: 4, sugar: 5, sodium: 430 },
+    'mutter paneer': { calories: 200, protein: 10, carbs: 12, fat: 13, fiber: 4, sugar: 5, sodium: 410 },
+    'navratan korma': { calories: 230, protein: 6, carbs: 18, fat: 15, fiber: 5, sugar: 8, sodium: 460 },
+    'shahi paneer': { calories: 240, protein: 12, carbs: 10, fat: 18, fiber: 2.5, sugar: 6, sodium: 440 },
+
+    // --- Accompaniments (Chutneys, Raitas, Pickles) ---
+    'mint chutney': { calories: 25, protein: 1, carbs: 4, fat: 0.5, fiber: 1.5, sugar: 2, sodium: 200 },
+    'tamarind chutney': { calories: 45, protein: 0.5, carbs: 11, fat: 0.1, fiber: 1, sugar: 9, sodium: 180 },
+    'coconut chutney': { calories: 90, protein: 1, carbs: 4, fat: 8, fiber: 2, sugar: 1, sodium: 150 },
+    'mango pickle (1 tbsp)': { calories: 50, protein: 0.5, carbs: 2, fat: 5, fiber: 1, sugar: 1, sodium: 600 },
+    'boondi raita': { calories: 130, protein: 5, carbs: 12, fat: 6, fiber: 1, sugar: 5, sodium: 250 },
+    'cucumber raita': { calories: 70, protein: 4, carbs: 7, fat: 3, fiber: 1, sugar: 5, sodium: 220 },
+    'papadum (roasted, 2 pcs)': { calories: 70, protein: 4, carbs: 12, fat: 0.5, fiber: 2, sugar: 0.5, sodium: 400 },
+
+    // --- More Snacks & Sweets ---
+    'khandvi': { calories: 200, protein: 7, carbs: 22, fat: 9, fiber: 2, sugar: 3, sodium: 350 },
+    'puran poli': { calories: 270, protein: 6, carbs: 45, fat: 7, fiber: 4, sugar: 20, sodium: 100 },
+    'mishti doi': { calories: 200, protein: 6, carbs: 30, fat: 6, fiber: 0, sugar: 28, sodium: 70 },
+    'sev puri': { calories: 300, protein: 7, carbs: 45, fat: 11, fiber: 6, sugar: 10, sodium: 450 },
+    'dahi vada': { calories: 280, protein: 10, carbs: 35, fat: 11, fiber: 5, sugar: 12, sodium: 380 },
+    'modak (steamed)': { calories: 130, protein: 3, carbs: 20, fat: 4, fiber: 1.5, sugar: 12, sodium: 30 },
+    'shrikhand': { calories: 260, protein: 7, carbs: 35, fat: 10, fiber: 0.5, sugar: 32, sodium: 90 },
+    'chikki': { calories: 480, protein: 10, carbs: 60, fat: 22, fiber: 4, sugar: 45, sodium: 50 },
+    'pedha': { calories: 400, protein: 9, carbs: 65, fat: 12, fiber: 0.5, sugar: 60, sodium: 100 },
+    'sandesh': { calories: 350, protein: 12, carbs: 40, fat: 15, fiber: 0.5, sugar: 38, sodium: 80 },
+
+    // --- Beverages ---
+    'masala chai': { calories: 90, protein: 2.5, carbs: 12, fat: 3, fiber: 0.5, sugar: 10, sodium: 40 },
+    'lassi (sweet)': { calories: 200, protein: 6, carbs: 35, fat: 4, fiber: 0.5, sugar: 32, sodium: 100 },
+    'lassi (salty)': { calories: 110, protein: 6, carbs: 12, fat: 4, fiber: 0.5, sugar: 5, sodium: 350 },
+    'mango lassi': { calories: 240, protein: 7, carbs: 42, fat: 5, fiber: 1, sugar: 38, sodium: 110 },
+    'chaas (buttermilk)': { calories: 50, protein: 2.5, carbs: 5, fat: 2, fiber: 0, sugar: 4, sodium: 200 },
+    'filter coffee': { calories: 100, protein: 3, carbs: 13, fat: 4, fiber: 0, sugar: 11, sodium: 45 },
+    'jal-jeera': { calories: 15, protein: 0.5, carbs: 3, fat: 0, fiber: 0.5, sugar: 1, sodium: 250 },
+    'thandai': { calories: 280, protein: 8, carbs: 30, fat: 14, fiber: 3, sugar: 25, sodium: 90 },
+    'nimbu pani (sweet)': { calories: 80, protein: 0.2, carbs: 20, fat: 0, fiber: 0.2, sugar: 19, sodium: 150 },
+    'aam panna': { calories: 100, protein: 0.5, carbs: 25, fat: 0.2, fiber: 1, sugar: 22, sodium: 200 },
 
     // International / Prepared Foods
     'burger': { calories: 250, protein: 12, carbs: 28, fat: 10, fiber: 2, sugar: 5, sodium: 500 },
