@@ -121,13 +121,17 @@ Now, analyze the user's meal based on these strict rules and provide the JSON re
         }
 
         // Extract the JSON text from the API's response
-        const generatedJson = result.candidates[0].content.parts[0].text;
+        const generatedJsonString = result.candidates[0].content.parts[0].text;
         
-        // The API returns a string of JSON, so we return that directly
+        // --- THIS IS THE FIX ---
+        // Clean the response, removing potential markdown fences
+        const cleanedJsonString = generatedJsonString.replace(/```json|```/g, '').trim();
+        
+        // The API returns a string of JSON, so we return that cleaned string
         return {
             statusCode: 200,
             headers: { 'Content-Type': 'application/json' },
-            body: generatedJson 
+            body: cleanedJsonString 
         };
 
     } catch (error) {
