@@ -22,19 +22,49 @@
         }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f5f5f7; /* Apple-like light gray background */
-            color: #1d1d1f; /* Apple's primary text color */
+            background-color: #f5f5f7;
+            color: #1d1d1f;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
         }
-        
-        /* Subtle "frosted glass" effect, inspired by Apple's UI */
+
+        /* --- NEW: Dynamic blurred background --- */
+        /* This creates the colorful orbs for the glass panels to blur */
+        body::before,
+        body::after {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+        body::before {
+            background: linear-gradient(to right, #007aff, #34c759);
+            width: 450px;
+            height: 450px;
+            top: -100px;
+            left: -150px;
+        }
+        body::after {
+            background: linear-gradient(to right, #ff9500, #ff2d55);
+            width: 500px;
+            height: 500px;
+            bottom: -150px;
+            right: -200px;
+        }
+
+        /* --- ENHANCED: Liquid Glass Panel --- */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.65); /* More translucent */
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Shinier "edge" */
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1); /* Softer shadow */
             transition: all 0.3s ease;
         }
 
@@ -44,13 +74,13 @@
         ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
 
-        /* Primary "Apple Blue" button */
+        /* --- ENHANCED: Primary "Apple Blue" button --- */
         .btn-primary {
             background-color: #007aff;
             color: white;
             font-weight: 600;
             padding: 0.75rem 1rem;
-            border-radius: 0.75rem; /* Softer radius */
+            border-radius: 0.75rem; /* 12px */
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
@@ -61,9 +91,11 @@
         }
         .btn-primary:hover {
             background-color: #0070e0;
-            transform: translateY(-1px);
+            transform: scale(1.02);
         }
-        /* Apple-style disabled button */
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
         .btn-primary:disabled {
             background-color: #e5e5ea;
             color: #8e8e93;
@@ -71,7 +103,7 @@
             transform: none;
         }
 
-        /* Secondary control buttons */
+        /* --- ENHANCED: Secondary control buttons --- */
         .control-btn {
             background-color: #e5e5ea; /* Light gray */
             color: #1d1d1f; /* Dark text */
@@ -82,9 +114,11 @@
         }
         .control-btn:hover {
             background-color: #dcdce0;
-            transform: translateY(-1px);
+            transform: scale(1.03);
         }
-        /* Active state uses the "Apple blue" */
+        .control-btn:active {
+            transform: scale(0.97);
+        }
         .control-btn.active {
             background-color: #007aff;
             color: white;
@@ -92,22 +126,68 @@
             border-color: transparent;
         }
         
-        /* Secondary "ghost" button for history */
+        /* --- ENHANCED: Secondary "ghost" button --- */
         .btn-secondary {
-             background-color: #f5f5f7;
+             background-color: rgba(255, 255, 255, 0.4);
              color: #007aff;
              border: 1px solid #d2d2d7;
              font-weight: 500;
+             transition: all 0.2s ease;
         }
         .btn-secondary:hover {
-            background-color: #e5e5ea;
+            background-color: rgba(255, 255, 255, 0.7);
+            transform: scale(1.02);
+        }
+        .btn-secondary:active {
+             transform: scale(0.98);
+        }
+        
+        /* --- NEW: Danger button style --- */
+        .btn-danger {
+            background-color: #ff3b30;
+            color: white;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+            border: none;
+        }
+        .btn-danger:hover {
+            background-color: #e02b20;
+            transform: scale(1.02);
+        }
+        .btn-danger:active {
+            transform: scale(0.98);
+        }
+
+        /* --- NEW: Polished input field --- */
+        .portion-input {
+            background-color: rgba(229, 229, 234, 0.6); /* bg-gray-200/60 */
+            border: 1px solid transparent;
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 0.25rem 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .portion-input:focus {
+            outline: none;
+            border-color: #007aff;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+        }
+        
+        /* --- NEW: Polished result item card --- */
+        .result-item {
+            background: rgba(255, 255, 255, 0.4); /* Sits inside the glass panel */
+            border-radius: 0.75rem; /* 12px */
+            padding: 0.75rem;
+            animation: fadeIn 0.5s ease-out forwards;
         }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .fade-in-item { animation: fadeIn 0.5s ease-out forwards; }
     </style>
 </head>
 <body class="p-4 sm:p-6 min-h-screen flex flex-col">
@@ -122,9 +202,9 @@
     <main class="w-full max-w-5xl mx-auto flex flex-col lg:flex-row gap-6 flex-grow">
         
         <div class="w-full lg:w-1/2 flex flex-col gap-5 lg:sticky lg:top-6 lg:h-[calc(100vh-6rem)]">
-            <div class="glass-panel rounded-2xl p-3 flex-grow flex flex-col items-center justify-center relative aspect-video lg:aspect-auto lg:h-full">
-                <video id="webcam" class="rounded-lg w-full h-full object-cover transition-opacity duration-300 opacity-0" autoplay playsinline></video>
-                <img id="image-preview" class="hidden rounded-lg w-full h-full object-contain" />
+            <div class="glass-panel rounded-3xl p-3 flex-grow flex flex-col items-center justify-center relative aspect-video lg:aspect-auto lg:h-full">
+                <video id="webcam" class="rounded-2xl w-full h-full object-cover transition-opacity duration-300 opacity-0" autoplay playsinline></video>
+                <img id="image-preview" class="hidden rounded-2xl w-full h-full object-contain" />
                 
                 <div id="camera-off-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
                     <i data-lucide="image-off" class="w-16 h-16 text-gray-400 mb-4"></i>
@@ -134,21 +214,21 @@
                 
                 <canvas id="canvas" class="hidden"></canvas>
                 
-                <div id="camera-error" class="hidden absolute inset-0 bg-white/50 backdrop-blur-sm rounded-lg flex flex-col items-center justify-center text-center p-4">
+                <div id="camera-error" class="hidden absolute inset-0 bg-white/50 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center text-center p-4">
                     <p id="camera-error-message" class="text-red-600 font-semibold mb-4">Camera access denied.</p>
                     <button id="enable-camera-btn" class="btn-primary py-2 px-4 text-sm">
                         Try Again
                     </button>
                 </div>
                 
-                <div id="loader" class="hidden absolute inset-0 bg-white/70 backdrop-blur-sm rounded-lg flex flex-col items-center justify-center text-center p-4 z-20">
+                <div id="loader" class="hidden absolute inset-0 bg-white/70 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center text-center p-4 z-20">
                     <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
                     <p class="mt-4 text-blue-600 font-semibold">ANALYZING...</p>
                 </div>
             </div>
             
             <div class="flex flex-col gap-3">
-                <button id="capture-btn" class="w-full btn-primary text-lg py-3">
+                <button id="capture-btn" class="w-full btn-primary text-lg py-3 rounded-xl">
                     <i data-lucide="scan-line"></i> Capture & Analyze
                 </button>
                 <div class="grid grid-cols-3 gap-3">
@@ -161,23 +241,23 @@
                     </button>
                     <input type="file" id="upload-input" class="hidden" accept="image/*">
                 </div>
-                 <button id="history-btn" class="w-full btn-secondary py-2 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2">
+                 <button id="history-btn" class="w-full btn-secondary py-2 px-4 rounded-xl flex items-center justify-center gap-2">
                     <i data-lucide="history"></i> View History
                 </button>
             </div>
         </div>
 
-        <div id="results-panel" class="w-full lg:w-1/2 glass-panel rounded-2xl p-4 sm:p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 min-h-[50vh] lg:min-h-[calc(100vh-6rem)]">
+        <div id="results-panel" class="w-full lg:w-1/2 glass-panel rounded-3xl p-4 sm:p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 min-h-[50vh] lg:min-h-[calc(100vh-6rem)]">
               <h2 class="text-2xl font-bold text-gray-900 mb-4 flex-shrink-0">Analysis Results</h2>
               
-              <div id="results-content" class="flex-grow space-y-3 pr-2 overflow-y-auto">
+              <div id="results-content" class="flex-grow space-y-3 pr-2 -mr-2 overflow-y-auto">
                   <div id="initial-message" class="flex flex-col items-center justify-center h-full text-center text-gray-500">
                         <i data-lucide="camera" class="w-16 h-16 mb-4"></i>
                         <p>Results will appear here.</p>
                   </div>
               </div>
               
-              <div id="totals-container" class="mt-4 pt-4 border-t border-gray-200 hidden flex-shrink-0">
+              <div id="totals-container" class="mt-4 pt-4 border-t border-gray-300/50 hidden flex-shrink-0">
                     <h3 class="text-lg font-semibold text-gray-800 text-center mb-4">Total Estimated Macros</h3>
                     <div class="flex flex-col md:flex-row items-center gap-6">
                         <div id="chart-container" class="w-40 h-40"></div>
@@ -188,26 +268,26 @@
     </main>
     
     <div id="history-modal" class="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-        <div class="w-full max-w-2xl glass-panel rounded-2xl p-6 flex flex-col max-h-[90vh]">
+        <div class="w-full max-w-2xl glass-panel rounded-3xl p-6 flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-bold text-gray-900">Scan History</h2>
                 <button id="close-history-btn" class="text-gray-500 hover:text-gray-900 transition-transform duration-300 hover:rotate-90"><i data-lucide="x"></i></button>
             </div>
-            <div id="history-content" class="flex-grow overflow-y-auto space-y-4 pr-2">
+            <div id="history-content" class="flex-grow overflow-y-auto space-y-4 pr-2 -mr-2">
                 </div>
-            <button id="clear-history-btn" class="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300">
+            <button id="clear-history-btn" class="mt-4 btn-danger py-2 px-4">
                 Clear History
             </button>
         </div>
     </div>
     
     <div id="confirm-modal" class="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-        <div class="w-full max-w-sm glass-panel rounded-2xl p-6 text-center">
+        <div class="w-full max-w-sm glass-panel rounded-3xl p-6 text-center">
             <h3 id="confirm-title" class="text-lg font-semibold mb-2">Are you sure?</h3>
             <p id="confirm-message" class="text-gray-600 mb-6">This action cannot be undone.</p>
             <div class="flex gap-4">
-                <button id="confirm-cancel-btn" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg transition">Cancel</button>
-                <button id="confirm-ok-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition">Confirm</button>
+                <button id="confirm-cancel-btn" class="w-full control-btn py-2 px-4">Cancel</button>
+                <button id="confirm-ok-btn" class="w-full btn-danger py-2 px-4">Confirm</button>
             </div>
         </div>
     </div>
@@ -230,7 +310,6 @@
               confirmCancelBtn = document.getElementById('confirm-cancel-btn'),
               chartContainer = document.getElementById('chart-container');
         
-        // Image Upload Elements
         const uploadBtn = document.getElementById('upload-btn');
         const uploadInput = document.getElementById('upload-input');
         const imagePreview = document.getElementById('image-preview');
@@ -334,14 +413,13 @@
             resultsPanel.classList.remove('opacity-0', '-translate-y-5');
         });
 
-        // --- Image Upload Logic ---
         uploadBtn.addEventListener('click', () => uploadInput.click());
 
         uploadInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
 
-            stopCamera(); // Stop camera if it's running
+            stopCamera(); 
 
             const reader = new FileReader();
             reader.onload = async (event) => {
@@ -360,7 +438,7 @@
                 resultsPanel.classList.remove('opacity-0', '-translate-y-5');
             };
             reader.readAsDataURL(file);
-            e.target.value = null; // Reset input
+            e.target.value = null; 
         });
 
 
@@ -427,7 +505,8 @@
                     const confidenceColor = data.confidence > 0.8 ? 'text-green-600' : data.confidence > 0.6 ? 'text-yellow-600' : 'text-red-600';
                     
                     const foodElement = document.createElement('div');
-                    foodElement.className = 'p-3 rounded-lg bg-white/50 fade-in-item';
+                    // --- STYLISTIC CHANGE HERE ---
+                    foodElement.className = 'result-item'; // Use new polished class
                     foodElement.style.animationDelay = `${index * 100}ms`;
                     foodElement.innerHTML = `
                         <div class="flex items-center justify-between">
@@ -436,7 +515,7 @@
                                 <span class="text-xs ${confidenceColor}">(${(data.confidence * 100).toFixed(0)}% confident)</span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <input type="number" value="${data.portion}" min="1" step="1" id="portion-${data.id}" class="w-20 bg-transparent border-b border-gray-300 text-right focus:outline-none focus:border-blue-500">
+                                <input type="number" value="${data.portion}" min="1" step="1" id="portion-${data.id}" class="portion-input w-20 text-right">
                                 <span>g</span>
                             </div>
                         </div>
@@ -472,13 +551,13 @@
                     <span class="text-blue-600">C: <strong>${carbs.toFixed(1)}g</strong></span> | 
                     <span class="text-purple-600">P: <strong>${protein.toFixed(1)}g</strong></span> | 
                     <span class="text-pink-600">F: <strong>${fat.toFixed(1)}g</strong></span> | 
-                    <span class="text-orange-600"><strong>${calories.toFixed(0)} Calories</strong></span>`;
+                    <span class="text-orange-600"><strong>${calories.toFixed(0)} Cal</strong></span>`;
             });
             totalsDiv.innerHTML = `
                 <p>Carbs: <strong class="text-blue-600">${total.carbs.toFixed(1)}g</strong></p>
                 <p>Protein: <strong class="text-purple-600">${total.protein.toFixed(1)}g</strong></p>
                 <p>Fat: <strong class="text-pink-600">${total.fat.toFixed(1)}g</strong></p>
-                <p class="text-orange-600 font-bold col-span-2 text-lg">Total Calories: <strong>${total.calories.toFixed(0)} Calories</strong></p>`;
+                <p class="text-orange-600 font-bold col-span-2 text-lg">Total Calories: <strong>${total.calories.toFixed(0)} Cal</strong></p>`;
             
             renderMacroChart(total);
         }
@@ -500,9 +579,9 @@
             chartContainer.innerHTML = `
                 <svg viewBox="0 0 36 36" class="w-full h-full">
                     <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3" stroke="#e5e7eb" />
-                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#007aff" stroke-dasharray="${carbDeg} ${360-carbDeg}" stroke-dashoffset="0" transform="rotate(-90 18 18)" />
-                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#a855f7" stroke-dasharray="${protDeg} ${360-protDeg}" stroke-dashoffset="-${carbDeg}" transform="rotate(-90 18 18)" />
-                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#ec4899" stroke-dasharray="${fatP * 360} 360" stroke-dashoffset="-${carbDeg + protDeg}" transform="rotate(-90 18 18)" />
+                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#007aff" stroke-linecap="round" stroke-dasharray="${carbDeg} ${360-carbDeg}" stroke-dashoffset="0" transform="rotate(-90 18 18)" />
+                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#a855f7" stroke-linecap="round" stroke-dasharray="${protDeg} ${360-protDeg}" stroke-dashoffset="-${carbDeg}" transform="rotate(-90 18 18)" />
+                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#ec4899" stroke-linecap="round" stroke-dasharray="${fatP * 360} 360" stroke-dashoffset="-${carbDeg + protDeg}" transform="rotate(-90 18 18)" />
                     <text x="18" y="20" text-anchor="middle" class="fill-gray-900 text-[5px] font-bold">${(totals.calories).toFixed(0)}</text>
                     <text x="18" y="24" text-anchor="middle" class="fill-gray-600 text-[3px]">Calories</text>
                 </svg>
@@ -522,7 +601,7 @@
             clearHistoryBtn.style.display = history.length > 0 ? 'block' : 'none';
             history.forEach(entry => {
                 const entryDiv = document.createElement('div');
-                entryDiv.className = 'bg-white/50 p-4 rounded-lg';
+                entryDiv.className = 'result-item'; // Use same polished class for history
                 const date = new Date(entry.timestamp);
                 let totalCals = 0;
                 let foodHtml = entry.foods.map(food => {
@@ -535,7 +614,7 @@
                 }).join('');
                 entryDiv.innerHTML = `
                     <div class="flex justify-between items-center">
-                        <p class="font-bold">${date.toLocaleDateString()} - ${date.toLocaleTimeString()}</p>
+                        <p class="font-bold text-sm">${date.toLocaleDateString()} - ${date.toLocaleTimeString()}</p>
                         <p class="font-bold text-orange-600">${totalCals.toFixed(0)} Calories</p>
                     </div>
                     ${foodHtml}
