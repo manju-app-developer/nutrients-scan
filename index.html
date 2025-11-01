@@ -28,14 +28,16 @@
             -moz-osx-font-smoothing: grayscale;
             position: relative;
             overflow-x: hidden;
-            min-height: 100vh; 
+            min-height: 100vh;
             
+            /* --- KEY CHANGE: Respects phone notches/islands --- */
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
             padding-left: env(safe-area-inset-left);
             padding-right: env(safe-area-inset-right);
         }
 
+        /* --- Dynamic blurred background (Unchanged) --- */
         body::before,
         body::after {
             content: '';
@@ -61,6 +63,7 @@
             right: -200px;
         }
 
+        /* --- ENHANCED: Liquid Glass Panel --- */
         .glass-panel {
             background: rgba(255, 255, 255, 0.65);
             backdrop-filter: blur(30px);
@@ -68,113 +71,194 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
             transition: all 0.3s ease;
+            /* --- KEY CHANGE: Softer, more iOS-like radius --- */
             border-radius: 1.75rem; /* 28px */
         }
         
+        /* --- KEY CHANGE: Native App Feel --- */
         #results-content, #history-content {
+            /* Adds momentum-based scrolling on iOS */
             -webkit-overflow-scrolling: touch;
         }
         button, input, a {
+            /* Removes the gray tap highlight on mobile */
             -webkit-tap-highlight-color: transparent;
         }
 
-        #loader p {
-            letter-spacing: 0.05em;
-        }
-
-        .modal-wrapper {
-            opacity: 0;
-            transition: opacity 0.2s ease-out;
-            z-index: 50; 
-        }
-        .modal-wrapper .glass-panel {
-            transform: scale(0.95);
-            transition: transform 0.2s ease-out;
-        }
-        .modal-wrapper.modal-open {
-            opacity: 1;
-        }
-        .modal-wrapper.modal-open .glass-panel {
-            transform: scale(1.0);
-        }
-
+        /* System-like scrollbar (Unchanged) */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
 
+        /* Primary "Apple Blue" button (Unchanged) */
         .btn-primary {
-            background-color: #007aff; color: white; font-weight: 600; padding: 0.75rem 1rem;
-            border-radius: 0.75rem; transition: all 0.2s ease; display: flex; align-items: center;
-            justify-content: center; gap: 0.5rem; border: none; cursor: pointer;
+            background-color: #007aff;
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem; /* 12px */
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
         }
-        .btn-primary:hover { background-color: #0070e0; transform: scale(1.02); }
-        .btn-primary:active { transform: scale(0.98); }
+        .btn-primary:hover {
+            background-color: #0070e0;
+            transform: scale(1.02);
+        }
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
         .btn-primary:disabled {
-            background-color: #e5e5ea; color: #8e8e93;
-            cursor: not-allowed; transform: none;
+            background-color: #e5e5ea;
+            color: #8e8e93;
+            cursor: not-allowed;
+            transform: none;
         }
-        .control-btn {
-            background-color: #e5e5ea; color: #1d1d1f; transition: all 0.2s ease;
-            border: 1px solid transparent; border-radius: 0.75rem; font-weight: 500;
-        }
-        .control-btn:hover { background-color: #dcdce0; transform: scale(1.03); }
-        .control-btn:active { transform: scale(0.97); }
-        .control-btn.active {
-            background-color: #007aff; color: white;
-            box-shadow: none; border-color: transparent;
-        }
-        .btn-secondary {
-             background-color: rgba(255, 255, 255, 0.4); color: #007aff; border: 1px solid #d2d2d7;
-             font-weight: 500; transition: all 0.2s ease; border-radius: 0.75rem;
-        }
-        .btn-secondary:hover { background-color: rgba(255, 255, 255, 0.7); transform: scale(1.02); }
-        .btn-secondary:active { transform: scale(0.98); }
-        .btn-danger {
-            background-color: #ff3b30; color: white; font-weight: 600; padding: 0.5rem 1rem;
-            border-radius: 0.75rem; transition: all 0.2s ease; border: none;
-        }
-        .btn-danger:hover { background-color: #e02b20; transform: scale(1.02); }
-        .btn-danger:active { transform: scale(0.98); }
 
+        /* Secondary control buttons (Unchanged) */
+        .control-btn {
+            background-color: #e5e5ea;
+            color: #1d1d1f;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            border-radius: 0.75rem;
+            font-weight: 500;
+        }
+        .control-btn:hover {
+            background-color: #dcdce0;
+            transform: scale(1.03);
+        }
+        .control-btn:active {
+            transform: scale(0.97);
+        }
+        .control-btn.active {
+            background-color: #007aff;
+            color: white;
+            box-shadow: none;
+            border-color: transparent;
+        }
+        
+        /* Secondary "ghost" button (Unchanged) */
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.4);
+            color: #007aff;
+            border: 1px solid #d2d2d7;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border-radius: 0.75rem; /* 12px */
+        }
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.7);
+            transform: scale(1.02);
+        }
+        .btn-secondary:active {
+            transform: scale(0.98);
+        }
+        
+        /* Danger button style (Unchanged) */
+        .btn-danger {
+            background-color: #ff3b30;
+            color: white;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+            border: none;
+        }
+        .btn-danger:hover {
+            background-color: #e02b20;
+            transform: scale(1.02);
+        }
+        .btn-danger:active {
+            transform: scale(0.98);
+        }
+
+        /* Polished input field (Unchanged) */
         .portion-input {
-            background-color: rgba(229, 229, 234, 0.6); border: 1px solid transparent;
-            border-radius: 0.5rem; padding: 0.25rem 0.5rem; font-weight: 500;
+            background-color: rgba(229, 229, 234, 0.6); 
+            border: 1px solid transparent;
+            border-radius: 0.5rem; /* 8px */
+            padding: 0.25rem 0.5rem;
+            font-weight: 500;
             transition: all 0.2s ease;
         }
         .portion-input:focus {
-            outline: none; border-color: #007aff; background-color: rgba(255, 255, 255, 0.8);
+            outline: none;
+            border-color: #007aff;
+            background-color: rgba(255, 255, 255, 0.8);
             box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
         }
         
+        /* Polished result item card (Unchanged) */
         .result-item {
-            background: rgba(255, 255, 255, 0.4); border-radius: 0.75rem;
-            padding: 0.75rem; animation: fadeIn 0.5s ease-out forwards;
-        }
-
-        /* N-Score Circle Style */
-        #n-score-circle {
-            transition: stroke-dasharray 0.8s ease-out, stroke 0.8s ease;
+            background: rgba(255, 255, 255, 0.4); 
+            border-radius: 0.75rem; /* 12px */
+            padding: 0.75rem;
+            animation: fadeIn 0.5s ease-out forwards;
         }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* --- NEW: Desktop Overlay --- */
+        #desktop-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: #f5f5f7; /* Match body bg */
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 1000;
+            padding: 2rem;
+            font-family: 'Inter', -apple-system, sans-serif;
+        }
+        #desktop-overlay h1 {
+            font-size: 1.875rem; /* 30px */
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 1rem;
+        }
+        #desktop-overlay p {
+            font-size: 1.125rem; /* 18px */
+            color: #6e6e73;
+            margin-bottom: 2rem;
+        }
+        #desktop-overlay-qr {
+            width: 250px;
+            height: 250px;
+            background-color: #e5e5ea; /* Placeholder bg */
+            border-radius: 1.25rem; /* 20px */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
+
+    <div id="desktop-overlay">
+        <h1>Open Nutri Scan on your Mobile</h1>
+        <p>Scan the QR code below to open the app on your phone.</p>
+        <img id="desktop-overlay-qr" src="" alt="QR Code to open Nutri Scan app">
+    </div>
     
-    <header class="w-full max-w-5xl mx-auto flex justify-between items-center mb-6 flex-shrink-0 px-4 sm:px-6 pt-6">
-        <a href="#" class="text-3xl font-bold text-gray-900 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12a5 5 0 0 1 5-5"/><path d="M12 17a5 5 0 0 0 5-5"/><path d="M7 12a5 5 0 0 0 5 5"/><path d="M12 7a5 5 0 0 1 5 5"/></svg>
+    <header class="w-full max-w-5xl mx-auto flex justify-between items-center mb-6 flex-shrink-0 px-4 sm:px-6 pt-4">
+        <a href="#" class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12a5 5 0 0 1 5-5"/><path d="M12 17a5 5 0 0 0 5-5"/><path d="M7 12a5 5 0 0 0 5 5"/><path d="M12 7a5 5 0 0 1 5 5"/></svg>
             Nutri Scan
         </a>
     </header>
 
-    <main class="w-full max-w-5xl mx-auto flex flex-col lg:flex-row gap-6 flex-grow px-4 sm:px-6 pb-6">
+    <main class="w-full max-w-5xl mx-auto flex flex-col lg:flex-row gap-6 flex-grow px-4 sm:px-6 pb-4">
         
-        <div class="w-full lg:w-1/2 flex flex-col gap-5 lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)] flex-shrink-0">
+        <div class="w-full lg:w-1/2 flex flex-col gap-5 lg:sticky lg:top-6 lg:h-[calc(100vh-6rem)]">
             <div class="glass-panel p-3 flex-grow flex flex-col items-center justify-center relative aspect-video lg:aspect-auto lg:h-full">
                 <video id="webcam" class="rounded-2xl w-full h-full object-cover transition-opacity duration-300 opacity-0" autoplay playsinline></video>
                 <img id="image-preview" class="hidden rounded-2xl w-full h-full object-contain" />
@@ -210,7 +294,7 @@
                     </button>
                     <button id="flip-camera-btn" title="Flip Camera" class="p-3 rounded-xl control-btn flex items-center justify-center"><i data-lucide="rotate-camera"></i></button>
                     <button id="upload-btn" title="Upload Image" class="p-3 rounded-xl control-btn flex items-center justify-center gap-2">
-                        <i data-lucide="upload"></i> Upload
+                         <i data-lucide="upload"></i> Upload
                     </button>
                     <input type="file" id="upload-input" class="hidden" accept="image/*">
                 </div>
@@ -220,75 +304,41 @@
             </div>
         </div>
 
-        <div id="results-panel" class="w-full lg:w-1/2 glass-panel p-4 sm:p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 flex-grow">
-              <h2 class="text-2xl font-bold text-gray-900 mb-4 flex-shrink-0">Analysis Results</h2>
-              
-              <div id="results-content" class="flex-grow space-y-3 pr-2 -mr-2 overflow-y-auto">
-                  <div id="initial-message" class="flex flex-col items-center justify-center h-full text-center text-gray-500">
-                        <i data-lucide="camera" class="w-16 h-16 mb-4"></i>
-                        <p>Results will appear here.</p>
-                  </div>
-              </div>
-              
-              <div id="totals-container" class="mt-4 pt-4 border-t border-gray-300/50 hidden flex-shrink-0">
-                    
-                    <!-- === NEW N-SCORE SECTION === -->
-                    <div id="n-score-container" class="mb-5 pb-4 border-b border-gray-300/50 text-center hidden">
-                        <div id="n-score-loader" class="flex items-center justify-center gap-2 text-gray-500 py-4">
-                            <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
-                            <span>Calculating N-Score...</span>
-                        </div>
-                        <div id="n-score-content" class="hidden">
-                            <div class="relative w-28 h-28 mx-auto">
-                                <svg class="w-full h-full" viewBox="0 0 36 36">
-                                    <path class="text-gray-200"
-                                          d="M18 2.0845
-                                             a 15.9155 15.9155 0 0 1 0 31.831
-                                             a 15.9155 15.9155 0 0 1 0 -31.831"
-                                          fill="none" stroke="currentColor" stroke-width="3" />
-                                    <path id="n-score-circle" class="text-blue-600"
-                                          stroke="currentColor" stroke-width="3.5" stroke-linecap="round"
-                                          fill="none"
-                                          transform="rotate(-90 18 18)"
-                                          d="M18 2.0845
-                                             a 15.9155 15.9155 0 0 1 0 31.831
-                                             a 15.9155 15.9155 0 0 1 0 -31.831"
-                                          stroke-dasharray="0, 100" />
-                                </svg>
-                                <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                    <span id="n-score-value" class="text-3xl font-bold text-gray-900">0</span>
-                                    <span class="text-xs font-medium text-gray-500">N-Score</span>
-                                </div>
-                            </div>
-                            <p id="n-score-message" class="mt-3 text-base font-medium text-gray-700 px-4 italic">Loading message...</p>
-                        </div>
-                    </div>
-                    <!-- === END N-SCORE SECTION === -->
-
-                    <h3 class="text-lg font-semibold text-gray-800 text-center mb-4">Total Estimated Macros</h3>
-                    <div class="flex flex-col md:flex-row items-center gap-6">
-                        <div id="chart-container" class="w-40 h-40 flex-shrink-0"></div>
-                        <div id="totals" class="flex-grow text-base font-medium grid grid-cols-2 gap-x-6 gap-y-2"></div>
-                    </div>
-              </div>
+        <div id="results-panel" class="w-full lg:w-1/2 glass-panel p-4 sm:p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 min-h-[50vh] lg:min-h-[calc(100vh-6rem)]">
+             <h2 class="text-2xl font-bold text-gray-900 mb-4 flex-shrink-0">Analysis Results</h2>
+             
+             <div id="results-content" class="flex-grow space-y-3 pr-2 -mr-2 overflow-y-auto">
+                 <div id="initial-message" class="flex flex-col items-center justify-center h-full text-center text-gray-500">
+                     <i data-lucide="camera" class="w-16 h-16 mb-4"></i>
+                     <p>Results will appear here.</p>
+                 </div>
+             </div>
+             
+             <div id="totals-container" class="mt-4 pt-4 border-t border-gray-300/50 hidden flex-shrink-0">
+                 <h3 class="text-lg font-semibold text-gray-800 text-center mb-4">Total Estimated Macros</h3>
+                 <div class="flex flex-col md:flex-row items-center gap-6">
+                     <div id="chart-container" class="w-40 h-40"></div>
+                     <div id="totals" class="flex-grow text-base font-medium grid grid-cols-2 gap-x-6 gap-y-2"></div>
+                 </div>
+             </div>
         </div>
     </main>
     
-    <div id="history-modal" class="modal-wrapper fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div id="history-modal" class="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
         <div class="w-full max-w-2xl glass-panel p-6 flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-bold text-gray-900">Scan History</h2>
                 <button id="close-history-btn" class="text-gray-500 hover:text-gray-900 transition-transform duration-300 hover:rotate-90"><i data-lucide="x"></i></button>
             </div>
             <div id="history-content" class="flex-grow overflow-y-auto space-y-4 pr-2 -mr-2">
-            </div>
+             </div>
             <button id="clear-history-btn" class="mt-4 btn-danger py-2 px-4 rounded-xl">
                 Clear History
             </button>
         </div>
     </div>
     
-    <div id="confirm-modal" class="modal-wrapper fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div id="confirm-modal" class="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
         <div class="w-full max-w-sm glass-panel p-6 text-center">
             <h3 id="confirm-title" class="text-lg font-semibold mb-2">Are you sure?</h3>
             <p id="confirm-message" class="text-gray-600 mb-6">This action cannot be undone.</p>
@@ -317,14 +367,6 @@
               confirmCancelBtn = document.getElementById('confirm-cancel-btn'),
               chartContainer = document.getElementById('chart-container');
         
-        // --- NEW N-Score DOM Elements ---
-        const nScoreContainer = document.getElementById('n-score-container'),
-              nScoreLoader = document.getElementById('n-score-loader'),
-              nScoreContent = document.getElementById('n-score-content'),
-              nScoreCircle = document.getElementById('n-score-circle'),
-              nScoreValue = document.getElementById('n-score-value'),
-              nScoreMessage = document.getElementById('n-score-message');
-
         const uploadBtn = document.getElementById('upload-btn');
         const uploadInput = document.getElementById('upload-input');
         const imagePreview = document.getElementById('image-preview');
@@ -357,7 +399,7 @@
                 currentStream = stream;
                 webcamElement.srcObject = stream;
                 webcamElement.classList.remove('hidden', 'opacity-0');
-                imagePreview.classList.add('hidden'); // Hide static preview
+                imagePreview.classList.add('hidden');
                 cameraOffPlaceholder.classList.add('hidden');
                 cameraError.classList.add('hidden');
                 
@@ -387,8 +429,7 @@
             if (currentStream) { currentStream.getTracks().forEach(track => track.stop()); }
             webcamElement.srcObject = null;
             webcamElement.classList.add('hidden', 'opacity-0');
-            // If no static preview is set, show the placeholder
-            if (!imagePreview.src || imagePreview.classList.contains('hidden')) {
+            if (!imagePreview.src) {
                 cameraOffPlaceholder.classList.remove('hidden');
             }
             cameraError.classList.add('hidden');
@@ -414,29 +455,15 @@
 
         captureBtn.addEventListener('click', async () => {
             if (!webcamElement.srcObject || webcamElement.paused) return;
-            
             loader.classList.remove('hidden');
             resultsPanel.classList.add('opacity-0', '-translate-y-5');
             
-            // 1. Draw the current frame to the canvas
             const context = canvasElement.getContext('2d');
             canvasElement.width = webcamElement.videoWidth;
             canvasElement.height = webcamElement.videoHeight;
             context.drawImage(webcamElement, 0, 0, canvasElement.width, canvasElement.height);
+            const base64ImageData = canvasElement.toDataURL('image/jpeg', 0.8).split(',')[1];
             
-            // 2. Get the captured image as a DataURL
-            const capturedImage = canvasElement.toDataURL('image/jpeg', 0.8);
-            const base64ImageData = capturedImage.split(',')[1];
-            
-            // 3. Set the static image preview's source
-            imagePreview.src = capturedImage;
-            // 4. Show the static preview
-            imagePreview.classList.remove('hidden');
-            
-            // 5. NOW, stop the live camera feed
-            stopCamera();
-            
-            // 6. Proceed with detection
             await detectFood(base64ImageData);
             
             loader.classList.add('hidden');
@@ -449,7 +476,7 @@
             const file = e.target.files[0];
             if (!file) return;
 
-            stopCamera(); // Stop any active camera
+            stopCamera(); 
 
             const reader = new FileReader();
             reader.onload = async (event) => {
@@ -502,7 +529,6 @@
         function displayError(message) {
             resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-red-100 text-red-700">${message}</div>`;
             totalsContainer.classList.add('hidden');
-            nScoreContainer.classList.add('hidden'); // Hide N-Score on error
         }
 
         function displayResults(items) {
@@ -518,7 +544,6 @@
                 resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-yellow-100 text-yellow-800 flex items-center gap-3"><i data-lucide="alert-triangle"></i><span>This application is not designed to analyze medication.</span></div>`;
                 lucide.createIcons();
                 totalsContainer.classList.add('hidden');
-                nScoreContainer.classList.add('hidden'); // Hide N-Score
                 return;
             }
 
@@ -526,7 +551,6 @@
                 resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-100 text-gray-600 flex items-center gap-3"><i data-lucide="search-slash"></i><p>No supported food items were detected.</p></div>`;
                 lucide.createIcons();
                 totalsContainer.classList.add('hidden');
-                nScoreContainer.classList.add('hidden'); // Hide N-Score
                 return;
             }
 
@@ -562,140 +586,36 @@
             });
 
             if (detectedFoodsData.length > 0) {
-                // Show N-Score container and its loader
-                nScoreContainer.classList.remove('hidden');
-                nScoreLoader.classList.remove('hidden');
-                nScoreContent.classList.add('hidden');
-
-                updateAllCalculations(); // This will now trigger the N-Score fetch
+                updateAllCalculations();
                 totalsContainer.classList.remove('hidden');
-                // saveToHistory() is now called *after* N-Score is fetched
+                saveToHistory();
             } else {
                 resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-100 text-gray-600 flex items-center gap-3"><i data-lucide="database-zap"></i><p>Detected items were not in our nutrition database.</p></div>`;
                  lucide.createIcons();
                 totalsContainer.classList.add('hidden');
-                nScoreContainer.classList.add('hidden'); // Hide N-Score
             }
         }
 
-        /**
-         * NEW: Displays the N-Score and AI-generated message.
-         * Also triggers saving the result to history.
-         */
-        function displayNScore(nScore, message) {
-            // 1. Update text
-            nScoreValue.textContent = nScore;
-            nScoreMessage.textContent = message;
-
-            // 2. Update circle gauge
-            const circumference = 100; // Simplified circumference
-            nScoreCircle.style.strokeDasharray = `${nScore} ${circumference - nScore}`;
-            
-            // 3. Set color based on score
-            let scoreColorClass = "text-blue-600";
-            let textColorClass = "text-blue-900";
-            if (nScore >= 80) { scoreColorClass = "text-green-600"; textColorClass = "text-green-900"; }
-            else if (nScore >= 60) { scoreColorClass = "text-blue-600"; textColorClass = "text-blue-900"; }
-            else if (nScore >= 40) { scoreColorClass = "text-yellow-600"; textColorClass = "text-yellow-900"; }
-            else { scoreColorClass = "text-red-600"; textColorClass = "text-red-900"; }
-            
-            const colorClasses = ["text-green-600", "text-blue-600", "text-yellow-600", "text-red-600"];
-            const textClasses = ["text-green-900", "text-blue-900", "text-yellow-900", "text-red-900"];
-
-            nScoreCircle.classList.remove(...colorClasses);
-            nScoreCircle.classList.add(scoreColorClass);
-            nScoreValue.classList.remove(...textClasses);
-            nScoreValue.classList.add(textColorClass);
-
-            // 4. Show content, hide loader
-            nScoreLoader.classList.add('hidden');
-            nScoreContent.classList.remove('hidden');
-
-            // 5. NOW save to history, since we have all data
-            saveToHistory(nScore, message);
-        }
-
-        /**
-         * NEW: Fetches the N-Score from the serverless function.
-         */
-        async function fetchNScore(totalNutrition, foodNames) {
-            // Show loader every time we fetch (e.g., on portion change)
-            nScoreLoader.classList.remove('hidden');
-            nScoreContent.classList.add('hidden');
-
-            try {
-                const response = await fetch('/.netlify/functions/get-n-score', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ totalNutrition, foodNames })
-                });
-                if (!response.ok) {
-                    throw new Error(`N-Score API error: ${response.status}`);
-                }
-                const { nScore, message } = await response.json();
-                if (nScore === undefined || message === undefined) {
-                    throw new Error("Invalid JSON response from N-Score function.");
-                }
-                displayNScore(nScore, message);
-            } catch (error) {
-                console.error("Failed to fetch N-Score:", error);
-                // Display an error in the N-Score message area
-                nScoreLoader.classList.add('hidden');
-                nScoreContent.classList.remove('hidden');
-                nScoreValue.textContent = "N/A";
-                nScoreMessage.textContent = "Could not calculate N-Score.";
-                nScoreCircle.style.strokeDasharray = "0 100";
-            }
-        }
-
-        /**
-         * UPDATED: Calculates all nutrients and triggers N-Score fetch.
-         */
         function updateAllCalculations() {
-            let totalNutrition = { carbs: 0, protein: 0, fat: 0, calories: 0, fiber: 0, sugar: 0, sodium: 0 };
-            let foodNames = []; // Array of food names for the prompt
-
+            let total = { carbs: 0, protein: 0, fat: 0, calories: 0 };
             detectedFoodsData.forEach(food => {
                 const factor = food.portion / 100;
-                const carbs = food.carbs * factor;
-                const protein = food.protein * factor;
-                const fat = food.fat * factor;
+                const carbs = food.carbs * factor, protein = food.protein * factor, fat = food.fat * factor;
                 const calories = food.calories * factor;
-                
-                // Add all nutrients to the total
-                totalNutrition.carbs += carbs;
-                totalNutrition.protein += protein;
-                totalNutrition.fat += fat;
-                totalNutrition.calories += calories;
-                totalNutrition.fiber += (food.fiber || 0) * factor;
-                totalNutrition.sugar += (food.sugar || 0) * factor;
-                totalNutrition.sodium += (food.sodium || 0) * factor;
-                
-                foodNames.push(food.name); // Collect food names
-
-                // Update individual item UI
+                total.carbs += carbs; total.protein += protein; total.fat += fat; total.calories += calories;
                 document.getElementById(`nutrients-${food.id}`).innerHTML = `
                     <span class="text-blue-600">C: <strong>${carbs.toFixed(1)}g</strong></span> | 
                     <span class="text-purple-600">P: <strong>${protein.toFixed(1)}g</strong></span> | 
                     <span class="text-pink-600">F: <strong>${fat.toFixed(1)}g</strong></span> | 
                     <span class="text-orange-600"><strong>${calories.toFixed(0)} Cal</strong></span>`;
             });
-
-            // Update totals UI
             totalsDiv.innerHTML = `
-                <p>Carbs: <strong class="text-blue-600">${totalNutrition.carbs.toFixed(1)}g</strong></p>
-                <p>Protein: <strong class="text-purple-600">${totalNutrition.protein.toFixed(1)}g</strong></p>
-                <p>Fat: <strong class="text-pink-600">${totalNutrition.fat.toFixed(1)}g</strong></p>
-                <p class="text-orange-600 font-bold col-span-2 text-lg">Total Calories: <strong>${totalNutrition.calories.toFixed(0)} Cal</strong></p>`;
+                <p>Carbs: <strong class="text-blue-600">${total.carbs.toFixed(1)}g</strong></p>
+                <p>Protein: <strong class="text-purple-600">${total.protein.toFixed(1)}g</strong></p>
+                <p>Fat: <strong class="text-pink-600">${total.fat.toFixed(1)}g</strong></p>
+                <p class="text-orange-600 font-bold col-span-2 text-lg">Total Calories: <strong>${total.calories.toFixed(0)} Cal</strong></p>`;
             
-            // Update macro chart
-            renderMacroChart(totalNutrition);
-
-            // --- NEW CALL ---
-            // Fetch the N-Score with the complete data
-            // Use a unique list of food names
-            const uniqueFoodNames = [...new Set(foodNames)];
-            fetchNScore(totalNutrition, uniqueFoodNames);
+            renderMacroChart(total);
         }
 
         function renderMacroChart(totals) {
@@ -708,6 +628,7 @@
             const carbP = (carbs / totalMacros);
             const protP = (protein / totalMacros);
             const fatP = (fat / totalMacros);
+
             const carbDeg = carbP * 360;
             const protDeg = protP * 360;
 
@@ -723,24 +644,13 @@
             `;
         }
         
-        /**
-         * UPDATED: Now saves nScore and message to history.
-         */
-        function saveToHistory(nScore, message) {
+        function saveToHistory() {
             const history = JSON.parse(localStorage.getItem('foodScanHistory') || '[]');
-            history.unshift({ 
-                timestamp: new Date().toISOString(), 
-                foods: detectedFoodsData.map(f => ({ name: f.name, portion: f.portion })),
-                nScore: nScore, // Save the score
-                message: message // Save the message
-            });
+            history.unshift({ timestamp: new Date().toISOString(), foods: detectedFoodsData.map(f => ({ name: f.name, portion: f.portion })) });
             if (history.length > 50) history.pop();
             localStorage.setItem('foodScanHistory', JSON.stringify(history));
         }
         
-        /**
-         * UPDATED: Now displays nScore and message from history.
-         */
         function loadHistory() {
             const history = JSON.parse(localStorage.getItem('foodScanHistory') || '[]');
             historyContent.innerHTML = history.length === 0 ? '<p class="text-gray-500">No scans saved yet.</p>' : '';
@@ -758,30 +668,12 @@
                     totalCals += cals;
                     return `<div class="ml-4 text-sm"><span class="capitalize font-semibold">${food.name} (${food.portion}g):</span> ${cals.toFixed(0)} Calories</div>`;
                 }).join('');
-
-                // NEW: Add nScore and message if they exist
-                let nScoreColor = "bg-blue-100 text-blue-700";
-                if(entry.nScore) {
-                    if (entry.nScore >= 80) nScoreColor = "bg-green-100 text-green-700";
-                    else if (entry.nScore >= 60) nScoreColor = "bg-blue-100 text-blue-700";
-                    else if (entry.nScore >= 40) nScoreColor = "bg-yellow-100 text-yellow-700";
-                    else nScoreColor = "bg-red-100 text-red-700";
-                }
-
-                const nScoreHtml = entry.nScore !== undefined ? `
-                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 mt-2">
-                        <span class="text-sm font-bold px-2 py-0.5 rounded-full ${nScoreColor} self-start">N-Score: ${entry.nScore}</span>
-                        <span class="text-sm text-gray-600 italic">"${entry.message}"</span>
-                    </div>
-                ` : '';
-                
                 entryDiv.innerHTML = `
                     <div class="flex justify-between items-center">
                         <p class="font-bold text-sm">${date.toLocaleDateString()} - ${date.toLocaleTimeString()}</p>
                         <p class="font-bold text-orange-600">${totalCals.toFixed(0)} Calories</p>
                     </div>
                     ${foodHtml}
-                    ${nScoreHtml}
                 `;
                 historyContent.appendChild(entryDiv);
             });
@@ -790,12 +682,8 @@
         historyBtn.addEventListener('click', () => { 
             loadHistory(); 
             historyModal.classList.remove('hidden');
-            setTimeout(() => historyModal.classList.add('modal-open'), 10); 
         });
-        closeHistoryBtn.addEventListener('click', () => {
-            historyModal.classList.remove('modal-open');
-            setTimeout(() => historyModal.classList.add('hidden'), 200); 
-        });
+        closeHistoryBtn.addEventListener('click', () => historyModal.classList.add('hidden'));
 
         let confirmCallback = null;
         function showConfirm(title, message, callback) {
@@ -803,20 +691,9 @@
             document.getElementById('confirm-message').textContent = message;
             confirmCallback = callback;
             confirmModal.classList.remove('hidden');
-            setTimeout(() => confirmModal.classList.add('modal-open'), 10); 
         }
-        
-        confirmOkBtn.addEventListener('click', () => { 
-            if (confirmCallback) confirmCallback(); 
-            confirmModal.classList.remove('modal-open');
-            setTimeout(() => confirmModal.classList.add('hidden'), 200); 
-        });
-        
-        confirmCancelBtn.addEventListener('click', () => {
-            confirmModal.classList.remove('modal-open');
-            setTimeout(() => confirmModal.classList.add('hidden'), 200); 
-        });
-        
+        confirmOkBtn.addEventListener('click', () => { if (confirmCallback) confirmCallback(); confirmModal.classList.add('hidden'); });
+        confirmCancelBtn.addEventListener('click', () => confirmModal.classList.add('hidden'));
         clearHistoryBtn.addEventListener('click', () => {
             showConfirm('Clear History?', 'Are you sure you want to delete all scan history?', () => {
                 localStorage.removeItem('foodScanHistory');
@@ -825,6 +702,26 @@
         });
         
         document.addEventListener('DOMContentLoaded', async () => {
+            
+            // --- NEW: Desktop/Mobile Check ---
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (!isMobile) {
+                // This is a desktop
+                document.getElementById('desktop-overlay').style.display = 'flex';
+                // Use API to generate QR code
+                document.getElementById('desktop-overlay-qr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://nutrients-scan.netlify.app&qzone=2&margin=0';
+                
+                // Hide the main app content
+                document.querySelector('header').style.display = 'none';
+                document.querySelector('main').style.display = 'none';
+                
+                // Stop further execution (like fetching data or setting up camera)
+                return; 
+            }
+            // --- End of Desktop/Mobile Check ---
+
+            // Existing code continues here ONLY for mobile users
             await fetchFoodData();
             captureBtn.disabled = true;
             flipCameraBtn.disabled = true;
