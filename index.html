@@ -2,315 +2,219 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nutri Scan - AI-Powered Nutrition Analysis</title>
-    <meta name="description" content="Instantly analyze the nutritional content of your food. Just snap a photo or upload an image and let our AI provide an estimate of calories, protein, carbs, and fat.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Nutri Scan - AI Nutrition Analysis</title>
+    <meta name="description" content="Instantly analyze the nutritional content of your food. Just snap a photo or upload an image and let our AI provide an estimate.">
     
-    <meta name="google-adsense-account" content="ca-pub-1014085303095720">
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#020617">
+    <meta name="theme-color" content="#F5F5F7">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1014085303095720" crossorigin="anonymous"></script>
 
     <style>
-        :root {
-            --glow-color-1: rgba(34, 211, 238, 0.7);
-            --glow-color-2: rgba(139, 92, 246, 0.7);
+        html { 
+            scroll-behavior: smooth; 
         }
-        html { scroll-behavior: smooth; }
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #020617;
-            color: #e5e7eb;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f7; /* Apple-like light gray background */
+            color: #1d1d1f; /* Apple's primary text color */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        .font-orbitron { font-family: 'Orbitron', sans-serif; }
-        .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
-        .aurora { position: absolute; border-radius: 50%; opacity: 0.3; filter: blur(120px); }
-        .aurora-1 { width: 700px; height: 700px; background: radial-gradient(circle, #0891b2, transparent 60%); top: -25%; left: -25%; animation: moveAurora1 35s infinite alternate ease-in-out; }
-        .aurora-2 { width: 600px; height: 600px; background: radial-gradient(circle, #4f46e5, transparent 60%); bottom: -30%; right: -25%; animation: moveAurora2 40s infinite alternate ease-in-out; }
-        .aurora-3 { width: 500px; height: 500px; background: radial-gradient(circle, #be185d, transparent 70%); top: 20%; right: -20%; animation: moveAurora2 30s infinite alternate-reverse ease-in-out; }
-        @keyframes moveAurora1 { from { transform: translate(-20%, -20%) rotate(0deg) scale(1); } to { transform: translate(20%, 20%) rotate(180deg) scale(1.2); } }
-        @keyframes moveAurora2 { from { transform: translate(20%, 30%) rotate(0deg) scale(1.2); } to { transform: translate(-20%, -30%) rotate(-180deg) scale(1); } }
-        .glass-panel { background: rgba(17, 24, 39, 0.65); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); transition: all 0.3s ease; }
-        .glass-panel:hover { border-color: rgba(255, 255, 255, 0.15); }
-        .neon-highlight { box-shadow: 0 0 5px var(--glow-color-1), 0 0 10px var(--glow-color-1), 0 0 15px var(--glow-color-1); animation: pulse-neon 2s infinite alternate; }
-        .neon-text { text-shadow: 0 0 4px var(--glow-color-1); }
-        .neon-text-alt { text-shadow: 0 0 4px var(--glow-color-2); }
-        @keyframes pulse-neon { from { box-shadow: 0 0 5px var(--glow-color-1), 0 0 10px var(--glow-color-1); } to { box-shadow: 0 0 10px var(--glow-color-1), 0 0 20px var(--glow-color-1); } }
-        ::-webkit-scrollbar { width: 8px; }
+        
+        /* Subtle "frosted glass" effect, inspired by Apple's UI */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        /* System-like scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(34, 211, 238, 0.4); border-radius: 10px; border: 1px solid rgba(34, 211, 238, 0.6); }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(34, 211, 238, 0.6); }
-        .control-btn { background-color: rgba(55, 65, 81, 0.5); transition: all 0.3s ease; border: 1px solid transparent; }
-        .control-btn:hover { background-color: rgba(55, 65, 81, 0.8); transform: translateY(-2px); border-color: var(--glow-color-1); }
-        .control-btn.active { background-color: rgba(34, 211, 238, 0.3); color: white; box-shadow: inset 0 0 10px rgba(34, 211, 238, 0.5); border-color: var(--glow-color-1); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+
+        /* Primary "Apple Blue" button */
+        .btn-primary {
+            background-color: #007aff;
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem; /* Softer radius */
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background-color: #0070e0;
+            transform: translateY(-1px);
+        }
+        /* Apple-style disabled button */
+        .btn-primary:disabled {
+            background-color: #e5e5ea;
+            color: #8e8e93;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Secondary control buttons */
+        .control-btn {
+            background-color: #e5e5ea; /* Light gray */
+            color: #1d1d1f; /* Dark text */
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            border-radius: 0.75rem;
+            font-weight: 500;
+        }
+        .control-btn:hover {
+            background-color: #dcdce0;
+            transform: translateY(-1px);
+        }
+        /* Active state uses the "Apple blue" */
+        .control-btn.active {
+            background-color: #007aff;
+            color: white;
+            box-shadow: none;
+            border-color: transparent;
+        }
+        
+        /* Secondary "ghost" button for history */
+        .btn-secondary {
+             background-color: #f5f5f7;
+             color: #007aff;
+             border: 1px solid #d2d2d7;
+             font-weight: 500;
+        }
+        .btn-secondary:hover {
+            background-color: #e5e5ea;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .fade-in-item { animation: fadeIn 0.5s ease-out forwards; }
     </style>
 </head>
-<body class="p-4 sm:p-6">
-
-    <div class="aurora-background">
-        <div class="aurora aurora-1"></div>
-        <div class="aurora aurora-2"></div>
-        <div class="aurora aurora-3"></div>
-    </div>
+<body class="p-4 sm:p-6 min-h-screen flex flex-col">
     
-    <header class="w-full max-w-7xl mx-auto flex justify-between items-center mb-6">
-        <a href="#" class="text-3xl font-bold font-orbitron neon-text flex items-center gap-2">
-            <i data-lucide="scan-eye"></i>Nutri Scan
+    <header class="w-full max-w-5xl mx-auto flex justify-between items-center mb-6 flex-shrink-0">
+        <a href="#" class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12a5 5 0 0 1 5-5"/><path d="M12 17a5 5 0 0 0 5-5"/><path d="M7 12a5 5 0 0 0 5 5"/><path d="M12 7a5 5 0 0 1 5 5"/></svg>
+            Nutri Scan
         </a>
-        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold">
-            <a href="#about" class="hover:text-cyan-300 transition-colors">About</a>
-            <a href="#how-it-works" class="hover:text-cyan-300 transition-colors">How It Works</a>
-            <a href="#features" class="hover:text-cyan-300 transition-colors">Features</a>
-            <a href="#faq" class="hover:text-cyan-300 transition-colors">FAQ</a>
-        </nav>
-        <button id="install-btn" class="hidden items-center gap-2 bg-indigo-600/80 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-xl transition-all duration-300 hover:scale-105">
-            <i data-lucide="download-cloud" class="w-5 h-5"></i> Install App
-        </button>
     </header>
 
-    <main class="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
-        <div class="w-full lg:w-1/2 flex flex-col gap-6 lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)]">
-            <div class="glass-panel rounded-2xl p-4 flex-grow flex flex-col items-center justify-center relative aspect-video">
+    <main class="w-full max-w-5xl mx-auto flex flex-col lg:flex-row gap-6 flex-grow">
+        
+        <div class="w-full lg:w-1/2 flex flex-col gap-5 lg:sticky lg:top-6 lg:h-[calc(100vh-6rem)]">
+            <div class="glass-panel rounded-2xl p-3 flex-grow flex flex-col items-center justify-center relative aspect-video lg:aspect-auto lg:h-full">
                 <video id="webcam" class="rounded-lg w-full h-full object-cover transition-opacity duration-300 opacity-0" autoplay playsinline></video>
                 <img id="image-preview" class="hidden rounded-lg w-full h-full object-contain" />
+                
                 <div id="camera-off-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
-                    <i data-lucide="image-off" class="w-16 h-16 text-gray-500 mb-4"></i>
-                    <p class="text-gray-400 font-semibold">Ready to Scan</p>
-                    <p class="text-sm text-gray-500">Start your camera or upload an image to begin.</p>
+                    <i data-lucide="image-off" class="w-16 h-16 text-gray-400 mb-4"></i>
+                    <p class="text-gray-700 font-semibold">Ready to Scan</p>
+                    <p class="text-sm text-gray-500">Start your camera or upload an image.</p>
                 </div>
+                
                 <canvas id="canvas" class="hidden"></canvas>
-                <div id="camera-error" class="hidden absolute inset-0 bg-black/50 rounded-lg flex flex-col items-center justify-center text-center p-4">
-                    <p id="camera-error-message" class="text-red-400 font-semibold mb-4">Camera access denied or not available.</p>
-                    <button id="enable-camera-btn" class="bg-cyan-500/80 hover:bg-cyan-500 text-white font-bold py-2 px-4 rounded-xl transition-all duration-300">
+                
+                <div id="camera-error" class="hidden absolute inset-0 bg-white/50 backdrop-blur-sm rounded-lg flex flex-col items-center justify-center text-center p-4">
+                    <p id="camera-error-message" class="text-red-600 font-semibold mb-4">Camera access denied.</p>
+                    <button id="enable-camera-btn" class="btn-primary py-2 px-4 text-sm">
                         Try Again
                     </button>
                 </div>
-                <div id="loader" class="hidden absolute inset-0 bg-gray-900/70 backdrop-blur-sm rounded-lg flex flex-col items-center justify-center text-center p-4 z-20">
-                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400"></div>
-                    <p class="mt-4 text-cyan-300 font-orbitron">ANALYZING...</p>
-                </div>
-            </div>
-            <div class="flex flex-col gap-4">
-                <button id="capture-btn" class="w-full bg-cyan-500/80 hover:bg-cyan-500 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 neon-highlight disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:scale-105 flex items-center justify-center gap-2 text-lg">
-                    <i data-lucide="scan-line"></i> Capture & Analyze
-                </button>
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    <button id="start-stop-btn" title="Start/Stop Camera" class="p-3 rounded-xl control-btn flex items-center justify-center gap-2 font-semibold">
-                       <i data-lucide="video"></i> Camera
-                    </button>
-                    <button id="flip-camera-btn" title="Flip Camera" class="p-3 rounded-xl control-btn flex items-center justify-center"><i data-lucide="rotate-camera"></i></button>
-                    <button id="upload-btn" class="p-3 rounded-xl control-btn flex items-center justify-center gap-2 font-semibold">
-                        <i data-lucide="upload"></i> Upload
-                    </button>
-                    <input type="file" id="upload-input" class="hidden" accept="image/*">
-                    <button id="history-btn" class="bg-violet-600/80 hover:bg-violet-600 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 sm:col-span-3">
-                        <i data-lucide="history"></i> View History
-                    </button>
+                
+                <div id="loader" class="hidden absolute inset-0 bg-white/70 backdrop-blur-sm rounded-lg flex flex-col items-center justify-center text-center p-4 z-20">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                    <p class="mt-4 text-blue-600 font-semibold">ANALYZING...</p>
                 </div>
             </div>
             
-            <div class="my-2 glass-panel rounded-2xl p-2 text-center text-xs text-gray-400 min-h-[100px] flex flex-col justify-center">
-                <span class="font-orbitron opacity-50">ADVERTISEMENT</span>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1014085303095720"
-                     data-ad-slot="1037031566"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                     setTimeout(() => { 
-                         try { (adsbygoogle = window.adsbygoogle || []).push({}) } catch(e){ console.error("Adsense push error", e)}
-                     }, 100);
-                </script>
+            <div class="flex flex-col gap-3">
+                <button id="capture-btn" class="w-full btn-primary text-lg py-3">
+                    <i data-lucide="scan-line"></i> Capture & Analyze
+                </button>
+                <div class="grid grid-cols-3 gap-3">
+                    <button id="start-stop-btn" title="Start/Stop Camera" class="p-3 rounded-xl control-btn flex items-center justify-center gap-2">
+                       <i data-lucide="video"></i> Camera
+                    </button>
+                    <button id="flip-camera-btn" title="Flip Camera" class="p-3 rounded-xl control-btn flex items-center justify-center"><i data-lucide="rotate-camera"></i></button>
+                    <button id="upload-btn" title="Upload Image" class="p-3 rounded-xl control-btn flex items-center justify-center gap-2">
+                        <i data-lucide="upload"></i> Upload
+                    </button>
+                    <input type="file" id="upload-input" class="hidden" accept="image/*">
+                </div>
+                 <button id="history-btn" class="w-full btn-secondary py-2 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2">
+                    <i data-lucide="history"></i> View History
+                </button>
             </div>
         </div>
 
-        <div id="results-panel" class="w-full lg:w-1/2 glass-panel rounded-2xl p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 min-h-[50vh] lg:min-h-[calc(100vh-3rem)]">
-              <h2 class="text-2xl font-bold font-orbitron neon-text mb-4">Analysis Results</h2>
+        <div id="results-panel" class="w-full lg:w-1/2 glass-panel rounded-2xl p-4 sm:p-6 flex flex-col opacity-0 -translate-y-5 transition-all duration-500 min-h-[50vh] lg:min-h-[calc(100vh-6rem)]">
+              <h2 class="text-2xl font-bold text-gray-900 mb-4 flex-shrink-0">Analysis Results</h2>
+              
               <div id="results-content" class="flex-grow space-y-3 pr-2 overflow-y-auto">
-                      <div id="initial-message" class="flex flex-col items-center justify-center h-full text-center text-gray-400">
-                              <i data-lucide="camera" class="w-16 h-16 mb-4"></i>
-                              <p>Capture or upload an image of your food to begin analysis.</p>
-                      </div>
+                  <div id="initial-message" class="flex flex-col items-center justify-center h-full text-center text-gray-500">
+                        <i data-lucide="camera" class="w-16 h-16 mb-4"></i>
+                        <p>Results will appear here.</p>
+                  </div>
               </div>
-              <div id="totals-container" class="mt-4 pt-4 border-t border-white/10 hidden">
-                      <h3 class="text-lg font-bold font-orbitron text-center mb-4 neon-text-alt">Total Estimated Macros & Calories</h3>
-                      <div class="flex flex-col md:flex-row items-center gap-6">
-                          <div id="chart-container" class="w-40 h-40"></div>
-                          <div id="totals" class="flex-grow text-base font-medium grid grid-cols-2 gap-x-6 gap-y-2"></div>
-                      </div>
+              
+              <div id="totals-container" class="mt-4 pt-4 border-t border-gray-200 hidden flex-shrink-0">
+                    <h3 class="text-lg font-semibold text-gray-800 text-center mb-4">Total Estimated Macros</h3>
+                    <div class="flex flex-col md:flex-row items-center gap-6">
+                        <div id="chart-container" class="w-40 h-40"></div>
+                        <div id="totals" class="flex-grow text-base font-medium grid grid-cols-2 gap-x-6 gap-y-2"></div>
+                    </div>
               </div>
         </div>
     </main>
     
-    <div class="w-full max-w-7xl mx-auto flex flex-col gap-12 mt-16 text-gray-300">
-        
-        <section id="about" class="glass-panel rounded-2xl p-8">
-            <h2 class="text-3xl font-bold font-orbitron neon-text-alt mb-4 text-center">Welcome to the Future of Nutrition</h2>
-            <p class="max-w-3xl mx-auto text-center text-lg leading-relaxed">
-                Nutri Scan is a revolutionary tool that harnesses the power of artificial intelligence to give you instant insights into the nutritional content of your meals. Simply point your camera, and our advanced vision AI will identify food items and estimate their macronutrient and calorie values. We believe that understanding what you eat is the first step towards a healthier lifestyle, and we're making it easier and more accessible than ever.
-            </p>
-        </section>
-
-        <section id="how-it-works" class="glass-panel rounded-2xl p-8">
-            <h2 class="text-3xl font-bold font-orbitron neon-text-alt mb-8 text-center">How It Works</h2>
-            <div class="grid md:grid-cols-4 gap-8 text-center">
-                <div class="flex flex-col items-center gap-3">
-                    <div class="w-16 h-16 bg-cyan-500/20 rounded-xl flex items-center justify-center border border-cyan-500"><i data-lucide="camera" class="w-8 h-8 text-cyan-400"></i></div>
-                    <h3 class="font-bold text-lg">1. Start Camera</h3>
-                    <p class="text-sm text-gray-400">Activate your device's camera or choose to upload an image from your gallery.</p>
-                </div>
-                <div class="flex flex-col items-center gap-3">
-                    <div class="w-16 h-16 bg-cyan-500/20 rounded-xl flex items-center justify-center border border-cyan-500"><i data-lucide="crop" class="w-8 h-8 text-cyan-400"></i></div>
-                    <h3 class="font-bold text-lg">2. Frame Your Food</h3>
-                    <p class="text-sm text-gray-400">Position your meal within the camera view. For best results, ensure good lighting and a clear view.</p>
-                </div>
-                <div class="flex flex-col items-center gap-3">
-                    <div class="w-16 h-16 bg-cyan-500/20 rounded-xl flex items-center justify-center border border-cyan-500"><i data-lucide="scan-line" class="w-8 h-8 text-cyan-400"></i></div>
-                    <h3 class="font-bold text-lg">3. Capture or Upload</h3>
-                    <p class="text-sm text-gray-400">Snap a picture or select one, and our AI gets to work analyzing the image in seconds.</p>
-                </div>
-                <div class="flex flex-col items-center gap-3">
-                    <div class="w-16 h-16 bg-cyan-500/20 rounded-xl flex items-center justify-center border border-cyan-500"><i data-lucide="pie-chart" class="w-8 h-8 text-cyan-400"></i></div>
-                    <h3 class="font-bold text-lg">4. Get Results</h3>
-                    <p class="text-sm text-gray-400">Receive a detailed breakdown of estimated calories, protein, carbs, and fat.</p>
-                </div>
-            </div>
-        </section>
-
-        <div class="grid lg:grid-cols-2 gap-12">
-            <section id="features" class="glass-panel rounded-2xl p-8">
-                <h2 class="text-2xl font-bold font-orbitron neon-text mb-6">Key Features</h2>
-                <ul class="space-y-4">
-                    <li class="flex items-start gap-4"><i data-lucide="cpu" class="w-6 h-6 text-violet-400 flex-shrink-0 mt-1"></i><div><h4 class="font-bold">Instant AI Analysis</h4><p class="text-sm text-gray-400">Leverages a powerful vision model to recognize a wide variety of food items from a single image.</p></div></li>
-                    <li class="flex items-start gap-4"><i data-lucide="calculator" class="w-6 h-6 text-violet-400 flex-shrink-0 mt-1"></i><div><h4 class="font-bold">Detailed Macro Breakdown</h4><p class="text-sm text-gray-400">Get estimated values for essential macronutrients—protein, carbohydrates, and fats—along with total calories.</p></div></li>
-                    <li class="flex items-start gap-4"><i data-lucide="scale" class="w-6 h-6 text-violet-400 flex-shrink-0 mt-1"></i><div><h4 class="font-bold">Adjustable Portions</h4><p class="text-sm text-gray-400">Fine-tune the results by adjusting the estimated portion size in grams for greater accuracy.</p></div></li>
-                    <li class="flex items-start gap-4"><i data-lucide="history" class="w-6 h-6 text-violet-400 flex-shrink-0 mt-1"></i><div><h4 class="font-bold">Scan History</h4><p class="text-sm text-gray-400">Your recent scans are saved locally on your device for easy review, helping you track your intake over time.</p></div></li>
-                </ul>
-            </section>
-            
-            <section id="nutrition-guide" class="glass-panel rounded-2xl p-8">
-                <h2 class="text-2xl font-bold font-orbitron neon-text mb-6">Understanding Nutrition</h2>
-                <div class="space-y-4">
-                    <div>
-                        <h4 class="font-bold text-cyan-300">Carbohydrates</h4>
-                        <p class="text-sm text-gray-400">The body's primary source of energy. Found in foods like bread, pasta, fruits, and vegetables. They fuel your brain and muscles.</p>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-violet-300">Proteins</h4>
-                        <p class="text-sm text-gray-400">Essential for building and repairing tissues, making enzymes, and hormones. Found in meat, dairy, beans, and nuts.</p>
-                    </div>
-                     <div>
-                        <h4 class="font-bold text-pink-300">Fats</h4>
-                        <p class="text-sm text-gray-400">An important energy source that also helps absorb vitamins and protect your organs. Healthy fats are found in avocados, nuts, and olive oil.</p>
-                    </div>
-                     <div>
-                        <h4 class="font-bold text-amber-300">Calories</h4>
-                        <p class="text-sm text-gray-400">A unit of energy. Your body needs calories to function, but balancing calorie intake with energy expenditure is key to weight management.</p>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <section id="faq" class="glass-panel rounded-2xl p-8">
-            <h2 class="text-3xl font-bold font-orbitron neon-text-alt mb-8 text-center">Frequently Asked Questions</h2>
-            <div class="max-w-3xl mx-auto space-y-6">
-                <div>
-                    <h3 class="font-bold">How accurate is Nutri Scan?</h3>
-                    <p class="text-sm text-gray-400 mt-1">Nutri Scan provides an AI-powered estimation based on visual data. While it's a powerful tool for general guidance, accuracy can be affected by factors like lighting, food presentation, and portion size ambiguity. It should be used for informational purposes and is not a scientific measurement tool.</p>
-                </div>
-                <div>
-                    <h3 class="font-bold">Is this a medical device?</h3>
-                    <p class="text-sm text-gray-400 mt-1">No. This application is for informational and educational purposes only. It is not a substitute for professional medical or dietary advice. Always consult a healthcare professional or registered dietitian for personalized health guidance and before making any changes to your diet.</p>
-                </div>
-                <div>
-                    <h3 class="font-bold">Is my data safe?</h3>
-                    <p class="text-sm text-gray-400 mt-1">We respect your privacy. The images you capture are sent for analysis and are not stored on our servers. Your scan history is stored locally on your own device's browser and is never uploaded. Please see our Privacy Policy for more details.</p>
-                </div>
-                 <div>
-                    <h3 class="font-bold">What foods can it recognize?</h3>
-                    <p class="text-sm text-gray-400 mt-1">Our AI is trained on a wide variety of common food items. While it is constantly improving, it may not recognize every type of food, especially complex or mixed dishes. For best results, try to capture clear images of individual food components.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="legal" class="glass-panel rounded-2xl p-8">
-             <div class="grid md:grid-cols-3 gap-8 text-sm">
-                <div>
-                    <h3 class="font-bold font-orbitron text-lg mb-2 neon-text">About Us</h3>
-                    <p class="text-gray-400">We are a team of health enthusiasts and tech developers passionate about making nutrition accessible to everyone. Nutri Scan was born from a desire to merge cutting-edge AI with the everyday need to understand our food better.</p>
-                </div>
-                <div>
-                    <h3 class="font-bold font-orbitron text-lg mb-2 neon-text">Contact Us</h3>
-                    <p class="text-gray-400">Have questions, feedback, or suggestions? We'd love to hear from you! Please reach out to us at: <a href="mailto:taskzyee@gmail.com" class="text-cyan-400 hover:underline">your-email@example.com</a></p>
-                    
-                </div>
-                <div>
-                    <h3 class="font-bold font-orbitron text-lg mb-2 neon-text">Privacy Policy</h3>
-                    <p class="text-gray-400">Your privacy is important to us. Our Privacy Policy explains how we handle data. In short: images are not stored, and history is saved only on your device. <a href="privacy.html" class="text-cyan-400 hover:underline">Read the full policy here</a>.</p>
-                    
-                </div>
-            </div>
-        </section>
-    </div>
-    
-    <div id="history-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div id="history-modal" class="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
         <div class="w-full max-w-2xl glass-panel rounded-2xl p-6 flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold font-orbitron neon-text-alt">Scan History</h2>
-                <button id="close-history-btn" class="text-gray-300 hover:text-white transition-transform duration-300 hover:rotate-90"><i data-lucide="x"></i></button>
+                <h2 class="text-2xl font-bold text-gray-900">Scan History</h2>
+                <button id="close-history-btn" class="text-gray-500 hover:text-gray-900 transition-transform duration-300 hover:rotate-90"><i data-lucide="x"></i></button>
             </div>
-            <div id="history-content" class="flex-grow overflow-y-auto space-y-4 pr-2"></div>
-            
-            <div class="mt-4 p-2 text-center text-xs text-gray-400 border-t border-white/10 min-h-[80px] flex flex-col justify-center">
-                <span class="font-orbitron opacity-50">ADVERTISEMENT</span>
-                 <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1014085303095720"
-                     data-ad-slot="8396646833"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-            </div>
-
-            <button id="clear-history-btn" class="mt-4 bg-red-600/80 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-xl transition-all duration-300 hover:scale-105">
+            <div id="history-content" class="flex-grow overflow-y-auto space-y-4 pr-2">
+                </div>
+            <button id="clear-history-btn" class="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300">
                 Clear History
             </button>
         </div>
     </div>
-    <div id="confirm-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    
+    <div id="confirm-modal" class="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
         <div class="w-full max-w-sm glass-panel rounded-2xl p-6 text-center">
-            <h3 id="confirm-title" class="text-lg font-bold font-orbitron mb-2">Are you sure?</h3>
-            <p id="confirm-message" class="text-gray-300 mb-6">This action cannot be undone.</p>
+            <h3 id="confirm-title" class="text-lg font-semibold mb-2">Are you sure?</h3>
+            <p id="confirm-message" class="text-gray-600 mb-6">This action cannot be undone.</p>
             <div class="flex gap-4">
-                <button id="confirm-cancel-btn" class="w-full bg-gray-600/80 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-xl transition">Cancel</button>
-                <button id="confirm-ok-btn" class="w-full bg-red-600/80 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-xl transition">Confirm</button>
+                <button id="confirm-cancel-btn" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg transition">Cancel</button>
+                <button id="confirm-ok-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition">Confirm</button>
             </div>
         </div>
     </div>
-    
-    <footer class="text-center mt-16 pb-4 space-y-3">
-         <div class="flex justify-center gap-x-6 gap-y-2 flex-wrap text-sm text-cyan-400">
-            <a href="#about" class="hover:underline">About</a>
-            <a href="#how-it-works" class="hover:underline">How It Works</a>
-            <a href="#features" class="hover:underline">Features</a>
-            <a href="#faq" class="hover:underline">FAQ</a>
-            <a href="#legal" class="hover:underline">Contact</a>
-            <a href="/privacy.html" class="hover:underline">Privacy Policy</a>
-         </div>
-         <p class="text-xs text-gray-500 max-w-2xl mx-auto"><strong>Disclaimer:</strong> Nutri Scan provides AI-based estimations for informational purposes only. It is not a medical device and should not be used as a substitute for professional medical or dietary advice. Consult a healthcare professional for personalized health guidance.</p>
-         <p class="text-xs text-gray-600">&copy; 2025 Nutri Scan. All rights reserved.</p>
-    </footer>
 
     <script>
         lucide.createIcons();
+        
         // --- DOM Element Declarations ---
         const webcamElement = document.getElementById('webcam'), canvasElement = document.getElementById('canvas'),
               captureBtn = document.getElementById('capture-btn'), startStopBtn = document.getElementById('start-stop-btn'),
@@ -323,10 +227,10 @@
               initialMessage = document.getElementById('initial-message'), totalsContainer = document.getElementById('totals-container'),
               totalsDiv = document.getElementById('totals'), loader = document.getElementById('loader'),
               confirmModal = document.getElementById('confirm-modal'), confirmOkBtn = document.getElementById('confirm-ok-btn'),
-              confirmCancelBtn = document.getElementById('confirm-cancel-btn'), installBtn = document.getElementById('install-btn'),
+              confirmCancelBtn = document.getElementById('confirm-cancel-btn'),
               chartContainer = document.getElementById('chart-container');
         
-        // NEW: Image Upload Elements
+        // Image Upload Elements
         const uploadBtn = document.getElementById('upload-btn');
         const uploadInput = document.getElementById('upload-input');
         const imagePreview = document.getElementById('image-preview');
@@ -430,7 +334,7 @@
             resultsPanel.classList.remove('opacity-0', '-translate-y-5');
         });
 
-        // --- NEW: Image Upload Logic ---
+        // --- Image Upload Logic ---
         uploadBtn.addEventListener('click', () => uploadInput.click());
 
         uploadInput.addEventListener('change', (e) => {
@@ -456,7 +360,7 @@
                 resultsPanel.classList.remove('opacity-0', '-translate-y-5');
             };
             reader.readAsDataURL(file);
-            e.target.value = null; // Reset input to allow re-uploading the same file
+            e.target.value = null; // Reset input
         });
 
 
@@ -486,8 +390,9 @@
                 displayError(`Detection failed. The AI could not process the image. Error: ${error.message}`);
             }
         }
+        
         function displayError(message) {
-            resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-red-900/50 text-red-300">${message}</div>`;
+            resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-red-100 text-red-700">${message}</div>`;
             totalsContainer.classList.add('hidden');
         }
 
@@ -501,14 +406,14 @@
             }
 
             if (items.length > 0 && items[0].foodName === 'medicine') {
-                resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-yellow-900/50 text-yellow-300 flex items-center gap-3"><i data-lucide="alert-triangle"></i><span>This application is not designed to analyze medication or provide medical advice.</span></div>`;
+                resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-yellow-100 text-yellow-800 flex items-center gap-3"><i data-lucide="alert-triangle"></i><span>This application is not designed to analyze medication.</span></div>`;
                 lucide.createIcons();
                 totalsContainer.classList.add('hidden');
                 return;
             }
 
             if (items.length === 0) {
-                resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-800/50 text-gray-300 flex items-center gap-3"><i data-lucide="search-slash"></i><p>No supported food items were detected in the image.</p></div>`;
+                resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-100 text-gray-600 flex items-center gap-3"><i data-lucide="search-slash"></i><p>No supported food items were detected.</p></div>`;
                 lucide.createIcons();
                 totalsContainer.classList.add('hidden');
                 return;
@@ -519,10 +424,10 @@
                 if (nutritionDB[foodName]) {
                     const data = { id: `food-${Date.now()}-${index}`, name: foodName, portion: item.estimatedWeight || 100, confidence: item.confidenceScore || 0, ...nutritionDB[foodName] };
                     detectedFoodsData.push(data);
-                    const confidenceColor = data.confidence > 0.8 ? 'text-green-400' : data.confidence > 0.6 ? 'text-yellow-400' : 'text-red-400';
+                    const confidenceColor = data.confidence > 0.8 ? 'text-green-600' : data.confidence > 0.6 ? 'text-yellow-600' : 'text-red-600';
                     
                     const foodElement = document.createElement('div');
-                    foodElement.className = 'p-3 rounded-lg bg-white/5 fade-in-item';
+                    foodElement.className = 'p-3 rounded-lg bg-white/50 fade-in-item';
                     foodElement.style.animationDelay = `${index * 100}ms`;
                     foodElement.innerHTML = `
                         <div class="flex items-center justify-between">
@@ -531,11 +436,11 @@
                                 <span class="text-xs ${confidenceColor}">(${(data.confidence * 100).toFixed(0)}% confident)</span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <input type="number" value="${data.portion}" min="1" step="1" id="portion-${data.id}" class="w-20 bg-transparent border-b border-white/20 text-right focus:outline-none focus:border-cyan-400">
+                                <input type="number" value="${data.portion}" min="1" step="1" id="portion-${data.id}" class="w-20 bg-transparent border-b border-gray-300 text-right focus:outline-none focus:border-blue-500">
                                 <span>g</span>
                             </div>
                         </div>
-                        <div id="nutrients-${data.id}" class="text-sm text-gray-300 mt-2"></div>`;
+                        <div id="nutrients-${data.id}" class="text-sm text-gray-700 mt-2"></div>`;
                     resultsContent.appendChild(foodElement);
                     document.getElementById(`portion-${data.id}`).addEventListener('input', (e) => {
                        const foodItem = detectedFoodsData.find(f => f.id === data.id);
@@ -550,7 +455,7 @@
                 totalsContainer.classList.remove('hidden');
                 saveToHistory();
             } else {
-                resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-800/50 text-gray-300 flex items-center gap-3"><i data-lucide="database-zap"></i><p>Detected items were not in our nutrition database.</p></div>`;
+                resultsContent.innerHTML = `<div class="p-3 rounded-lg bg-gray-100 text-gray-600 flex items-center gap-3"><i data-lucide="database-zap"></i><p>Detected items were not in our nutrition database.</p></div>`;
                  lucide.createIcons();
                 totalsContainer.classList.add('hidden');
             }
@@ -564,16 +469,16 @@
                 const calories = food.calories * factor;
                 total.carbs += carbs; total.protein += protein; total.fat += fat; total.calories += calories;
                 document.getElementById(`nutrients-${food.id}`).innerHTML = `
-                    <span class="text-cyan-400">C: <strong>${carbs.toFixed(1)}g</strong></span> | 
-                    <span class="text-violet-400">P: <strong>${protein.toFixed(1)}g</strong></span> | 
-                    <span class="text-pink-400">F: <strong>${fat.toFixed(1)}g</strong></span> | 
-                    <span class="text-amber-300"><strong>${calories.toFixed(0)} Calories</strong></span>`; // FIXED
+                    <span class="text-blue-600">C: <strong>${carbs.toFixed(1)}g</strong></span> | 
+                    <span class="text-purple-600">P: <strong>${protein.toFixed(1)}g</strong></span> | 
+                    <span class="text-pink-600">F: <strong>${fat.toFixed(1)}g</strong></span> | 
+                    <span class="text-orange-600"><strong>${calories.toFixed(0)} Calories</strong></span>`;
             });
             totalsDiv.innerHTML = `
-                <p>Carbs: <strong class="text-cyan-300">${total.carbs.toFixed(1)}g</strong></p>
-                <p>Protein: <strong class="text-violet-300">${total.protein.toFixed(1)}g</strong></p>
-                <p>Fat: <strong class="text-pink-300">${total.fat.toFixed(1)}g</strong></p>
-                <p class="text-amber-300 font-bold col-span-2 text-lg">Total Calories: <strong>${total.calories.toFixed(0)} Calories</strong></p>`; // FIXED
+                <p>Carbs: <strong class="text-blue-600">${total.carbs.toFixed(1)}g</strong></p>
+                <p>Protein: <strong class="text-purple-600">${total.protein.toFixed(1)}g</strong></p>
+                <p>Fat: <strong class="text-pink-600">${total.fat.toFixed(1)}g</strong></p>
+                <p class="text-orange-600 font-bold col-span-2 text-lg">Total Calories: <strong>${total.calories.toFixed(0)} Calories</strong></p>`;
             
             renderMacroChart(total);
         }
@@ -594,14 +499,14 @@
 
             chartContainer.innerHTML = `
                 <svg viewBox="0 0 36 36" class="w-full h-full">
-                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3" stroke="#374151" />
-                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#22d3ee" stroke-dasharray="${carbDeg} ${360-carbDeg}" stroke-dashoffset="0" transform="rotate(-90 18 18)" />
-                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#8b5cf6" stroke-dasharray="${protDeg} ${360-protDeg}" stroke-dashoffset="-${carbDeg}" transform="rotate(-90 18 18)" />
+                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3" stroke="#e5e7eb" />
+                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#007aff" stroke-dasharray="${carbDeg} ${360-carbDeg}" stroke-dashoffset="0" transform="rotate(-90 18 18)" />
+                    <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#a855f7" stroke-dasharray="${protDeg} ${360-protDeg}" stroke-dashoffset="-${carbDeg}" transform="rotate(-90 18 18)" />
                     <circle cx="18" cy="18" r="15.915" fill="transparent" stroke-width="3.5" stroke="#ec4899" stroke-dasharray="${fatP * 360} 360" stroke-dashoffset="-${carbDeg + protDeg}" transform="rotate(-90 18 18)" />
-                    <text x="18" y="20" text-anchor="middle" class="fill-white text-[5px] font-bold">${(totals.calories).toFixed(0)}</text>
-                    <text x="18" y="24" text-anchor="middle" class="fill-gray-400 text-[3px]">Calories</text>
+                    <text x="18" y="20" text-anchor="middle" class="fill-gray-900 text-[5px] font-bold">${(totals.calories).toFixed(0)}</text>
+                    <text x="18" y="24" text-anchor="middle" class="fill-gray-600 text-[3px]">Calories</text>
                 </svg>
-            `; // FIXED
+            `;
         }
         
         function saveToHistory() {
@@ -613,11 +518,11 @@
         
         function loadHistory() {
             const history = JSON.parse(localStorage.getItem('foodScanHistory') || '[]');
-            historyContent.innerHTML = history.length === 0 ? '<p class="text-gray-400">No scans saved yet.</p>' : '';
+            historyContent.innerHTML = history.length === 0 ? '<p class="text-gray-500">No scans saved yet.</p>' : '';
             clearHistoryBtn.style.display = history.length > 0 ? 'block' : 'none';
             history.forEach(entry => {
                 const entryDiv = document.createElement('div');
-                entryDiv.className = 'glass-panel p-4 rounded-lg';
+                entryDiv.className = 'bg-white/50 p-4 rounded-lg';
                 const date = new Date(entry.timestamp);
                 let totalCals = 0;
                 let foodHtml = entry.foods.map(food => {
@@ -626,15 +531,15 @@
                     const factor = food.portion / 100;
                     const cals = n.calories * factor;
                     totalCals += cals;
-                    return `<div class="ml-4 text-sm"><span class="capitalize font-semibold">${food.name} (${food.portion}g):</span> ${cals.toFixed(0)} Calories</div>`; // FIXED
+                    return `<div class="ml-4 text-sm"><span class="capitalize font-semibold">${food.name} (${food.portion}g):</span> ${cals.toFixed(0)} Calories</div>`;
                 }).join('');
                 entryDiv.innerHTML = `
                     <div class="flex justify-between items-center">
                         <p class="font-bold">${date.toLocaleDateString()} - ${date.toLocaleTimeString()}</p>
-                        <p class="font-bold text-amber-300">${totalCals.toFixed(0)} Calories</p>
+                        <p class="font-bold text-orange-600">${totalCals.toFixed(0)} Calories</p>
                     </div>
                     ${foodHtml}
-                `; // FIXED
+                `;
                 historyContent.appendChild(entryDiv);
             });
         }
@@ -642,13 +547,6 @@
         historyBtn.addEventListener('click', () => { 
             loadHistory(); 
             historyModal.classList.remove('hidden');
-            setTimeout(() => {
-                try {
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                } catch (e) {
-                    console.error("AdSense push error in modal:", e);
-                }
-            }, 50);
         });
         closeHistoryBtn.addEventListener('click', () => historyModal.classList.add('hidden'));
 
@@ -666,28 +564,6 @@
                 localStorage.removeItem('foodScanHistory');
                 loadHistory();
             });
-        });
-
-        // PWA Installation Logic
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBtn.classList.remove('hidden');
-            installBtn.classList.add('flex');
-        });
-
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                deferredPrompt = null;
-                installBtn.classList.add('hidden');
-            }
-        });
-
-        window.addEventListener('appinstalled', () => {
-            installBtn.classList.add('hidden');
         });
         
         document.addEventListener('DOMContentLoaded', async () => {
